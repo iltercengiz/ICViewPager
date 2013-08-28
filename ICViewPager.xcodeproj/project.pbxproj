@@ -13,9 +13,9 @@
 		7CF3D65F17CE32E40021036A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D65D17CE32E40021036A /* InfoPlist.strings */; };
 		7CF3D66117CE32E40021036A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66017CE32E40021036A /* main.m */; };
 		7CF3D66517CE32E40021036A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66417CE32E40021036A /* AppDelegate.m */; };
-		7CF3D66717CE32E40021036A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D66617CE32E40021036A /* Default.png */; };
-		7CF3D66917CE32E40021036A /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D66817CE32E40021036A /* Default@2x.png */; };
 		7CF3D66B17CE32E40021036A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D66A17CE32E40021036A /* Default-568h@2x.png */; };
+		7CF3D67217CE332F0021036A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67117CE332F0021036A /* iPhone.storyboard */; };
+		7CF3D67617CE336E0021036A /* Localization.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67817CE336E0021036A /* Localization.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,9 +29,11 @@
 		7CF3D66217CE32E40021036A /* ICViewPager-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ICViewPager-Prefix.pch"; sourceTree = "<group>"; };
 		7CF3D66317CE32E40021036A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7CF3D66417CE32E40021036A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		7CF3D66617CE32E40021036A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		7CF3D66817CE32E40021036A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		7CF3D66A17CE32E40021036A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7CF3D67117CE332F0021036A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
+		7CF3D67317CE335B0021036A /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7CF3D67717CE336E0021036A /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localization.strings; sourceTree = "<group>"; };
+		7CF3D67917CE336F0021036A /* tr */ = {isa = PBXFileReference; lastKnownFileType = file; name = tr; path = tr.lproj/Localization.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 			children = (
 				7CF3D66317CE32E40021036A /* AppDelegate.h */,
 				7CF3D66417CE32E40021036A /* AppDelegate.m */,
+				7CF3D67117CE332F0021036A /* iPhone.storyboard */,
 				7CF3D65B17CE32E40021036A /* Supporting Files */,
 			);
 			path = ICViewPager;
@@ -92,9 +95,8 @@
 				7CF3D65D17CE32E40021036A /* InfoPlist.strings */,
 				7CF3D66017CE32E40021036A /* main.m */,
 				7CF3D66217CE32E40021036A /* ICViewPager-Prefix.pch */,
-				7CF3D66617CE32E40021036A /* Default.png */,
-				7CF3D66817CE32E40021036A /* Default@2x.png */,
 				7CF3D66A17CE32E40021036A /* Default-568h@2x.png */,
+				7CF3D67817CE336E0021036A /* Localization.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -134,6 +136,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				tr,
 			);
 			mainGroup = 7CF3D64817CE32E40021036A;
 			productRefGroup = 7CF3D65217CE32E40021036A /* Products */;
@@ -151,9 +154,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CF3D65F17CE32E40021036A /* InfoPlist.strings in Resources */,
-				7CF3D66717CE32E40021036A /* Default.png in Resources */,
-				7CF3D66917CE32E40021036A /* Default@2x.png in Resources */,
 				7CF3D66B17CE32E40021036A /* Default-568h@2x.png in Resources */,
+				7CF3D67217CE332F0021036A /* iPhone.storyboard in Resources */,
+				7CF3D67617CE336E0021036A /* Localization.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,8 +179,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				7CF3D65E17CE32E40021036A /* en */,
+				7CF3D67317CE335B0021036A /* tr */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		7CF3D67817CE336E0021036A /* Localization.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7CF3D67717CE336E0021036A /* en */,
+				7CF3D67917CE336F0021036A /* tr */,
+			);
+			name = Localization.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
