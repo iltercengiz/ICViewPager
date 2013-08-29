@@ -14,8 +14,11 @@
 		7CF3D66117CE32E40021036A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66017CE32E40021036A /* main.m */; };
 		7CF3D66517CE32E40021036A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66417CE32E40021036A /* AppDelegate.m */; };
 		7CF3D66B17CE32E40021036A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D66A17CE32E40021036A /* Default-568h@2x.png */; };
-		7CF3D67217CE332F0021036A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67117CE332F0021036A /* iPhone.storyboard */; };
 		7CF3D67617CE336E0021036A /* Localization.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67817CE336E0021036A /* Localization.strings */; };
+		7CF3D67E17CE33E10021036A /* ViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D67D17CE33E10021036A /* ViewPagerController.m */; };
+		7CF3D68117CE33EC0021036A /* HostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D68017CE33EC0021036A /* HostViewController.m */; };
+		7CF3D68217CE35500021036A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67117CE332F0021036A /* iPhone.storyboard */; };
+		7CF3D68517CE3F5B0021036A /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D68417CE3F5B0021036A /* ContentViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,12 @@
 		7CF3D67317CE335B0021036A /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7CF3D67717CE336E0021036A /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localization.strings; sourceTree = "<group>"; };
 		7CF3D67917CE336F0021036A /* tr */ = {isa = PBXFileReference; lastKnownFileType = file; name = tr; path = tr.lproj/Localization.strings; sourceTree = "<group>"; };
+		7CF3D67C17CE33E10021036A /* ViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewPagerController.h; sourceTree = "<group>"; };
+		7CF3D67D17CE33E10021036A /* ViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewPagerController.m; sourceTree = "<group>"; };
+		7CF3D67F17CE33EC0021036A /* HostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HostViewController.h; sourceTree = "<group>"; };
+		7CF3D68017CE33EC0021036A /* HostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HostViewController.m; sourceTree = "<group>"; };
+		7CF3D68317CE3F5B0021036A /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
+		7CF3D68417CE3F5B0021036A /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +92,8 @@
 				7CF3D66317CE32E40021036A /* AppDelegate.h */,
 				7CF3D66417CE32E40021036A /* AppDelegate.m */,
 				7CF3D67117CE332F0021036A /* iPhone.storyboard */,
+				7CF3D67B17CE33C80021036A /* ICViewPager */,
+				7CF3D67A17CE33C80021036A /* Controller */,
 				7CF3D65B17CE32E40021036A /* Supporting Files */,
 			);
 			path = ICViewPager;
@@ -99,6 +110,26 @@
 				7CF3D67817CE336E0021036A /* Localization.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7CF3D67A17CE33C80021036A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7CF3D67F17CE33EC0021036A /* HostViewController.h */,
+				7CF3D68017CE33EC0021036A /* HostViewController.m */,
+				7CF3D68317CE3F5B0021036A /* ContentViewController.h */,
+				7CF3D68417CE3F5B0021036A /* ContentViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7CF3D67B17CE33C80021036A /* ICViewPager */ = {
+			isa = PBXGroup;
+			children = (
+				7CF3D67C17CE33E10021036A /* ViewPagerController.h */,
+				7CF3D67D17CE33E10021036A /* ViewPagerController.m */,
+			);
+			path = ICViewPager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,7 +186,7 @@
 			files = (
 				7CF3D65F17CE32E40021036A /* InfoPlist.strings in Resources */,
 				7CF3D66B17CE32E40021036A /* Default-568h@2x.png in Resources */,
-				7CF3D67217CE332F0021036A /* iPhone.storyboard in Resources */,
+				7CF3D68217CE35500021036A /* iPhone.storyboard in Resources */,
 				7CF3D67617CE336E0021036A /* Localization.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -169,6 +200,9 @@
 			files = (
 				7CF3D66117CE32E40021036A /* main.m in Sources */,
 				7CF3D66517CE32E40021036A /* AppDelegate.m in Sources */,
+				7CF3D67E17CE33E10021036A /* ViewPagerController.m in Sources */,
+				7CF3D68117CE33EC0021036A /* HostViewController.m in Sources */,
+				7CF3D68517CE3F5B0021036A /* ContentViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
