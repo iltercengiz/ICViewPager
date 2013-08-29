@@ -3,6 +3,8 @@ ICViewPager
 
 A tab view that mimics ActionBarSherlock's FragmentsTabsPager and Google Play app's tab management.
 
+<img src="https://dl.dropboxusercontent.com/u/17948706/Resources/SS.png" alt="ICViewPager" title="ICViewPager">
+
 ## Usage
 
 Just copy ViewPagerController.m and ViewPagerController.h files to your project.
