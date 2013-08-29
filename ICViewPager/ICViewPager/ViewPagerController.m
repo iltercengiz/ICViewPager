@@ -9,8 +9,8 @@
 #import "ViewPagerController.h"
 
 #define kDefaultTabHeight 49.0 // iOS's default tab height
-#define kDefaultTabOffset 64.0 // Offset of the second and further tabs' from left
-#define kDefaultTabWidth 96.0
+#define kDefaultTabOffset 56.0 // Offset of the second and further tabs' from left
+#define kDefaultTabWidth 128.0
 
 #define kDefaultTabLocation 1.0 // 1.0: Top, 0.0: Bottom
 
@@ -73,7 +73,16 @@
     UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)sender;
     
     CGPoint translation = [panGestureRecognizer translationInView:self.pageViewController.view];
-//    NSLog(@"X: %f Y: %f", translation.x, translation.y);
+    NSLog(@"X: %f Y: %f", translation.x, translation.y);
+    
+    // Bring tab to active position
+    UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
+    
+    CGRect frame = tabView.frame;
+    frame.origin.x -= translation.x * self.tabWidth / self.tabsView.frame.size.width;
+    frame.size.width = self.tabsView.frame.size.width;
+    
+    [_tabsView scrollRectToVisible:frame animated:YES];
 }
 - (IBAction)handleTapGesture:(id)sender {
     
@@ -103,8 +112,15 @@
         }
     }
     
+    // Set active tab
     self.activeTabIndex = index;
-    [_tabsView scrollRectToVisible:tabView.frame animated:YES];
+    
+    // Bring tab to active position
+    CGRect frame = tabView.frame;
+    frame.origin.x -= self.tabOffset;
+    frame.size.width = self.tabsView.frame.size.width;
+    
+    [_tabsView scrollRectToVisible:frame animated:YES];
 }
 
 #pragma mark -
@@ -191,6 +207,7 @@
         
         CGRect frame = tabView.frame;
         frame.origin.x = contentSizeWidth;
+        frame.size.width = self.tabWidth;
         tabView.frame = frame;
         
         [_tabsView addSubview:tabView];
@@ -266,6 +283,15 @@
     
     UIViewController *viewController = self.pageViewController.viewControllers[0];
     _activeTabIndex = [self indexForViewController:viewController];
+    
+    // Bring tab to active position
+    UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
+    
+    CGRect frame = tabView.frame;
+    frame.origin.x -= self.tabOffset;
+    frame.size.width = self.tabsView.frame.size.width;
+    
+    [_tabsView scrollRectToVisible:frame animated:YES];
 }
 
 @end
