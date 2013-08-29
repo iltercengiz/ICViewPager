@@ -114,6 +114,9 @@
     
     // Set active tab
     self.activeTabIndex = index;
+    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
+        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
+    }
     
     // Bring tab to active position
     CGRect frame = tabView.frame;
@@ -283,6 +286,10 @@
     
     UIViewController *viewController = self.pageViewController.viewControllers[0];
     _activeTabIndex = [self indexForViewController:viewController];
+    
+    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
+        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
+    }
     
     // Bring tab to active position
     UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
