@@ -17,6 +17,7 @@ ICViewController supports minimum iOS 6 and uses ARC.
 ## To-do
 - Tabs don't play well with contents while scrolling
 - Scrolling tabs and selecting a further tab then the active one, causes contents to misalign
+- iPad support
 
 ## Contact
 [@monsieurje](https://twitter.com/monsieurje)
