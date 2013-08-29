@@ -18,7 +18,7 @@ ICViewController supports minimum iOS 6 and uses ARC.
 
 ## Contact
 [@monsieurje](https://twitter.com/monsieurje)
-[Ilter Cengiz](me@iltercengiz.info)
+[Ilter Cengiz](mailto:me@iltercengiz.info)
 
 ## Licence
 ICViewPager is MIT licensed. See the LICENCE file for more info.
