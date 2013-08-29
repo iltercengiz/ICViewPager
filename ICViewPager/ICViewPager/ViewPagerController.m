@@ -73,7 +73,7 @@
     UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)sender;
     
     CGPoint translation = [panGestureRecognizer translationInView:self.pageViewController.view];
-    NSLog(@"X: %f Y: %f", translation.x, translation.y);
+//    NSLog(@"X: %f Y: %f", translation.x, translation.y);
     
     // Bring tab to active position
     UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
@@ -97,19 +97,11 @@
                                       direction:UIPageViewControllerNavigationDirectionReverse
                                        animated:YES
                                      completion:nil];
-        NSLog(@"%@", self.pageViewController.viewControllers);
-        for (UIViewController *viewController in self.pageViewController.viewControllers) {
-            NSLog(@"Index: %i", [self indexForViewController:viewController]);
-        }
     } else if (index > self.activeTabIndex) {
         [_pageViewController setViewControllers:@[[self viewControllerAtIndex:index]]
                                       direction:UIPageViewControllerNavigationDirectionForward
                                        animated:YES
                                      completion:nil];
-        NSLog(@"%@", self.pageViewController.viewControllers);
-        for (UIViewController *viewController in self.pageViewController.viewControllers) {
-            NSLog(@"Index: %i", [self indexForViewController:viewController]);
-        }
     }
     
     // Set active tab
@@ -280,7 +272,7 @@
 
 #pragma mark - UIPageViewControllerDelegate
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
-    NSLog(@"willTransitionToViewController: %i", [self indexForViewController:[pendingViewControllers objectAtIndex:0]]);
+//    NSLog(@"willTransitionToViewController: %i", [self indexForViewController:[pendingViewControllers objectAtIndex:0]]);
 }
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     
