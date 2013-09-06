@@ -263,7 +263,7 @@
     _tabsView.showsHorizontalScrollIndicator = NO;
     _tabsView.showsVerticalScrollIndicator = NO;
     
-    [self.view addSubview:_tabsView];
+    [self.view insertSubview:_tabsView atIndex:0];
     
     // Add tab views to _tabsView
     CGFloat contentSizeWidth = 0;
@@ -298,7 +298,7 @@
         pageView.bounds = self.view.bounds;
         pageView.tag = kPageViewTag;
         
-        [self.view addSubview:pageView];
+        [self.view insertSubview:pageView atIndex:0];
     }
     
     CGRect frame = pageView.frame;
