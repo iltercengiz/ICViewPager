@@ -172,6 +172,14 @@
     self.activeTabIndex = index;
 }
 
+#pragma mark - 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    // Re-align tabs if needed
+    self.activeTabIndex = self.activeTabIndex;
+}
+
+#pragma mark - Setter/Getter
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
     
     TabView *activeTabView;
