@@ -343,6 +343,8 @@
         // Create TabView and subview the content
         TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.tabWidth, self.tabHeight)];
         [tabView addSubview:tabViewContent];
+        [tabView setClipsToBounds:YES];
+        
         tabViewContent.center = tabView.center;
         
         // Replace the null object with tabView
