@@ -15,8 +15,7 @@ You can subclass it and implement dataSource and delegate methods in the subclas
 ICViewController supports minimum iOS 6 and uses ARC.
 
 ## To-do
-- Tabs don't play well with contents while scrolling
-- Scrolling tabs and selecting a further tab then the active one, causes contents to misalign
+- Current version doesn't track pan gestures in content view. These should be tracked to scroll tabs synchronously
 - iPad support
 
 ## Contact
