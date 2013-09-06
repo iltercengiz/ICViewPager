@@ -20,6 +20,8 @@
     self.dataSource = self;
     self.delegate = self;
     
+    self.title = @"View Pager";
+    
     // Keeps tab bar below navigation bar on iOS 7.0+
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -41,20 +43,13 @@
     
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor clearColor];
-    label.text = [NSString stringWithFormat:@"Content View %i", index];
+    label.font = [UIFont systemFontOfSize:13.0];
+    label.text = [NSString stringWithFormat:@"Content View #%i", index];
     label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor whiteColor];
+    label.textColor = [UIColor blackColor];
     [label sizeToFit];
     
-    UIView *tabView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, label.frame.size.width + 8.0, viewPager.tabHeight)];
-    [tabView addSubview:label];
-    [tabView.layer setBorderColor:[UIColor whiteColor].CGColor];
-    [tabView.layer setBorderWidth:1.0];
-    tabView.backgroundColor = [UIColor lightGrayColor];
-    
-    label.center = [tabView convertPoint:tabView.center fromView:tabView.superview];
-    
-    return tabView;
+    return label;
 }
 - (UIViewController *)viewPager:(ViewPagerController *)viewPager contentForTabAtIndex:(NSUInteger)index {
     

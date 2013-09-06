@@ -16,6 +16,69 @@
 
 #define kPageViewTag 34
 
+// TabView for tabs, that provides un/selected state indicators
+@class TabView;
+
+@interface TabView : UIView
+@property (nonatomic, getter = isSelected) BOOL selected;
+@property (nonatomic) UIColor *indicatorColor;
+@end
+
+@implementation TabView
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
+- (void)setSelected:(BOOL)selected {
+    _selected = selected;
+    // Update view as state changed
+    [self setNeedsDisplay];
+}
+- (void)drawRect:(CGRect)rect {
+    
+    UIBezierPath *bezierPath;
+    
+    // Draw top line
+    bezierPath = [UIBezierPath bezierPath];
+    [bezierPath moveToPoint:CGPointMake(0.0, 0.0)];
+    [bezierPath addLineToPoint:CGPointMake(rect.size.width, 0.0)];
+    [[UIColor colorWithWhite:197.0/255.0 alpha:0.75] setStroke];
+    [bezierPath setLineWidth:1.0];
+    [bezierPath stroke];
+    
+    // Draw bottom line
+    bezierPath = [UIBezierPath bezierPath];
+    [bezierPath moveToPoint:CGPointMake(0.0, rect.size.height)];
+    [bezierPath addLineToPoint:CGPointMake(rect.size.width, rect.size.height)];
+    [[UIColor colorWithWhite:197.0/255.0 alpha:0.75] setStroke];
+    [bezierPath setLineWidth:1.0];
+    [bezierPath stroke];
+    
+    // Draw an indicator line if tab is selected
+    if (self.selected) {
+        
+        bezierPath = [UIBezierPath bezierPath];
+        
+        // Set indicator color if provided any, otherwise use a default color
+        if (self.indicatorColor) {
+            [self.indicatorColor setStroke];
+        } else {
+            [[UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75] setStroke];
+        }
+        
+        // Draw the indicator
+        [bezierPath moveToPoint:CGPointMake(0.0, rect.size.height - 1.0)];
+        [bezierPath addLineToPoint:CGPointMake(rect.size.width, rect.size.height - 1.0)];
+        [bezierPath setLineWidth:5.0];
+        [bezierPath stroke];
+    }
+}
+@end
+
+// ViewPagerController
 @interface ViewPagerController () <UIGestureRecognizerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
 @property UIPageViewController *pageViewController;
@@ -27,7 +90,7 @@
 
 @property NSUInteger tabCount;
 
-@property NSUInteger activeTabIndex;
+@property (nonatomic)  NSUInteger activeTabIndex;
 
 @end
 
@@ -118,6 +181,22 @@
     [_tabsView scrollRectToVisible:frame animated:YES];
 }
 
+- (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
+    
+    TabView *activeTabView;
+    
+    // Set to-be-inactive tab unselected
+    activeTabView = [self tabViewAtIndex:self.activeTabIndex];
+    activeTabView.selected = NO;
+    
+    // Set to-be-active tab selected
+    activeTabView = [self tabViewAtIndex:activeTabIndex];
+    activeTabView.selected = YES;
+    
+    // Set current activeTabIndex
+    _activeTabIndex = activeTabIndex;
+}
+
 #pragma mark -
 - (void)defaultSettings {
     
@@ -164,7 +243,7 @@
                                   direction:UIPageViewControllerNavigationDirectionForward
                                    animated:NO
                                  completion:nil];
-    _activeTabIndex = 0;
+    self.activeTabIndex = 0;
     
     // Add contentView
     UIView *pageView = [self.view viewWithTag:kPageViewTag];
@@ -172,6 +251,8 @@
     if (!pageView) {
         
         pageView = _pageViewController.view;
+        pageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        pageView.backgroundColor = [UIColor clearColor];
         pageView.bounds = self.view.bounds;
         pageView.tag = kPageViewTag;
         
@@ -185,10 +266,11 @@
     
     // Add tabsView
     _tabsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0,
-                                                               self.tabLocation ? 0.0 : pageView.frame.size.height,
+                                                               self.tabLocation ? 0.0 : self.view.frame.size.height - self.tabHeight,
                                                                self.view.frame.size.width,
                                                                self.tabHeight)];
     _tabsView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    _tabsView.backgroundColor = [UIColor clearColor];
     _tabsView.showsHorizontalScrollIndicator = NO;
     _tabsView.showsVerticalScrollIndicator = NO;
     
@@ -217,14 +299,24 @@
     _tabsView.contentSize = CGSizeMake(contentSizeWidth, self.tabHeight);
 }
 
-- (UIView *)tabViewAtIndex:(NSUInteger)index {
+- (TabView *)tabViewAtIndex:(NSUInteger)index {
     
     if (index >= _tabCount) {
         return nil;
     }
     
     if ([[_tabs objectAtIndex:index] isEqual:[NSNull null]]) {
-        [_tabs replaceObjectAtIndex:index withObject:[self.dataSource viewPager:self viewForTabAtIndex:index]];
+        
+        // Get view from dataSource
+        UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
+        
+        // Create TabView and subview the content
+        TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.tabWidth, self.tabHeight)];
+        [tabView addSubview:tabViewContent];
+        tabViewContent.center = tabView.center;
+        
+        // Replace the null object with tabView
+        [_tabs replaceObjectAtIndex:index withObject:tabView];
     }
     
     return [_tabs objectAtIndex:index];
@@ -277,7 +369,7 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     
     UIViewController *viewController = self.pageViewController.viewControllers[0];
-    _activeTabIndex = [self indexForViewController:viewController];
+    self.activeTabIndex = [self indexForViewController:viewController];
     
     if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
