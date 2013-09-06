@@ -127,22 +127,45 @@
 
 - (IBAction)handleTapGesture:(id)sender {
     
+    // Get the desired page's index
     UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
     UIView *tabView = tapGestureRecognizer.view;
-    NSUInteger index = [_tabs indexOfObject:tabView];
+    __block NSUInteger index = [_tabs indexOfObject:tabView];
     
-//    NSLog(@"Tab #%i tapped!", index);
-        
+    // Get the desired viewController
+    UIViewController *viewController = [self viewControllerAtIndex:index];
+    
+    // __weak pageViewController to be used in blocks to prevent retaining strong reference to self
+    __weak UIPageViewController *weakPageViewController = self.pageViewController;
+    
     if (index < self.activeTabIndex) {
-        [_pageViewController setViewControllers:@[[self viewControllerAtIndex:index]]
-                                      direction:UIPageViewControllerNavigationDirectionReverse
-                                       animated:YES
-                                     completion:nil];
+        [self.pageViewController setViewControllers:@[viewController]
+                                          direction:UIPageViewControllerNavigationDirectionReverse
+                                           animated:YES
+                                         completion:^(BOOL completed) {
+                                             
+                                             // Set the current page again to obtain synchronisation between tabs and content
+                                             dispatch_async(dispatch_get_main_queue(), ^{
+                                                 [weakPageViewController setViewControllers:@[viewController]
+                                                                                  direction:UIPageViewControllerNavigationDirectionReverse
+                                                                                   animated:NO
+                                                                                 completion:nil];
+                                             });
+                                         }];
     } else if (index > self.activeTabIndex) {
-        [_pageViewController setViewControllers:@[[self viewControllerAtIndex:index]]
-                                      direction:UIPageViewControllerNavigationDirectionForward
-                                       animated:YES
-                                     completion:nil];
+        [self.pageViewController setViewControllers:@[viewController]
+                                          direction:UIPageViewControllerNavigationDirectionForward
+                                           animated:YES
+                                         completion:^(BOOL completed) {
+                                             
+                                             // Set the current page again to obtain synchronisation between tabs and content
+                                             dispatch_async(dispatch_get_main_queue(), ^{
+                                                 [weakPageViewController setViewControllers:@[viewController]
+                                                                                  direction:UIPageViewControllerNavigationDirectionForward
+                                                                                   animated:NO
+                                                                                 completion:nil];
+                                             });
+                                         }];
     }
     
     // Set activeTabIndex
