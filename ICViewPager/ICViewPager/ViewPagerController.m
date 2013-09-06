@@ -169,18 +169,8 @@
                                      completion:nil];
     }
     
-    // Set active tab
+    // Set activeTabIndex
     self.activeTabIndex = index;
-    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
-    }
-    
-    // Bring tab to active position
-    CGRect frame = tabView.frame;
-    frame.origin.x -= self.tabOffset;
-    frame.size.width = self.tabsView.frame.size.width;
-    
-    [_tabsView scrollRectToVisible:frame animated:YES];
 }
 
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
