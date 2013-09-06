@@ -51,7 +51,8 @@
     
     return label;
 }
-- (UIViewController *)viewPager:(ViewPagerController *)viewPager contentForTabAtIndex:(NSUInteger)index {
+
+- (UIViewController *)viewPager:(ViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index {
     
     ContentViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     

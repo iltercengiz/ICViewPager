@@ -365,7 +365,27 @@
     }
     
     if ([[_contents objectAtIndex:index] isEqual:[NSNull null]]) {
-        [_contents replaceObjectAtIndex:index withObject:[self.dataSource viewPager:self contentForTabAtIndex:index]];
+        
+        UIViewController *viewController;
+        
+        if ([self.dataSource respondsToSelector:@selector(viewPager:contentViewControllerForTabAtIndex:)]) {
+            viewController = [self.dataSource viewPager:self contentViewControllerForTabAtIndex:index];
+        } else if ([self.dataSource respondsToSelector:@selector(viewPager:contentViewForTabAtIndex:)]) {
+            
+            UIView *view = [self.dataSource viewPager:self contentViewForTabAtIndex:index];
+            
+            // Adjust view's bounds to match the pageView's bounds
+            UIView *pageView = [self.view viewWithTag:kPageViewTag];
+            view.frame = pageView.bounds;
+            
+            viewController = [UIViewController new];
+            viewController.view = view;
+        } else {
+            viewController = [[UIViewController alloc] init];
+            viewController.view = [[UIView alloc] init];
+        }
+        
+        [_contents replaceObjectAtIndex:index withObject:viewController];
     }
     
     return [_contents objectAtIndex:index];
