@@ -81,7 +81,7 @@
 @end
 
 // ViewPagerController
-@interface ViewPagerController () <UIGestureRecognizerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface ViewPagerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
 @property UIPageViewController *pageViewController;
 
@@ -119,36 +119,12 @@
     [super viewDidLoad];
 	
     [self reloadData];
-    
-    for (UIGestureRecognizer *gestureRecognizer in self.pageViewController.view.gestureRecognizers) {
-        gestureRecognizer.delegate = self;
-    }
-    
-    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-    panGestureRecognizer.delegate = self;
-    [self.pageViewController.view addGestureRecognizer:panGestureRecognizer];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-- (IBAction)handlePanGesture:(id)sender {
-    
-    UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)sender;
-    
-    CGPoint translation = [panGestureRecognizer translationInView:self.pageViewController.view];
-//    NSLog(@"X: %f Y: %f", translation.x, translation.y);
-    
-    // Bring tab to active position
-    UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
-    
-    CGRect frame = tabView.frame;
-    frame.origin.x -= translation.x * self.tabWidth / self.tabsView.frame.size.width;
-    frame.size.width = self.tabsView.frame.size.width;
-    
-    [_tabsView scrollRectToVisible:frame animated:YES];
-}
 - (IBAction)handleTapGesture:(id)sender {
     
     UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
@@ -364,11 +340,6 @@
 - (NSUInteger)indexForViewController:(UIViewController *)viewController {
     
     return [_contents indexOfObject:viewController];
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
 }
 
 #pragma mark - UIPageViewControllerDataSource
