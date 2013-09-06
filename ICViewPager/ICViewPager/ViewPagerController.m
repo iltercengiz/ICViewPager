@@ -14,6 +14,8 @@
 
 #define kDefaultTabLocation 1.0 // 1.0: Top, 0.0: Bottom
 
+#define kDefaultStartFromSecondTab 0.0 // 1.0: YES, 0.0: NO
+
 #define kPageViewTag 34
 
 // TabView for tabs, that provides un/selected state indicators
@@ -195,6 +197,20 @@
     
     // Set current activeTabIndex
     _activeTabIndex = activeTabIndex;
+    
+    // Inform delegate about the change
+    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
+        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
+    }
+    
+    // Bring tab to active position
+    UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
+    
+    CGRect frame = tabView.frame;
+    frame.origin.x -= self.tabOffset;
+    frame.size.width = self.tabsView.frame.size.width;
+    
+    [_tabsView scrollRectToVisible:frame animated:YES];
 }
 
 #pragma mark -
@@ -221,6 +237,8 @@
     
     _tabLocation = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabLocation withDefault:kDefaultTabLocation];
     
+    _startFromSecondTab = [self.delegate viewPager:self valueForOption:ViewPagerOptionStartFromSecondTab withDefault:kDefaultStartFromSecondTab];
+    
     // Empty tabs and contents
     [_tabs removeAllObjects];
     [_contents removeAllObjects];
@@ -237,32 +255,6 @@
     for (int i = 0; i < _tabCount; i++) {
         [_contents addObject:[NSNull null]];
     }
-    
-    // Set first viewController
-    [_pageViewController setViewControllers:@[[self viewControllerAtIndex:0]]
-                                  direction:UIPageViewControllerNavigationDirectionForward
-                                   animated:NO
-                                 completion:nil];
-    self.activeTabIndex = 0;
-    
-    // Add contentView
-    UIView *pageView = [self.view viewWithTag:kPageViewTag];
-    
-    if (!pageView) {
-        
-        pageView = _pageViewController.view;
-        pageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        pageView.backgroundColor = [UIColor clearColor];
-        pageView.bounds = self.view.bounds;
-        pageView.tag = kPageViewTag;
-        
-        [self.view addSubview:pageView];
-    }
-    
-    CGRect frame = pageView.frame;
-    frame.size.height = self.view.frame.size.height - self.tabHeight;
-    frame.origin.y = self.tabLocation ? self.tabHeight : 0.0;
-    pageView.frame = frame;
     
     // Add tabsView
     _tabsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0,
@@ -297,6 +289,47 @@
     }
     
     _tabsView.contentSize = CGSizeMake(contentSizeWidth, self.tabHeight);
+    
+    // Add contentView
+    UIView *pageView = [self.view viewWithTag:kPageViewTag];
+    
+    if (!pageView) {
+        
+        pageView = _pageViewController.view;
+        pageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        pageView.backgroundColor = [UIColor clearColor];
+        pageView.bounds = self.view.bounds;
+        pageView.tag = kPageViewTag;
+        
+        [self.view addSubview:pageView];
+    }
+    
+    CGRect frame = pageView.frame;
+    frame.size.height = self.view.frame.size.height - self.tabHeight;
+    frame.origin.y = self.tabLocation ? self.tabHeight : 0.0;
+    pageView.frame = frame;
+    
+    // Set first viewController
+    UIViewController *viewController;
+    
+    if (self.startFromSecondTab) {
+        viewController = [self viewControllerAtIndex:1];
+    } else {
+        viewController = [self viewControllerAtIndex:0];
+    }
+    
+    if (viewController == nil) {
+        viewController = [[UIViewController alloc] init];
+        viewController.view = [[UIView alloc] init];
+    }
+    
+    [_pageViewController setViewControllers:@[viewController]
+                                  direction:UIPageViewControllerNavigationDirectionForward
+                                   animated:NO
+                                 completion:nil];
+    
+    // Set activeTabIndex
+    self.activeTabIndex = self.startFromSecondTab;
 }
 
 - (TabView *)tabViewAtIndex:(NSUInteger)index {
@@ -370,19 +403,6 @@
     
     UIViewController *viewController = self.pageViewController.viewControllers[0];
     self.activeTabIndex = [self indexForViewController:viewController];
-    
-    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
-    }
-    
-    // Bring tab to active position
-    UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
-    
-    CGRect frame = tabView.frame;
-    frame.origin.x -= self.tabOffset;
-    frame.size.width = self.tabsView.frame.size.width;
-    
-    [_tabsView scrollRectToVisible:frame animated:YES];
 }
 
 @end

@@ -12,7 +12,8 @@ typedef enum {
     ViewPagerOptionTabHeight = 0,
     ViewPagerOptionTabOffset,
     ViewPagerOptionTabWidth,
-    ViewPagerOptionTabLocation
+    ViewPagerOptionTabLocation,
+    ViewPagerOptionStartFromSecondTab
 } ViewPagerOption;
 
 @protocol ViewPagerDataSource;
@@ -33,6 +34,9 @@ typedef enum {
 
 // 1.0: Top, 0.0: Bottom, changes tab bar's location in the screen
 @property CGFloat tabLocation;
+
+// 1.0: YES, 0.0: NO, defines if view should appear with the second or the first tab
+@property CGFloat startFromSecondTab;
 
 // Reload all tabs and contents
 - (void)reloadData;

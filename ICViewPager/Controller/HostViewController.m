@@ -62,6 +62,15 @@
 
 #pragma mark - ViewPagerDelegate
 - (CGFloat)viewPager:(ViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value {
+    
+    switch (option) {
+        case ViewPagerOptionStartFromSecondTab:
+            return 1.0;
+            break;
+        default:
+            break;
+    }
+    
     return value;
 }
 
