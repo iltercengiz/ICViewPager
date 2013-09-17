@@ -80,10 +80,12 @@
 }
 @end
 
+
 // ViewPagerController
-@interface ViewPagerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface ViewPagerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate>
 
 @property UIPageViewController *pageViewController;
+@property (assign) id<UIScrollViewDelegate> origPageScrollViewDelegate;
 
 @property UIScrollView *tabsView;
 
@@ -91,6 +93,7 @@
 @property NSMutableArray *contents;
 
 @property NSUInteger tabCount;
+@property (assign) BOOL isAnimatingToTab;
 
 @property (nonatomic)  NSUInteger activeTabIndex;
 
@@ -127,6 +130,8 @@
 
 - (IBAction)handleTapGesture:(id)sender {
     
+    self.isAnimatingToTab = YES;
+    
     // Get the desired page's index
     UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
     UIView *tabView = tapGestureRecognizer.view;
@@ -137,12 +142,16 @@
     
     // __weak pageViewController to be used in blocks to prevent retaining strong reference to self
     __weak UIPageViewController *weakPageViewController = self.pageViewController;
+    __weak ViewPagerController *weakSelf = self;
+    
+    NSLog(@"%@",weakPageViewController.view);
     
     if (index < self.activeTabIndex) {
         [self.pageViewController setViewControllers:@[viewController]
                                           direction:UIPageViewControllerNavigationDirectionReverse
                                            animated:YES
                                          completion:^(BOOL completed) {
+                                             weakSelf.isAnimatingToTab = NO;
                                              
                                              // Set the current page again to obtain synchronisation between tabs and content
                                              dispatch_async(dispatch_get_main_queue(), ^{
@@ -157,6 +166,7 @@
                                           direction:UIPageViewControllerNavigationDirectionForward
                                            animated:YES
                                          completion:^(BOOL completed) {
+                                             weakSelf.isAnimatingToTab = NO;
                                              
                                              // Set the current page again to obtain synchronisation between tabs and content
                                              dispatch_async(dispatch_get_main_queue(), ^{
@@ -200,12 +210,24 @@
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
     }
     
-    // Bring tab to active position
+    // Bring tab to active position, Position the tab in center if possible
     UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
     
     CGRect frame = tabView.frame;
-    frame.origin.x -= self.tabOffset;
-    frame.size.width = self.tabsView.frame.size.width;
+    frame.origin.x += (frame.size.width / 2);
+    frame.origin.x -= _tabsView.frame.size.width / 2;
+    frame.size.width = _tabsView.frame.size.width;
+    
+    if(frame.origin.x < 0)
+    {
+        frame.origin.x = 0;
+    }
+    
+    if((frame.origin.x + frame.size.width) > _tabsView.contentSize.width)
+    {
+        frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);	
+    }
+    
     
     [_tabsView scrollRectToVisible:frame animated:YES];
 }
@@ -222,8 +244,15 @@
     _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                           navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                         options:nil];
+    
+    //Setup some forwarding events to hijack the scrollview
+    self.origPageScrollViewDelegate = ((UIScrollView*)[_pageViewController.view.subviews objectAtIndex:0]).delegate;
+    [((UIScrollView*)[_pageViewController.view.subviews objectAtIndex:0]) setDelegate:self];
+    
     _pageViewController.dataSource = self;
     _pageViewController.delegate = self;
+    
+    self.isAnimatingToTab = NO;
 }
 - (void)reloadData {
     
@@ -336,7 +365,7 @@
     }
     
     if ([[_tabs objectAtIndex:index] isEqual:[NSNull null]]) {
-        
+
         // Get view from dataSource
         UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
         
@@ -395,19 +424,21 @@
     return [_contents indexOfObject:viewController];
 }
 
+
+
 #pragma mark - UIPageViewControllerDataSource
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    
     NSUInteger index = [self indexForViewController:viewController];
     index++;
     return [self viewControllerAtIndex:index];
 }
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    
     NSUInteger index = [self indexForViewController:viewController];
     index--;
     return [self viewControllerAtIndex:index];
 }
+
+
 
 #pragma mark - UIPageViewControllerDelegate
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
@@ -419,4 +450,119 @@
     self.activeTabIndex = [self indexForViewController:viewController];
 }
 
+
+
+
+#pragma mark - UIScrollViewDelegate, Responding to Scrolling and Dragging
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [self.origPageScrollViewDelegate scrollViewDidScroll:scrollView];
+    }
+    
+    if(!self.isAnimatingToTab) {
+        UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
+        
+        //Get the related tab view position
+        CGRect frame = tabView.frame;
+        
+        CGFloat movedRatio = (scrollView.contentOffset.x / scrollView.frame.size.width) - 1;
+        frame.origin.x += movedRatio * frame.size.width;
+        
+        frame.origin.x += (frame.size.width / 2);
+        frame.origin.x -= _tabsView.frame.size.width / 2;
+        frame.size.width = _tabsView.frame.size.width;
+        
+        if(frame.origin.x < 0)
+        {
+            frame.origin.x = 0;
+        }
+        
+        if((frame.origin.x + frame.size.width) > _tabsView.contentSize.width)
+        {
+            frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);
+        }
+        
+        [_tabsView scrollRectToVisible:frame animated:NO];
+    }
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [self.origPageScrollViewDelegate scrollViewWillBeginDragging:scrollView];
+    }
+}
+
+-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        [self.origPageScrollViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [self.origPageScrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
+-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView{
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
+        return [self.origPageScrollViewDelegate scrollViewShouldScrollToTop:scrollView];
+    }
+    
+    return NO;
+}
+
+-(void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+        [self.origPageScrollViewDelegate scrollViewDidScrollToTop:scrollView];
+    }
+}
+
+-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [self.origPageScrollViewDelegate scrollViewWillBeginDecelerating:scrollView];
+    }
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [self.origPageScrollViewDelegate scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
+
+#pragma mark - UIScrollViewDelegate, Managing Zooming
+-(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+        return [self.origPageScrollViewDelegate viewForZoomingInScrollView:scrollView];
+    }
+    
+    return nil;
+}
+
+-(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+        [self.origPageScrollViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
+    }
+}
+
+-(void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+        [self.origPageScrollViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
+    }
+}
+
+-(void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+        [self.origPageScrollViewDelegate scrollViewDidZoom:scrollView];
+    }
+}
+
+
+#pragma mark - UIScrollViewDelegate, Responding to Scrolling Animations
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [self.origPageScrollViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
+    }
+}
 @end
