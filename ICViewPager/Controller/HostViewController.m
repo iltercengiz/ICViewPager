@@ -77,5 +77,17 @@
     
     return value;
 }
+- (UIColor *)viewPager:(ViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color {
+    
+    switch (component) {
+        case ViewPagerIndicator:
+            return [[UIColor redColor] colorWithAlphaComponent:0.64];
+            break;
+        default:
+            break;
+    }
+    
+    return color;
+}
 
 @end

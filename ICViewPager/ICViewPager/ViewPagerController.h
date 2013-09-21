@@ -17,6 +17,12 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
     ViewPagerOptionCenterCurrentTab
 };
 
+typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
+    ViewPagerIndicator,
+    ViewPagerTabsView,
+    ViewPagerContent
+};
+
 @protocol ViewPagerDataSource;
 @protocol ViewPagerDelegate;
 
@@ -45,12 +51,19 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
 // Defaults to NO
 @property CGFloat centerCurrentTab;
 
+#pragma mark Colors
+// Colors for several parts
+@property UIColor *indicatorColor;
+@property UIColor *tabsViewBackgroundColor;
+@property UIColor *contentViewBackgroundColor;
+
 #pragma mark Methods
 // Reload all tabs and contents
 - (void)reloadData;
 
 @end
 
+#pragma mark dataSource
 @protocol ViewPagerDataSource <NSObject>
 
 // Asks dataSource how many tabs will be
@@ -67,6 +80,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
 
 @end
 
+#pragma mark delegate
 @protocol ViewPagerDelegate <NSObject>
 
 @optional
@@ -75,5 +89,14 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
 // Every time - reloadData called, ViewPager will ask its delegate for option values
 // So you don't have to set options from ViewPager itself
 - (CGFloat)viewPager:(ViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value;
+/*
+ * Use this method to customize the look and feel.
+ * viewPager will ask its delegate for colors for its components.
+ * And if they are provided, it will use them, otherwise it will use default colors.
+ * Also not that, colors for tab and content views will change the tabView's and contentView's background 
+ * (you should provide these views with a clearColor to see the colors),
+ * and indicator will change its own color.
+ */
+- (UIColor *)viewPager:(ViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color;
 
 @end

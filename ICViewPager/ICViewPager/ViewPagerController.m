@@ -20,6 +20,10 @@
 
 #define kPageViewTag 34
 
+#define kDefaultIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
+#define kDefaultTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
+#define kDefaultContentViewBackgroundColor [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:0.75]
+
 // TabView for tabs, that provides un/selected state indicators
 @class TabView;
 
@@ -66,17 +70,11 @@
         
         bezierPath = [UIBezierPath bezierPath];
         
-        // Set indicator color if provided any, otherwise use a default color
-        if (self.indicatorColor) {
-            [self.indicatorColor setStroke];
-        } else {
-            [[UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75] setStroke];
-        }
-        
         // Draw the indicator
         [bezierPath moveToPoint:CGPointMake(0.0, rect.size.height - 1.0)];
         [bezierPath addLineToPoint:CGPointMake(rect.size.width, rect.size.height - 1.0)];
         [bezierPath setLineWidth:5.0];
+        [self.indicatorColor setStroke];
         [bezierPath stroke];
     }
 }
@@ -243,6 +241,7 @@
 #pragma mark -
 - (void)defaultSettings {
     
+    // Default settings
     _tabHeight = kDefaultTabHeight;
     _tabOffset = kDefaultTabOffset;
     _tabWidth = kDefaultTabWidth;
@@ -253,6 +252,12 @@
     
     _centerCurrentTab = kDefaultCenterCurrentTab;
     
+    // Default colors
+    _indicatorColor = kDefaultIndicatorColor;
+    _tabsViewBackgroundColor = kDefaultTabsViewBackgroundColor;
+    _contentViewBackgroundColor = kDefaultContentViewBackgroundColor;
+    
+    // pageViewController
     _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                           navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                         options:nil];
@@ -281,6 +286,13 @@
         _centerCurrentTab = [self.delegate viewPager:self valueForOption:ViewPagerOptionCenterCurrentTab withDefault:kDefaultCenterCurrentTab];
     }
     
+    // Get colors if provided
+    if ([self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
+        _indicatorColor = [self.delegate viewPager:self colorForComponent:ViewPagerIndicator withDefault:kDefaultIndicatorColor];
+        _tabsViewBackgroundColor = [self.delegate viewPager:self colorForComponent:ViewPagerTabsView withDefault:kDefaultTabsViewBackgroundColor];
+        _contentViewBackgroundColor = [self.delegate viewPager:self colorForComponent:ViewPagerContent withDefault:kDefaultContentViewBackgroundColor];
+    }
+    
     // Empty tabs and contents
     [_tabs removeAllObjects];
     [_contents removeAllObjects];
@@ -304,7 +316,7 @@
                                                                self.view.frame.size.width,
                                                                self.tabHeight)];
     _tabsView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    _tabsView.backgroundColor = [UIColor clearColor];
+    _tabsView.backgroundColor = self.tabsViewBackgroundColor;
     _tabsView.showsHorizontalScrollIndicator = NO;
     _tabsView.showsVerticalScrollIndicator = NO;
     
@@ -339,7 +351,7 @@
         
         pageView = _pageViewController.view;
         pageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        pageView.backgroundColor = [UIColor clearColor];
+        pageView.backgroundColor = self.contentViewBackgroundColor;
         pageView.bounds = self.view.bounds;
         pageView.tag = kPageViewTag;
         
@@ -389,6 +401,7 @@
         TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.tabWidth, self.tabHeight)];
         [tabView addSubview:tabViewContent];
         [tabView setClipsToBounds:YES];
+        [tabView setIndicatorColor:self.indicatorColor];
         
         tabViewContent.center = tabView.center;
         
