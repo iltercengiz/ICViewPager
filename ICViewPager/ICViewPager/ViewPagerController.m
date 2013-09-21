@@ -88,6 +88,7 @@
 @property (assign) id<UIScrollViewDelegate> origPageScrollViewDelegate;
 
 @property UIScrollView *tabsView;
+@property UIView *contentView;
 
 @property NSMutableArray *tabs;
 @property NSMutableArray *contents;
@@ -122,6 +123,24 @@
     [super viewDidLoad];
 	
     [self reloadData];
+}
+- (void)viewWillLayoutSubviews {
+    
+    CGRect frame;
+    
+    frame = _tabsView.frame;
+    frame.origin.x = 0.0;
+    frame.origin.y = self.tabLocation ? 0.0 : self.view.frame.size.height - self.tabHeight;
+    frame.size.width = self.view.bounds.size.width;
+    frame.size.height = self.tabHeight;
+    _tabsView.frame = frame;
+    
+    frame = _contentView.frame;
+    frame.origin.x = 0.0;
+    frame.origin.y = self.tabLocation ? self.tabHeight : 0.0;
+    frame.size.width = self.view.bounds.size.width;
+    frame.size.height = self.view.frame.size.height - self.tabHeight;
+    _contentView.frame = frame;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -311,10 +330,7 @@
     }
     
     // Add tabsView
-    _tabsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0,
-                                                               self.tabLocation ? 0.0 : self.view.frame.size.height - self.tabHeight,
-                                                               self.view.frame.size.width,
-                                                               self.tabHeight)];
+    _tabsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.tabHeight)];
     _tabsView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _tabsView.backgroundColor = self.tabsViewBackgroundColor;
     _tabsView.showsHorizontalScrollIndicator = NO;
@@ -345,23 +361,18 @@
     _tabsView.contentSize = CGSizeMake(contentSizeWidth, self.tabHeight);
     
     // Add contentView
-    UIView *pageView = [self.view viewWithTag:kPageViewTag];
+    _contentView = [self.view viewWithTag:kPageViewTag];
     
-    if (!pageView) {
+    if (!_contentView) {
         
-        pageView = _pageViewController.view;
-        pageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        pageView.backgroundColor = self.contentViewBackgroundColor;
-        pageView.bounds = self.view.bounds;
-        pageView.tag = kPageViewTag;
+        _contentView = _pageViewController.view;
+        _contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        _contentView.backgroundColor = self.contentViewBackgroundColor;
+        _contentView.bounds = self.view.bounds;
+        _contentView.tag = kPageViewTag;
         
-        [self.view insertSubview:pageView atIndex:0];
+        [self.view insertSubview:_contentView atIndex:0];
     }
-    
-    CGRect frame = pageView.frame;
-    frame.size.height = self.view.frame.size.height - self.tabHeight;
-    frame.origin.y = self.tabLocation ? self.tabHeight : 0.0;
-    pageView.frame = frame;
     
     // Set first viewController
     UIViewController *viewController;

@@ -71,6 +71,9 @@
         case ViewPagerOptionCenterCurrentTab:
             return 0.0;
             break;
+        case ViewPagerOptionTabLocation:
+            return 1.0;
+            break;
         default:
             break;
     }
