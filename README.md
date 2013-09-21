@@ -15,11 +15,8 @@ Supports both iPhone and iPad.
 
 ICViewController supports minimum iOS 6 and uses ARC.
 
-## Updated
-- Track pan gestures in content view. Tracked to scroll tabs synchronously
-
 ## To-do
-- None at the moment
+- Update README.md with the sample usage.
 
 ## Contact
 [Ilter Cengiz](mailto:me@iltercengiz.info)
