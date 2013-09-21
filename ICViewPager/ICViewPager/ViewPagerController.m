@@ -218,16 +218,13 @@
     frame.origin.x -= _tabsView.frame.size.width / 2;
     frame.size.width = _tabsView.frame.size.width;
     
-    if(frame.origin.x < 0)
-    {
+    if (frame.origin.x < 0) {
         frame.origin.x = 0;
     }
     
-    if((frame.origin.x + frame.size.width) > _tabsView.contentSize.width)
-    {
+    if ((frame.origin.x + frame.size.width) > _tabsView.contentSize.width) {
         frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);	
     }
-    
     
     [_tabsView scrollRectToVisible:frame animated:YES];
 }
@@ -424,8 +421,6 @@
     return [_contents indexOfObject:viewController];
 }
 
-
-
 #pragma mark - UIPageViewControllerDataSource
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     NSUInteger index = [self indexForViewController:viewController];
@@ -438,8 +433,6 @@
     return [self viewControllerAtIndex:index];
 }
 
-
-
 #pragma mark - UIPageViewControllerDelegate
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
 //    NSLog(@"willTransitionToViewController: %i", [self indexForViewController:[pendingViewControllers objectAtIndex:0]]);
@@ -450,16 +443,14 @@
     self.activeTabIndex = [self indexForViewController:viewController];
 }
 
-
-
-
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling and Dragging
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
         [self.origPageScrollViewDelegate scrollViewDidScroll:scrollView];
     }
     
-    if(!self.isAnimatingToTab) {
+    if (!self.isAnimatingToTab) {
         UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
         
         //Get the related tab view position
@@ -472,97 +463,83 @@
         frame.origin.x -= _tabsView.frame.size.width / 2;
         frame.size.width = _tabsView.frame.size.width;
         
-        if(frame.origin.x < 0)
-        {
+        if (frame.origin.x < 0) {
             frame.origin.x = 0;
         }
         
-        if((frame.origin.x + frame.size.width) > _tabsView.contentSize.width)
-        {
+        if ((frame.origin.x + frame.size.width) > _tabsView.contentSize.width) {
             frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);
         }
         
         [_tabsView scrollRectToVisible:frame animated:NO];
     }
 }
-
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
         [self.origPageScrollViewDelegate scrollViewWillBeginDragging:scrollView];
     }
 }
-
--(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
         [self.origPageScrollViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
-
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
         [self.origPageScrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
 }
-
--(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView{
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView{
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
         return [self.origPageScrollViewDelegate scrollViewShouldScrollToTop:scrollView];
     }
-    
     return NO;
 }
-
--(void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
         [self.origPageScrollViewDelegate scrollViewDidScrollToTop:scrollView];
     }
 }
-
--(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
         [self.origPageScrollViewDelegate scrollViewWillBeginDecelerating:scrollView];
     }
 }
-
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
         [self.origPageScrollViewDelegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
-
 #pragma mark - UIScrollViewDelegate, Managing Zooming
--(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
         return [self.origPageScrollViewDelegate viewForZoomingInScrollView:scrollView];
     }
     
     return nil;
 }
-
--(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
         [self.origPageScrollViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
     }
 }
-
--(void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
         [self.origPageScrollViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
     }
 }
-
--(void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
         [self.origPageScrollViewDelegate scrollViewDidZoom:scrollView];
     }
 }
 
-
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling Animations
--(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    if([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    if ([self.origPageScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
         [self.origPageScrollViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
     }
 }
+
 @end
