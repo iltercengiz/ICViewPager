@@ -16,6 +16,8 @@
 
 #define kDefaultStartFromSecondTab 0.0 // 1.0: YES, 0.0: NO
 
+#define kDefaultCenterCurrentTab 0.0 // 1.0: YES, 0.0: NO
+
 #define kPageViewTag 34
 
 // TabView for tabs, that provides un/selected state indicators
@@ -210,20 +212,29 @@
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
     }
     
-    // Bring tab to active position, Position the tab in center if possible
+    // Bring tab to active position
+    // Position the tab in center if centerCurrentTab option provided as YES
+    
     UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
-    
     CGRect frame = tabView.frame;
-    frame.origin.x += (frame.size.width / 2);
-    frame.origin.x -= _tabsView.frame.size.width / 2;
-    frame.size.width = _tabsView.frame.size.width;
     
-    if (frame.origin.x < 0) {
-        frame.origin.x = 0;
-    }
-    
-    if ((frame.origin.x + frame.size.width) > _tabsView.contentSize.width) {
-        frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);	
+    if (self.centerCurrentTab) {
+        
+        frame.origin.x += (frame.size.width / 2);
+        frame.origin.x -= _tabsView.frame.size.width / 2;
+        frame.size.width = _tabsView.frame.size.width;
+        
+        if (frame.origin.x < 0) {
+            frame.origin.x = 0;
+        }
+        
+        if ((frame.origin.x + frame.size.width) > _tabsView.contentSize.width) {
+            frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);
+        }
+    } else {
+        
+        frame.origin.x -= self.tabOffset;
+        frame.size.width = self.tabsView.frame.size.width;
     }
     
     [_tabsView scrollRectToVisible:frame animated:YES];
@@ -261,6 +272,8 @@
     _tabLocation = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabLocation withDefault:kDefaultTabLocation];
     
     _startFromSecondTab = [self.delegate viewPager:self valueForOption:ViewPagerOptionStartFromSecondTab withDefault:kDefaultStartFromSecondTab];
+    
+    _centerCurrentTab = [self.delegate viewPager:self valueForOption:ViewPagerOptionCenterCurrentTab withDefault:kDefaultCenterCurrentTab];
     
     // Empty tabs and contents
     [_tabs removeAllObjects];
@@ -453,22 +466,29 @@
     if (!self.isAnimatingToTab) {
         UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
         
-        //Get the related tab view position
+        // Get the related tab view position
         CGRect frame = tabView.frame;
         
         CGFloat movedRatio = (scrollView.contentOffset.x / scrollView.frame.size.width) - 1;
         frame.origin.x += movedRatio * frame.size.width;
         
-        frame.origin.x += (frame.size.width / 2);
-        frame.origin.x -= _tabsView.frame.size.width / 2;
-        frame.size.width = _tabsView.frame.size.width;
-        
-        if (frame.origin.x < 0) {
-            frame.origin.x = 0;
-        }
-        
-        if ((frame.origin.x + frame.size.width) > _tabsView.contentSize.width) {
-            frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);
+        if (self.centerCurrentTab) {
+            
+            frame.origin.x += (frame.size.width / 2);
+            frame.origin.x -= _tabsView.frame.size.width / 2;
+            frame.size.width = _tabsView.frame.size.width;
+            
+            if (frame.origin.x < 0) {
+                frame.origin.x = 0;
+            }
+            
+            if ((frame.origin.x + frame.size.width) > _tabsView.contentSize.width) {
+                frame.origin.x = (_tabsView.contentSize.width - _tabsView.frame.size.width);
+            }
+        } else {
+            
+            frame.origin.x -= self.tabOffset;
+            frame.size.width = self.tabsView.frame.size.width;
         }
         
         [_tabsView scrollRectToVisible:frame animated:NO];

@@ -68,6 +68,9 @@
         case ViewPagerOptionStartFromSecondTab:
             return 1.0;
             break;
+        case ViewPagerOptionCenterCurrentTab:
+            return 0.0;
+            break;
         default:
             break;
     }

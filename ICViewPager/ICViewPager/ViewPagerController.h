@@ -13,7 +13,8 @@ typedef enum {
     ViewPagerOptionTabOffset,
     ViewPagerOptionTabWidth,
     ViewPagerOptionTabLocation,
-    ViewPagerOptionStartFromSecondTab
+    ViewPagerOptionStartFromSecondTab,
+    ViewPagerOptionCenterCurrentTab
 } ViewPagerOption;
 
 @protocol ViewPagerDataSource;
@@ -38,6 +39,10 @@ typedef enum {
 // 1.0: YES, 0.0: NO, defines if view should appear with the second or the first tab
 @property CGFloat startFromSecondTab;
 
+// 1.0: YES, 0.0: NO, defines if tabs should be centered, with the given tabWidth
+@property CGFloat centerCurrentTab;
+
+#pragma mark Methods
 // Reload all tabs and contents
 - (void)reloadData;
 
