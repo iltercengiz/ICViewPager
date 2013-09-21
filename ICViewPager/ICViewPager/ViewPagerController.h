@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum {
-    ViewPagerOptionTabHeight = 0,
+typedef NS_ENUM(NSUInteger, ViewPagerOption) {
+    ViewPagerOptionTabHeight,
     ViewPagerOptionTabOffset,
     ViewPagerOptionTabWidth,
     ViewPagerOptionTabLocation,
     ViewPagerOptionStartFromSecondTab,
     ViewPagerOptionCenterCurrentTab
-} ViewPagerOption;
+};
 
 @protocol ViewPagerDataSource;
 @protocol ViewPagerDelegate;
@@ -25,7 +25,7 @@ typedef enum {
 @property id<ViewPagerDataSource> dataSource;
 @property id<ViewPagerDelegate> delegate;
 
-// ViewPagerOptions
+#pragma mark ViewPagerOptions
 // Tab bar's height, defaults to 49.0
 @property CGFloat tabHeight;
 // Tab bar's offset from left, defaults to 56.0
