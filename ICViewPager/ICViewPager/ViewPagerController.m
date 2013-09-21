@@ -95,9 +95,9 @@
 @property NSMutableArray *contents;
 
 @property NSUInteger tabCount;
-@property (assign) BOOL isAnimatingToTab;
+@property (getter = isAnimatingToTab, assign) BOOL animatingToTab;
 
-@property (nonatomic)  NSUInteger activeTabIndex;
+@property (nonatomic) NSUInteger activeTabIndex;
 
 @end
 
@@ -132,7 +132,7 @@
 
 - (IBAction)handleTapGesture:(id)sender {
     
-    self.isAnimatingToTab = YES;
+    self.animatingToTab = YES;
     
     // Get the desired page's index
     UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
@@ -153,7 +153,7 @@
                                           direction:UIPageViewControllerNavigationDirectionReverse
                                            animated:YES
                                          completion:^(BOOL completed) {
-                                             weakSelf.isAnimatingToTab = NO;
+                                             weakSelf.animatingToTab = NO;
                                              
                                              // Set the current page again to obtain synchronisation between tabs and content
                                              dispatch_async(dispatch_get_main_queue(), ^{
@@ -168,7 +168,7 @@
                                           direction:UIPageViewControllerNavigationDirectionForward
                                            animated:YES
                                          completion:^(BOOL completed) {
-                                             weakSelf.isAnimatingToTab = NO;
+                                             weakSelf.animatingToTab = NO;
                                              
                                              // Set the current page again to obtain synchronisation between tabs and content
                                              dispatch_async(dispatch_get_main_queue(), ^{
@@ -264,7 +264,7 @@
     _pageViewController.dataSource = self;
     _pageViewController.delegate = self;
     
-    self.isAnimatingToTab = NO;
+    self.animatingToTab = NO;
 }
 - (void)reloadData {
     
@@ -469,7 +469,7 @@
         [self.origPageScrollViewDelegate scrollViewDidScroll:scrollView];
     }
     
-    if (!self.isAnimatingToTab) {
+    if (![self isAnimatingToTab]) {
         UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
         
         // Get the related tab view position
