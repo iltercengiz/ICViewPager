@@ -8,7 +8,7 @@
 
 #import "ViewPagerController.h"
 
-#define kDefaultTabHeight 44.0 // iOS's default tab height
+#define kDefaultTabHeight 44.0 // Default tab height
 #define kDefaultTabOffset 56.0 // Offset of the second and further tabs' from left
 #define kDefaultTabWidth 128.0
 

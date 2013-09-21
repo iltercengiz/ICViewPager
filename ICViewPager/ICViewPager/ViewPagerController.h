@@ -34,12 +34,15 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
 @property CGFloat tabWidth;
 
 // 1.0: Top, 0.0: Bottom, changes tab bar's location in the screen
+// Defaults to Top
 @property CGFloat tabLocation;
 
 // 1.0: YES, 0.0: NO, defines if view should appear with the second or the first tab
+// Defaults to NO
 @property CGFloat startFromSecondTab;
 
 // 1.0: YES, 0.0: NO, defines if tabs should be centered, with the given tabWidth
+// Defaults to NO
 @property CGFloat centerCurrentTab;
 
 #pragma mark Methods
