@@ -117,6 +117,8 @@
     return self;
 }
 
+#define IOS_VERSION_7 [[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending
+
 #pragma mark - View life cycle
 - (void)viewDidLoad {
     
@@ -130,7 +132,15 @@
     
     frame = _tabsView.frame;
     frame.origin.x = 0.0;
-    frame.origin.y = self.tabLocation ? 0.0 : self.view.frame.size.height - self.tabHeight;
+    if (self.tabLocation) {
+        frame.origin.y = IOS_VERSION_7 ? 20 : 0;
+        if (!self.navigationController.navigationBarHidden) {
+            frame.origin.y += self.navigationController.navigationBar.frame.size.height;
+        }
+    } else {
+        frame.origin.y = self.view.frame.size.height - self.tabHeight;
+    }
+
     frame.size.width = self.view.bounds.size.width;
     frame.size.height = self.tabHeight;
     _tabsView.frame = frame;
