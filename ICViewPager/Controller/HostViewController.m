@@ -69,10 +69,10 @@
             return 1.0;
             break;
         case ViewPagerOptionCenterCurrentTab:
-            return 0.0;
+            return 1.0;
             break;
         case ViewPagerOptionTabLocation:
-            return 1.0;
+            return 0.0;
             break;
         default:
             break;
@@ -84,7 +84,7 @@
     
     switch (component) {
         case ViewPagerIndicator:
-            return [[UIColor redColor] colorWithAlphaComponent:0.64];
+            return [[UIColor greenColor] colorWithAlphaComponent:0.64];
             break;
         default:
             break;
