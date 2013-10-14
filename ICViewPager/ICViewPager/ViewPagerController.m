@@ -117,6 +117,8 @@
     return self;
 }
 
+#define IOS_VERSION_7 [[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending
+
 #pragma mark - View life cycle
 - (void)viewDidLoad {
     
@@ -125,21 +127,27 @@
     [self reloadData];
 }
 - (void)viewWillLayoutSubviews {
+    CGFloat headerOffset = 0;
+    if (IOS_VERSION_7) {
+        headerOffset = 20;
+        if (self.navigationController && !self.navigationController.navigationBarHidden) {
+            headerOffset += self.navigationController.navigationBar.frame.size.height;
+        }
+    }
     
-    CGRect frame;
-    
-    frame = _tabsView.frame;
+    CGRect frame = _tabsView.frame;
     frame.origin.x = 0.0;
-    frame.origin.y = self.tabLocation ? 0.0 : self.view.frame.size.height - self.tabHeight;
+    frame.origin.y = self.tabLocation ? headerOffset : self.view.frame.size.height - self.tabHeight;
     frame.size.width = self.view.bounds.size.width;
     frame.size.height = self.tabHeight;
     _tabsView.frame = frame;
-    
+
+    CGFloat yAfterBar = _tabsView.frame.origin.y + _tabsView.frame.size.height;
     frame = _contentView.frame;
     frame.origin.x = 0.0;
-    frame.origin.y = self.tabLocation ? self.tabHeight : 0.0;
+    frame.origin.y = self.tabLocation ? yAfterBar : headerOffset;
     frame.size.width = self.view.bounds.size.width;
-    frame.size.height = self.view.frame.size.height - self.tabHeight;
+    frame.size.height = self.view.frame.size.height - yAfterBar;
     _contentView.frame = frame;
 }
 
@@ -593,3 +601,4 @@
 }
 
 @end
+
