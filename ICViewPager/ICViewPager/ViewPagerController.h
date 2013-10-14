@@ -28,8 +28,8 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 
 @interface ViewPagerController : UIViewController
 
-@property id<ViewPagerDataSource> dataSource;
-@property id<ViewPagerDelegate> delegate;
+@property(weak) id <ViewPagerDataSource> dataSource;
+@property(weak) id <ViewPagerDelegate> delegate;
 
 #pragma mark ViewPagerOptions
 // Tab bar's height, defaults to 49.0
@@ -68,6 +68,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 
 // Asks dataSource how many tabs will be
 - (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager;
+
 // Asks dataSource to give a view to display as a tab item
 // It is suggested to return a view with a clearColor background
 // So that un/selected states can be clearly seen
@@ -76,6 +77,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 @optional
 // The content for any tab. Return a view controller and ViewPager will use its view to show as content
 - (UIViewController *)viewPager:(ViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index;
+
 - (UIView *)viewPager:(ViewPagerController *)viewPager contentViewForTabAtIndex:(NSUInteger)index;
 
 @end
@@ -86,9 +88,11 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 @optional
 // delegate object must implement this method if wants to be informed when a tab changes
 - (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index;
+
 // Every time - reloadData called, ViewPager will ask its delegate for option values
 // So you don't have to set options from ViewPager itself
 - (CGFloat)viewPager:(ViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value;
+
 /*
  * Use this method to customize the look and feel.
  * viewPager will ask its delegate for colors for its components.
