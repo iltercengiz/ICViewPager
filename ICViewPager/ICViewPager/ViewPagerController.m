@@ -294,14 +294,23 @@
     // Set current activeTabIndex
     _activeTabIndex = activeTabIndex;
     
+    // Remove invisible content views from the contents array
+    for (NSUInteger i = 0; i < self.contents.count; i++) {
+        if (i != self.activeTabIndex - 1 &&
+            i != self.activeTabIndex &&
+            i != self.activeTabIndex + 1)
+        {
+            [self.contents replaceObjectAtIndex:i withObject:[NSNull null]];
+        }
+    }
+    
     // Inform delegate about the change
     if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
     }
     
     // Bring tab to active position
-    // Position the tab in center if centerCurrentTab option provided as YES
-    
+    // Position the tab in center if centerCurrentTab option is provided as YES
     UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
     CGRect frame = tabView.frame;
     
