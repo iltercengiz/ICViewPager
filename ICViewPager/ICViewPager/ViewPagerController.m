@@ -8,13 +8,11 @@
 
 #import "ViewPagerController.h"
 
+#pragma mark - Constants and macros
 #define kPageViewTag 34
-
 #define IOS_VERSION_7 [[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending
 
-/*
- * TabView for tabs, that provides un/selected state indicators
- */
+#pragma mark - TabView
 @class TabView;
 
 @interface TabView : UIView
@@ -70,10 +68,7 @@
 }
 @end
 
-
-/*
- * ViewPagerController
- */
+#pragma mark - ViewPagerController
 @interface ViewPagerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate>
 
 // Tab and content stuff
