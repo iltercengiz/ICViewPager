@@ -17,17 +17,17 @@
 
 - (void)viewDidLoad {
     
+    [super viewDidLoad];
+    
     self.dataSource = self;
     self.delegate = self;
     
     self.title = @"View Pager";
     
     // Keeps tab bar below navigation bar on iOS 7.0+
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-    
-    [super viewDidLoad];
+    // if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+    //     self.edgesForExtendedLayout = UIRectEdgeNone;
+    // }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -44,7 +44,7 @@
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont systemFontOfSize:13.0];
-    label.text = [NSString stringWithFormat:@"Content View #%i", index];
+    label.text = [NSString stringWithFormat:@"Tab #%i", index];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blackColor];
     [label sizeToFit];
@@ -66,31 +66,29 @@
     
     switch (option) {
         case ViewPagerOptionStartFromSecondTab:
-            return 1.0;
-            break;
+            return 0.0;
         case ViewPagerOptionCenterCurrentTab:
-            return 1.0;
-            break;
+            return 0.0;
         case ViewPagerOptionTabLocation:
             return 0.0;
-            break;
+        case ViewPagerOptionTabHeight:
+            return 32.0;
+        case ViewPagerOptionTabOffset:
+            return 36.0;
+        case ViewPagerOptionTabWidth:
+            return 108.0;
         default:
-            break;
+            return value;
     }
-    
-    return value;
 }
 - (UIColor *)viewPager:(ViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color {
     
     switch (component) {
         case ViewPagerIndicator:
-            return [[UIColor greenColor] colorWithAlphaComponent:0.64];
-            break;
+            return [[UIColor redColor] colorWithAlphaComponent:0.64];
         default:
-            break;
+            return color;
     }
-    
-    return color;
 }
 
 @end

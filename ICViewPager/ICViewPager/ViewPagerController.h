@@ -56,27 +56,31 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  */
 @property (weak) id <ViewPagerDelegate> delegate;
 
-#pragma mark ViewPagerOptions
-@property CGFloat tabHeight;
-@property CGFloat tabOffset;
-@property CGFloat tabWidth;
-
-@property CGFloat tabLocation;
-
-@property CGFloat startFromSecondTab;
-
-@property CGFloat centerCurrentTab;
-
-#pragma mark Colors
-@property UIColor *indicatorColor;
-@property UIColor *tabsViewBackgroundColor;
-@property UIColor *contentViewBackgroundColor;
-
 #pragma mark Methods
 /**
  * Reloads all tabs and contents
  */
 - (void)reloadData;
+
+/**
+ * Call this method to get the value of a given option.
+ * Returns NAN for any undefined option.
+ *
+ * @param option The option key. Keys are defined in ViewPagerController.h
+ *
+ * @return A CGFloat, defining the setting for the given option
+ */
+- (CGFloat)valueForOption:(ViewPagerOption)option;
+
+/**
+ * Call this method to get the color of a given component.
+ * Returns [UIColor clearColor] for any undefined component.
+ *
+ * @param component The component key. Keys are defined in ViewPagerController.h
+ *
+ * @return A UIColor for the given component
+ */
+- (UIColor *)colorForComponent:(ViewPagerComponent)component;
 
 @end
 
