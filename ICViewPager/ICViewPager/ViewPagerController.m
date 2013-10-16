@@ -121,9 +121,13 @@
 
 #pragma mark - View life cycle
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
-	
+}
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+    // Reload data
     [self reloadData];
 }
 - (void)viewWillLayoutSubviews {
