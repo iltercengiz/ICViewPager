@@ -492,7 +492,7 @@
     // Set first viewController
     UIViewController *viewController;
     
-    if (self.startFromSecondTab) {
+    if ([self.startFromSecondTab boolValue]) {
         viewController = [self viewControllerAtIndex:1];
     } else {
         viewController = [self viewControllerAtIndex:0];
@@ -554,7 +554,7 @@
                                                                             options:nil];
     [self addChildViewController:self.pageViewController];
 
-    // Setup some forwarding events to hijack the scrollview
+    // Setup some forwarding events to hijack the scrollView
     // Keep a reference to the actual delegate
     self.actualDelegate = ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate;
     // Set self as new delegate
