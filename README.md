@@ -111,7 +111,7 @@ You can change ViewPager's options via `viewPager:valueForOption:withDefault:` d
     }
 }
 ```
-You can change some colors too. Just like options, return the interested component's color, and leave out all the rest![a link](http://www.youtube.com/watch?v=LBTXNPZPfbE)
+You can change some colors too. Just like options, return the interested component's color, and leave out all the rest! [Link](http://www.youtube.com/watch?v=LBTXNPZPfbE)
     
 ### Options
 
