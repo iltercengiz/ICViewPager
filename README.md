@@ -17,7 +17,7 @@ Or you can use CocoaPods (as this is the recommended way).
 
 ## Usage
 
-Subclass ViewPagerController (as it's a UIViewController subclass) and implement dataSource and delegate methods in the subclass.
+Subclass ViewPagerController (as it's a `UIViewController` subclass) and implement dataSource and delegate methods in the subclass.
 
 In the subclass assign self as dataSource and delegate,
 
@@ -111,9 +111,7 @@ You can change ViewPager's options via `viewPager:valueForOption:withDefault:` d
     }
 }
 ```
-You can change some colors too. Just like options, return the interested component's color, and leave out all the rest![^footnote]
-    
-  [^footnote]: [Linkin Park - Leave Out All the Rest](http://www.youtube.com/watch?v=LBTXNPZPfbE)
+You can change some colors too. Just like options, return the interested component's color, and leave out all the rest![a link](http://www.youtube.com/watch?v=LBTXNPZPfbE)
     
 ### Options
 
