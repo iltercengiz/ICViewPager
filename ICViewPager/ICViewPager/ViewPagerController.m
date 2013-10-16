@@ -24,6 +24,8 @@
 #define kDefaultTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
 #define kDefaultContentViewBackgroundColor [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:0.75]
 
+#define IOS_VERSION_7 [[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending
+
 // TabView for tabs, that provides un/selected state indicators
 @class TabView;
 
@@ -117,8 +119,6 @@
     return self;
 }
 
-#define IOS_VERSION_7 [[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending
-
 #pragma mark - View life cycle
 - (void)viewDidLoad {
     
@@ -127,28 +127,28 @@
     [self reloadData];
 }
 - (void)viewWillLayoutSubviews {
-    CGFloat headerOffset = 0;
+    
+    CGFloat topLayoutGuide = 0;
     if (IOS_VERSION_7) {
-        headerOffset = 20;
+        topLayoutGuide = 20;
         if (self.navigationController && !self.navigationController.navigationBarHidden) {
-            headerOffset += self.navigationController.navigationBar.frame.size.height;
+            topLayoutGuide += self.navigationController.navigationBar.frame.size.height;
         }
     }
     
-    CGRect frame = _tabsView.frame;
+    CGRect frame = self.tabsView.frame;
     frame.origin.x = 0.0;
-    frame.origin.y = self.tabLocation ? headerOffset : self.view.frame.size.height - self.tabHeight;
+    frame.origin.y = self.tabLocation ? topLayoutGuide : self.view.frame.size.height - self.tabHeight;
     frame.size.width = self.view.bounds.size.width;
     frame.size.height = self.tabHeight;
-    _tabsView.frame = frame;
-
-    CGFloat yAfterBar = _tabsView.frame.origin.y + _tabsView.frame.size.height;
-    frame = _contentView.frame;
+    self.tabsView.frame = frame;
+    
+    frame = self.contentView.frame;
     frame.origin.x = 0.0;
-    frame.origin.y = self.tabLocation ? yAfterBar : headerOffset;
+    frame.origin.y = self.tabLocation ? topLayoutGuide + CGRectGetHeight(self.tabsView.frame) : topLayoutGuide;
     frame.size.width = self.view.bounds.size.width;
-    frame.size.height = self.view.frame.size.height - yAfterBar;
-    _contentView.frame = frame;
+    frame.size.height = self.view.frame.size.height - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame));
+    self.contentView.frame = frame;
 }
 
 - (void)didReceiveMemoryWarning {
