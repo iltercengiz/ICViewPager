@@ -28,8 +28,8 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 
 @interface ViewPagerController : UIViewController
 
-@property(weak) id <ViewPagerDataSource> dataSource;
-@property(weak) id <ViewPagerDelegate> delegate;
+@property (weak) id <ViewPagerDataSource> dataSource;
+@property (weak) id <ViewPagerDelegate> delegate;
 
 #pragma mark ViewPagerOptions
 // Tab bar's height, defaults to 49.0
