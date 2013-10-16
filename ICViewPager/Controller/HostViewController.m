@@ -23,9 +23,9 @@
     self.title = @"View Pager";
     
     // Keeps tab bar below navigation bar on iOS 7.0+
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
+//    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+//        self.edgesForExtendedLayout = UIRectEdgeNone;
+//    }
     
     [super viewDidLoad];
 }
