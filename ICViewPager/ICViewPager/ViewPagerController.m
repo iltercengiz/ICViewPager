@@ -288,7 +288,8 @@
     _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                           navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                         options:nil];
-    
+    [self addChildViewController:_pageViewController];
+
     //Setup some forwarding events to hijack the scrollview
     self.origPageScrollViewDelegate = ((UIScrollView*)[_pageViewController.view.subviews objectAtIndex:0]).delegate;
     [((UIScrollView*)[_pageViewController.view.subviews objectAtIndex:0]) setDelegate:self];
