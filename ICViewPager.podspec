@@ -1,28 +1,30 @@
 Pod::Spec.new do |s|
 
   s.name         = "ICViewPager"
-  s.version      = "1.2.1"
-  s.summary      = "A tab view that mimics ActionBarSherlock's FragmentsTabsPager and Google Play app's tab management."
+  s.version      = "1.3"
+  s.summary      = "You can create sliding tabs with ViewPager."
 
   s.description  = <<-DESC
-				   A tab view that mimics ActionBarSherlock's FragmentsTabsPager and Google Play app's tab management.
+          Slide through the contents or select from tabs or slide through tabs and select!
 
-				   ## Usage
+          ## Installation
+          Just copy ViewPagerController.m and ViewPagerController.h files to your project.
+          Or you can use CocoaPods (as this is the recommended way).
+          `pod 'ICViewPager'`
 
-				   Just copy ViewPagerController.m and ViewPagerController.h files to your project.
-				   You can subclass it and implement dataSource and delegate methods in the subclass or just assign it to a view controller as file's owner and provide external dataSource and delegate objects.
+          ## Usage
+          Subclass ViewPagerController (as it's a `UIViewController` subclass) and implement dataSource and delegate methods in the subclass.
 
-				   ## Requirements
+          ## Requirements
+          ViewPager supports minimum iOS 6 and uses ARC.
+          Supports both iPhone and iPad.
 
-				   ICViewController supports minimum iOS 6.1 and uses ARC.
-				   Supports both iPhone and iPad
+          ## Contact
+          [Ilter Cengiz](mailto:me@iltercengiz.info)
+          [@monsieurje](https://twitter.com/monsieurje)
 
-				   ## Contact
-				   [Ilter Cengiz](mailto:me@iltercengiz.info)
-				   [@monsieurje](https://twitter.com/monsieurje)
-
-				   ## Licence
-				   ICViewPager is MIT licensed. See the LICENSE file for more info.
+          ## Licence
+          ICViewPager is MIT licensed. See the LICENSE file for more info.
                    DESC
 
   s.homepage     = "https://github.com/monsieurje/ICViewPager"
@@ -30,8 +32,8 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Ilter Cengiz" => "me@iltercengiz.info" }
   s.platform     = :ios, '6.1'
-  s.source       = { :git => "https://github.com/monsieurje/ICViewPager.git", :tag => "1.2.1" }
-  s.source_files  = 'ICViewPager/ICViewPager/*.{h,m}'
+  s.source       = { :git => "https://github.com/monsieurje/ICViewPager.git", :tag => "1.3" }
+  s.source_files = 'ICViewPager/ICViewPager/*.{h,m}'
   s.requires_arc = true
 
 end
