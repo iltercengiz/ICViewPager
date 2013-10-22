@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C115E011816DED1000BCE63 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C115E001816DED1000BCE63 /* Images.xcassets */; };
 		7CEC17A917DA1EC000E4A439 /* iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CEC17A817DA1EC000E4A439 /* iPad.storyboard */; };
 		7CF3D65517CE32E40021036A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CF3D65417CE32E40021036A /* UIKit.framework */; };
 		7CF3D65717CE32E40021036A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CF3D65617CE32E40021036A /* Foundation.framework */; };
@@ -14,7 +15,6 @@
 		7CF3D65F17CE32E40021036A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D65D17CE32E40021036A /* InfoPlist.strings */; };
 		7CF3D66117CE32E40021036A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66017CE32E40021036A /* main.m */; };
 		7CF3D66517CE32E40021036A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66417CE32E40021036A /* AppDelegate.m */; };
-		7CF3D66B17CE32E40021036A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D66A17CE32E40021036A /* Default-568h@2x.png */; };
 		7CF3D67617CE336E0021036A /* Localization.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67817CE336E0021036A /* Localization.strings */; };
 		7CF3D67E17CE33E10021036A /* ViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D67D17CE33E10021036A /* ViewPagerController.m */; };
 		7CF3D68117CE33EC0021036A /* HostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D68017CE33EC0021036A /* HostViewController.m */; };
@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7C115E001816DED1000BCE63 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7CEC17A817DA1EC000E4A439 /* iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPad.storyboard; sourceTree = "<group>"; };
 		7CF3D65117CE32E40021036A /* ICViewPager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ICViewPager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF3D65417CE32E40021036A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -34,7 +35,6 @@
 		7CF3D66217CE32E40021036A /* ICViewPager-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ICViewPager-Prefix.pch"; sourceTree = "<group>"; };
 		7CF3D66317CE32E40021036A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7CF3D66417CE32E40021036A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		7CF3D66A17CE32E40021036A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7CF3D67117CE332F0021036A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		7CF3D67317CE335B0021036A /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7CF3D67717CE336E0021036A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localization.strings; sourceTree = "<group>"; };
@@ -97,6 +97,7 @@
 				7CEC17A817DA1EC000E4A439 /* iPad.storyboard */,
 				7CF3D67B17CE33C80021036A /* ICViewPager */,
 				7CF3D67A17CE33C80021036A /* Controller */,
+				7C115E001816DED1000BCE63 /* Images.xcassets */,
 				7CF3D65B17CE32E40021036A /* Supporting Files */,
 			);
 			path = ICViewPager;
@@ -109,7 +110,6 @@
 				7CF3D65D17CE32E40021036A /* InfoPlist.strings */,
 				7CF3D66017CE32E40021036A /* main.m */,
 				7CF3D66217CE32E40021036A /* ICViewPager-Prefix.pch */,
-				7CF3D66A17CE32E40021036A /* Default-568h@2x.png */,
 				7CF3D67817CE336E0021036A /* Localization.strings */,
 			);
 			name = "Supporting Files";
@@ -188,7 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CF3D65F17CE32E40021036A /* InfoPlist.strings in Resources */,
-				7CF3D66B17CE32E40021036A /* Default-568h@2x.png in Resources */,
+				7C115E011816DED1000BCE63 /* Images.xcassets in Resources */,
 				7CF3D68217CE35500021036A /* iPhone.storyboard in Resources */,
 				7CEC17A917DA1EC000E4A439 /* iPad.storyboard in Resources */,
 				7CF3D67617CE336E0021036A /* Localization.strings in Resources */,
@@ -295,6 +295,8 @@
 		7CF3D66F17CE32E40021036A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ICViewPager/ICViewPager-Prefix.pch";
 				INFOPLIST_FILE = "ICViewPager/ICViewPager-Info.plist";
@@ -307,6 +309,8 @@
 		7CF3D67017CE32E40021036A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ICViewPager/ICViewPager-Prefix.pch";
 				INFOPLIST_FILE = "ICViewPager/ICViewPager-Info.plist";
