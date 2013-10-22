@@ -184,8 +184,6 @@
     __weak UIPageViewController *weakPageViewController = self.pageViewController;
     __weak ViewPagerController *weakSelf = self;
     
-    NSLog(@"%@",weakPageViewController.view);
-    
     if (index < self.activeTabIndex) {
         [self.pageViewController setViewControllers:@[viewController]
                                           direction:UIPageViewControllerNavigationDirectionReverse
