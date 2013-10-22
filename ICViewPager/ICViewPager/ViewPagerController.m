@@ -516,7 +516,7 @@
                                      completion:nil];
     
     // Set activeTabIndex
-    self.activeTabIndex = [self.startFromSecondTab unsignedIntegerValue];
+    self.activeTabIndex = [self.startFromSecondTab boolValue] ? 1 : 0;
 }
 
 - (CGFloat)valueForOption:(ViewPagerOption)option {
