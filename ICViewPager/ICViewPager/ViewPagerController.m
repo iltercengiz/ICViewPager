@@ -258,21 +258,21 @@
 - (void)setTabLocation:(NSNumber *)tabLocation {
     
     if ([tabLocation floatValue] != 1.0 && [tabLocation floatValue] != 0.0)
-        tabLocation = [NSNumber numberWithFloat:1.0];
+        tabLocation = [tabLocation boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _tabLocation = tabLocation;
 }
 - (void)setStartFromSecondTab:(NSNumber *)startFromSecondTab {
     
     if ([startFromSecondTab floatValue] != 1.0 && [startFromSecondTab floatValue] != 0.0)
-        startFromSecondTab = [NSNumber numberWithFloat:0.0];
+        startFromSecondTab = [startFromSecondTab boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _startFromSecondTab = startFromSecondTab;
 }
 - (void)setCenterCurrentTab:(NSNumber *)centerCurrentTab {
     
     if ([centerCurrentTab floatValue] != 1.0 && [centerCurrentTab floatValue] != 0.0)
-        centerCurrentTab = [NSNumber numberWithFloat:0.0];
+        centerCurrentTab = [centerCurrentTab boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _centerCurrentTab = centerCurrentTab;
 }
