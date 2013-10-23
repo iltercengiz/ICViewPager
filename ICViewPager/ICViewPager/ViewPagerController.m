@@ -94,6 +94,7 @@
 @property (nonatomic) NSUInteger activeTabIndex;
 
 @property (getter = isAnimatingToTab, assign) BOOL animatingToTab;
+@property (getter = isDefaultSetupDone, assign) BOOL defaultSetupDone;
 
 // Colors
 @property (nonatomic) UIColor *indicatorColor;
@@ -135,8 +136,10 @@
     
     [super viewWillAppear:animated];
     
-    // Reload data
-    [self reloadData];
+    // Do setup if it's not done yet
+    if (![self isDefaultSetupDone]) {
+        [self defaultSetup];
+    }
 }
 - (void)viewWillLayoutSubviews {
     
@@ -433,6 +436,66 @@
 #pragma mark - Public methods
 - (void)reloadData {
     
+    // Call to setup again with the updated data
+    [self defaultSetup];
+}
+
+- (CGFloat)valueForOption:(ViewPagerOption)option {
+    
+    switch (option) {
+        case ViewPagerOptionTabHeight:
+            return [[self tabHeight] floatValue];
+        case ViewPagerOptionTabOffset:
+            return [[self tabOffset] floatValue];
+        case ViewPagerOptionTabWidth:
+            return [[self tabWidth] floatValue];
+        case ViewPagerOptionTabLocation:
+            return [[self tabLocation] floatValue];
+        case ViewPagerOptionStartFromSecondTab:
+            return [[self startFromSecondTab] floatValue];
+        case ViewPagerOptionCenterCurrentTab:
+            return [[self centerCurrentTab] floatValue];
+        default:
+            return NAN;
+    }
+}
+- (UIColor *)colorForComponent:(ViewPagerComponent)component {
+    
+    switch (component) {
+        case ViewPagerIndicator:
+            return [self indicatorColor];
+        case ViewPagerTabsView:
+            return [self tabsViewBackgroundColor];
+        case ViewPagerContent:
+            return [self contentViewBackgroundColor];
+        default:
+            return [UIColor clearColor];
+    }
+}
+
+#pragma mark - Private methods
+- (void)defaultSettings {
+    
+    // pageViewController
+    self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+                                                              navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
+                                                                            options:nil];
+    [self addChildViewController:self.pageViewController];
+
+    // Setup some forwarding events to hijack the scrollView
+    // Keep a reference to the actual delegate
+    self.actualDelegate = ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate;
+    // Set self as new delegate
+    ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate = self;
+    
+    self.pageViewController.dataSource = self;
+    self.pageViewController.delegate = self;
+    
+    self.animatingToTab = NO;
+    self.defaultSetupDone = NO;
+}
+- (void)defaultSetup {
+    
     // Empty tabs and contents
     [self.tabs removeAllObjects];
     [self.contents removeAllObjects];
@@ -517,60 +580,9 @@
     
     // Set activeTabIndex
     self.activeTabIndex = [self.startFromSecondTab boolValue] ? 1 : 0;
-}
-
-- (CGFloat)valueForOption:(ViewPagerOption)option {
     
-    switch (option) {
-        case ViewPagerOptionTabHeight:
-            return [[self tabHeight] floatValue];
-        case ViewPagerOptionTabOffset:
-            return [[self tabOffset] floatValue];
-        case ViewPagerOptionTabWidth:
-            return [[self tabWidth] floatValue];
-        case ViewPagerOptionTabLocation:
-            return [[self tabLocation] floatValue];
-        case ViewPagerOptionStartFromSecondTab:
-            return [[self startFromSecondTab] floatValue];
-        case ViewPagerOptionCenterCurrentTab:
-            return [[self centerCurrentTab] floatValue];
-        default:
-            return NAN;
-    }
-}
-- (UIColor *)colorForComponent:(ViewPagerComponent)component {
-    
-    switch (component) {
-        case ViewPagerIndicator:
-            return [self indicatorColor];
-        case ViewPagerTabsView:
-            return [self tabsViewBackgroundColor];
-        case ViewPagerContent:
-            return [self contentViewBackgroundColor];
-        default:
-            return [UIColor clearColor];
-    }
-}
-
-#pragma mark - Private methods
-- (void)defaultSettings {
-    
-    // pageViewController
-    self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
-                                                              navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
-                                                                            options:nil];
-    [self addChildViewController:self.pageViewController];
-
-    // Setup some forwarding events to hijack the scrollView
-    // Keep a reference to the actual delegate
-    self.actualDelegate = ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate;
-    // Set self as new delegate
-    ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate = self;
-    
-    self.pageViewController.dataSource = self;
-    self.pageViewController.delegate = self;
-    
-    self.animatingToTab = NO;
+    // Set setup done
+    self.defaultSetupDone = YES;
 }
 
 - (TabView *)tabViewAtIndex:(NSUInteger)index {
