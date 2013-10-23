@@ -9,7 +9,8 @@
 #import "ViewPagerController.h"
 
 #pragma mark - Constants and macros
-#define kPageViewTag 34
+#define kTabViewTag 38
+#define kContentViewTag 34
 #define IOS_VERSION_7 [[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending
 
 #pragma mark - TabView
@@ -497,6 +498,11 @@
 - (void)defaultSetup {
     
     // Empty tabs and contents
+    for (UIView *tabView in self.tabs) {
+        [tabView removeFromSuperview];
+    }
+    self.tabsView.contentSize = CGSizeZero;
+    
     [self.tabs removeAllObjects];
     [self.contents removeAllObjects];
     
@@ -505,27 +511,33 @@
     
     // Populate arrays with [NSNull null];
     self.tabs = [NSMutableArray arrayWithCapacity:self.tabCount];
-    for (int i = 0; i < self.tabCount; i++) {
+    for (NSUInteger i = 0; i < self.tabCount; i++) {
         [self.tabs addObject:[NSNull null]];
     }
     
     self.contents = [NSMutableArray arrayWithCapacity:self.tabCount];
-    for (int i = 0; i < self.tabCount; i++) {
+    for (NSUInteger i = 0; i < self.tabCount; i++) {
         [self.contents addObject:[NSNull null]];
     }
     
     // Add tabsView
-    self.tabsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), [self.tabHeight floatValue])];
-    self.tabsView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.tabsView.backgroundColor = self.tabsViewBackgroundColor;
-    self.tabsView.showsHorizontalScrollIndicator = NO;
-    self.tabsView.showsVerticalScrollIndicator = NO;
+    self.tabsView = (UIScrollView *)[self.view viewWithTag:kTabViewTag];
     
-    [self.view insertSubview:self.tabsView atIndex:0];
+    if (!self.tabsView) {
+        
+        self.tabsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), [self.tabHeight floatValue])];
+        self.tabsView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.tabsView.backgroundColor = self.tabsViewBackgroundColor;
+        self.tabsView.showsHorizontalScrollIndicator = NO;
+        self.tabsView.showsVerticalScrollIndicator = NO;
+        self.tabsView.tag = kTabViewTag;
+        
+        [self.view insertSubview:self.tabsView atIndex:0];
+    }
     
     // Add tab views to _tabsView
     CGFloat contentSizeWidth = 0;
-    for (int i = 0; i < self.tabCount; i++) {
+    for (NSUInteger i = 0; i < self.tabCount; i++) {
         
         UIView *tabView = [self tabViewAtIndex:i];
         
@@ -546,7 +558,7 @@
     self.tabsView.contentSize = CGSizeMake(contentSizeWidth, [self.tabHeight floatValue]);
     
     // Add contentView
-    self.contentView = [self.view viewWithTag:kPageViewTag];
+    self.contentView = [self.view viewWithTag:kContentViewTag];
     
     if (!self.contentView) {
         
@@ -554,7 +566,7 @@
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         self.contentView.backgroundColor = self.contentViewBackgroundColor;
         self.contentView.bounds = self.view.bounds;
-        self.contentView.tag = kPageViewTag;
+        self.contentView.tag = kContentViewTag;
         
         [self.view insertSubview:self.contentView atIndex:0];
     }
@@ -632,7 +644,7 @@
             UIView *view = [self.dataSource viewPager:self contentViewForTabAtIndex:index];
             
             // Adjust view's bounds to match the pageView's bounds
-            UIView *pageView = [self.view viewWithTag:kPageViewTag];
+            UIView *pageView = [self.view viewWithTag:kContentViewTag];
             view.frame = pageView.bounds;
             
             viewController = [UIViewController new];
