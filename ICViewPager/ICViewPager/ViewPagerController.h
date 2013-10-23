@@ -63,6 +63,13 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 - (void)reloadData;
 
 /**
+ * Selects the given tab and shows the content at this index
+ *
+ * @param index The index of the tab that will be selected
+ */
+- (void)selectTabAtIndex:(NSUInteger)index;
+
+/**
  * Call this method to get the value of a given option.
  * Returns NAN for any undefined option.
  *

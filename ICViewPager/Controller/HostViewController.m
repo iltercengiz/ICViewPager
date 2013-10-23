@@ -28,11 +28,23 @@
     // if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
     //     self.edgesForExtendedLayout = UIRectEdgeNone;
     // }
+    
+    self.navigationItem.rightBarButtonItem = ({
+        
+        UIBarButtonItem *button;
+        button = [[UIBarButtonItem alloc] initWithTitle:@"Tab #5" style:UIBarButtonItemStylePlain target:self action:@selector(selectTabWithNumberFive)];
+        
+        button;
+    });
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)selectTabWithNumberFive {
+    [self selectTabAtIndex:5];
 }
 
 #pragma mark - ViewPagerDataSource
