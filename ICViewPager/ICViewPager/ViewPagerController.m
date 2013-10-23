@@ -418,7 +418,7 @@
         CGFloat value = 0.0;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionStartFromSecondTab withDefault:value];
-        _startFromSecondTab = [NSNumber numberWithFloat:value];
+        self.startFromSecondTab = [NSNumber numberWithFloat:value];
     }
     return _startFromSecondTab;
 }
@@ -428,7 +428,7 @@
         CGFloat value = 0.0;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionCenterCurrentTab withDefault:value];
-        _centerCurrentTab = [NSNumber numberWithFloat:value];
+        self.centerCurrentTab = [NSNumber numberWithFloat:value];
     }
     return _centerCurrentTab;
 }
