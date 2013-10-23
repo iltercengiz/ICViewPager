@@ -80,7 +80,7 @@
         case ViewPagerOptionStartFromSecondTab:
             return 0.0;
         case ViewPagerOptionCenterCurrentTab:
-            return 0.0;
+            return 1.0;
         case ViewPagerOptionTabLocation:
             return 0.0;
         case ViewPagerOptionTabHeight:
@@ -89,6 +89,10 @@
             return 36.0;
         case ViewPagerOptionTabWidth:
             return 108.0;
+        case ViewPagerOptionFixFormerTabsPositions:
+            return 1.0;
+        case ViewPagerOptionFixLatterTabsPositions:
+            return 1.0;
         default:
             return value;
     }

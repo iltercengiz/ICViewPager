@@ -90,6 +90,8 @@
 @property (nonatomic) NSNumber *tabLocation;
 @property (nonatomic) NSNumber *startFromSecondTab;
 @property (nonatomic) NSNumber *centerCurrentTab;
+@property (nonatomic) NSNumber *fixFormerTabsPositions;
+@property (nonatomic) NSNumber *fixLatterTabsPositions;
 
 @property (nonatomic) NSUInteger tabCount;
 @property (nonatomic) NSUInteger activeTabIndex;
@@ -113,6 +115,8 @@
 @synthesize tabLocation = _tabLocation;
 @synthesize startFromSecondTab = _startFromSecondTab;
 @synthesize centerCurrentTab = _centerCurrentTab;
+@synthesize fixFormerTabsPositions = _fixFormerTabsPositions;
+@synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
 
 #pragma mark - Init
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -241,6 +245,20 @@
         centerCurrentTab = [centerCurrentTab boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _centerCurrentTab = centerCurrentTab;
+}
+- (void)setFixFormerTabsPositions:(NSNumber *)fixFormerTabsPositions {
+    
+    if ([fixFormerTabsPositions floatValue] != 1.0 && [fixFormerTabsPositions floatValue] != 0.0)
+        fixFormerTabsPositions = [fixFormerTabsPositions boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    
+    _fixFormerTabsPositions = fixFormerTabsPositions;
+}
+- (void)setFixLatterTabsPositions:(NSNumber *)fixLatterTabsPositions {
+    
+    if ([fixLatterTabsPositions floatValue] != 1.0 && [fixLatterTabsPositions floatValue] != 0.0)
+        fixLatterTabsPositions = [fixLatterTabsPositions boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    
+    _fixLatterTabsPositions = fixLatterTabsPositions;
 }
 
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
@@ -414,6 +432,26 @@
     }
     return _centerCurrentTab;
 }
+- (NSNumber *)fixFormerTabsPositions {
+    
+    if (!_fixFormerTabsPositions) {
+        CGFloat value = 0.0;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionFixFormerTabsPositions withDefault:value];
+        self.fixFormerTabsPositions = [NSNumber numberWithFloat:value];
+    }
+    return _fixFormerTabsPositions;
+}
+- (NSNumber *)fixLatterTabsPositions {
+    
+    if (!_fixLatterTabsPositions) {
+        CGFloat value = 0.0;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionFixLatterTabsPositions withDefault:value];
+        self.fixLatterTabsPositions = [NSNumber numberWithFloat:value];
+    }
+    return _fixLatterTabsPositions;
+}
 
 - (UIColor *)indicatorColor {
     
@@ -565,6 +603,18 @@
     
     // Add tab views to _tabsView
     CGFloat contentSizeWidth = 0;
+    
+    // Give the standard offset if fixFormerTabsPositions is provided as YES
+    if ([self.fixFormerTabsPositions boolValue]) {
+        
+        // And if the centerCurrentTab is provided as YES fine tune the offset according to it
+        if ([self.centerCurrentTab boolValue]) {
+            contentSizeWidth = (CGRectGetWidth(self.tabsView.frame) - [self.tabWidth floatValue]) / 2.0;
+        } else {
+            contentSizeWidth = [self.tabOffset floatValue];
+        }
+    }
+    
     for (NSUInteger i = 0; i < self.tabCount; i++) {
         
         UIView *tabView = [self tabViewAtIndex:i];
@@ -581,6 +631,17 @@
         // To capture tap events
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
         [tabView addGestureRecognizer:tapGestureRecognizer];
+    }
+    
+    // Extend contentSizeWidth if fixLatterTabsPositions is provided YES
+    if ([self.fixLatterTabsPositions boolValue]) {
+        
+        // And if the centerCurrentTab is provided as YES fine tune the content size according to it
+        if ([self.centerCurrentTab boolValue]) {
+            contentSizeWidth += (CGRectGetWidth(self.tabsView.frame) - [self.tabWidth floatValue]) / 2.0;
+        } else {
+            contentSizeWidth += CGRectGetWidth(self.tabsView.frame) - [self.tabWidth floatValue] - [self.tabOffset floatValue];
+        }
     }
     
     self.tabsView.contentSize = CGSizeMake(contentSizeWidth, [self.tabHeight floatValue]);
