@@ -149,6 +149,16 @@
 }
 - (void)viewWillLayoutSubviews {
     
+    // Re-layout sub views
+    [self layoutSubviews];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)layoutSubviews {
+    
     CGFloat topLayoutGuide = 0.0;
     if (IOS_VERSION_7) {
         topLayoutGuide = 20.0;
@@ -172,10 +182,6 @@
     self.contentView.frame = frame;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
 #pragma mark - IBAction
 - (IBAction)handleTapGesture:(id)sender {
     
@@ -192,6 +198,9 @@
 
 #pragma mark - Interface rotation
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    // Re-layout sub views
+    [self layoutSubviews];
     
     // Re-align tabs if needed
     self.activeTabIndex = self.activeTabIndex;
