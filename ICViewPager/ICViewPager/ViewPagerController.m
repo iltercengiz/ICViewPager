@@ -475,7 +475,7 @@
 }
 - (UIColor *)tabsViewBackgroundColor {
     
-    if (_tabsViewBackgroundColor) {
+    if (!_tabsViewBackgroundColor) {
         UIColor *color = [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75];
         if ([self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
             color = [self.delegate viewPager:self colorForComponent:ViewPagerTabsView withDefault:color];

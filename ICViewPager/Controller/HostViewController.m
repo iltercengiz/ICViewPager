@@ -49,7 +49,7 @@
 
 #pragma mark - ViewPagerDataSource
 - (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager {
-    return 10;
+    return 2;
 }
 - (UIView *)viewPager:(ViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index {
     
@@ -102,6 +102,8 @@
     switch (component) {
         case ViewPagerIndicator:
             return [[UIColor redColor] colorWithAlphaComponent:0.64];
+        case ViewPagerTabsView:
+            return [[UIColor greenColor] colorWithAlphaComponent:0.64];
         default:
             return color;
     }
