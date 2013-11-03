@@ -499,6 +499,23 @@
 #pragma mark - Public methods
 - (void)reloadData {
     
+    // Empty all options and colors
+    // So that, ViewPager will reflect the changes
+    // Empty all options
+    _tabHeight = nil;
+    _tabOffset = nil;
+    _tabWidth = nil;
+    _tabLocation = nil;
+    _startFromSecondTab = nil;
+    _centerCurrentTab = nil;
+    _fixFormerTabsPositions = nil;
+    _fixLatterTabsPositions = nil;
+    
+    // Empty all colors
+    _indicatorColor = nil;
+    _tabsViewBackgroundColor = nil;
+    _contentViewBackgroundColor = nil;
+    
     // Call to setup again with the updated data
     [self defaultSetup];
 }
