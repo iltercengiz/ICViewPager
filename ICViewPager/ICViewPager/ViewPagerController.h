@@ -74,6 +74,15 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 - (void)selectTabAtIndex:(NSUInteger)index;
 
 /**
+ * Reloads the appearance of the tabs view. 
+ * Adjusts tabs' width, offset, the center, fix former/latter tabs cases.
+ * Without implementing the - viewPager:valueForOption:withDefault: delegate method, 
+ * this method does nothing.
+ * Calling this method without changing any option will affect the performance.
+ */
+- (void)setNeedsReloadOptions;
+
+/**
  * Call this method to get the value of a given option.
  * Returns NAN for any undefined option.
  *

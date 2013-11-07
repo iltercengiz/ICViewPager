@@ -47,15 +47,22 @@
     [self selectTabAtIndex:5];
 }
 
+#pragma mark - Interface Orientation Changes
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    // Update changes after screen rotates
+    [self performSelector:@selector(setNeedsReloadOptions) withObject:nil afterDelay:duration];
+}
+
 #pragma mark - ViewPagerDataSource
 - (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager {
-    return 2;
+    return 10;
 }
 - (UIView *)viewPager:(ViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index {
     
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor clearColor];
-    label.font = [UIFont systemFontOfSize:13.0];
+    label.font = [UIFont systemFontOfSize:12.0];
     label.text = [NSString stringWithFormat:@"Tab #%i", index];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blackColor];
@@ -84,11 +91,11 @@
         case ViewPagerOptionTabLocation:
             return 0.0;
         case ViewPagerOptionTabHeight:
-            return 32.0;
+            return 49.0;
         case ViewPagerOptionTabOffset:
             return 36.0;
         case ViewPagerOptionTabWidth:
-            return 108.0;
+            return UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 128.0 : 96.0;
         case ViewPagerOptionFixFormerTabsPositions:
             return 1.0;
         case ViewPagerOptionFixLatterTabsPositions:
@@ -103,7 +110,7 @@
         case ViewPagerIndicator:
             return [[UIColor redColor] colorWithAlphaComponent:0.64];
         case ViewPagerTabsView:
-            return [[UIColor greenColor] colorWithAlphaComponent:0.64];
+            return [[UIColor lightGrayColor] colorWithAlphaComponent:0.32];
         default:
             return color;
     }

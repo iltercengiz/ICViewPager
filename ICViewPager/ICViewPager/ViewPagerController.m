@@ -13,6 +13,15 @@
 #define kContentViewTag 34
 #define IOS_VERSION_7 [[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending
 
+#define kTabHeight 44.0
+#define kTabOffset 56.0
+#define kTabWidth 128.0
+#define kTabLocation 1.0
+#define kStartFromSecondTab 0.0
+#define kCenterCurrentTab 0.0
+#define kFixFormerTabsPositions 0.0
+#define kFixLatterTabsPositions 0.0
+
 #pragma mark - TabView
 @class TabView;
 
@@ -384,7 +393,7 @@
 - (NSNumber *)tabHeight {
     
     if (!_tabHeight) {
-        CGFloat value = 44.0;
+        CGFloat value = kTabHeight;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabHeight withDefault:value];
         self.tabHeight = [NSNumber numberWithFloat:value];
@@ -394,7 +403,7 @@
 - (NSNumber *)tabOffset {
     
     if (!_tabOffset) {
-        CGFloat value = 56.0;
+        CGFloat value = kTabOffset;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabOffset withDefault:value];
         self.tabOffset = [NSNumber numberWithFloat:value];
@@ -404,7 +413,7 @@
 - (NSNumber *)tabWidth {
     
     if (!_tabWidth) {
-        CGFloat value = 128.0;
+        CGFloat value = kTabWidth;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabWidth withDefault:value];
         self.tabWidth = [NSNumber numberWithFloat:value];
@@ -414,7 +423,7 @@
 - (NSNumber *)tabLocation {
     
     if (!_tabLocation) {
-        CGFloat value = 1.0;
+        CGFloat value = kTabLocation;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabLocation withDefault:value];
         self.tabLocation = [NSNumber numberWithFloat:value];
@@ -424,7 +433,7 @@
 - (NSNumber *)startFromSecondTab {
     
     if (!_startFromSecondTab) {
-        CGFloat value = 0.0;
+        CGFloat value = kStartFromSecondTab;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionStartFromSecondTab withDefault:value];
         self.startFromSecondTab = [NSNumber numberWithFloat:value];
@@ -434,7 +443,7 @@
 - (NSNumber *)centerCurrentTab {
     
     if (!_centerCurrentTab) {
-        CGFloat value = 0.0;
+        CGFloat value = kCenterCurrentTab;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionCenterCurrentTab withDefault:value];
         self.centerCurrentTab = [NSNumber numberWithFloat:value];
@@ -444,7 +453,7 @@
 - (NSNumber *)fixFormerTabsPositions {
     
     if (!_fixFormerTabsPositions) {
-        CGFloat value = 0.0;
+        CGFloat value = kFixFormerTabsPositions;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionFixFormerTabsPositions withDefault:value];
         self.fixFormerTabsPositions = [NSNumber numberWithFloat:value];
@@ -454,7 +463,7 @@
 - (NSNumber *)fixLatterTabsPositions {
     
     if (!_fixLatterTabsPositions) {
-        CGFloat value = 0.0;
+        CGFloat value = kFixLatterTabsPositions;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
             value = [self.delegate viewPager:self valueForOption:ViewPagerOptionFixLatterTabsPositions withDefault:value];
         self.fixLatterTabsPositions = [NSNumber numberWithFloat:value];
@@ -531,6 +540,64 @@
     if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
     }
+}
+
+- (void)setNeedsReloadOptions {
+    
+    // If our delegate doesn't respond to our options method, return
+    // Otherwise reload options
+    if (![self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)]) {
+        return;
+    }
+    
+    // Update these options
+    self.tabWidth = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionTabWidth withDefault:kTabWidth]];
+    self.tabOffset = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionTabOffset withDefault:kTabOffset]];
+    self.centerCurrentTab = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionCenterCurrentTab withDefault:kCenterCurrentTab]];
+    self.fixFormerTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixFormerTabsPositions withDefault:kFixFormerTabsPositions]];
+    self.fixLatterTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixLatterTabsPositions withDefault:kFixLatterTabsPositions]];
+    
+    // We should update contentSize property of our tabsView, so we should recalculate it with the new values
+    CGFloat contentSizeWidth = 0;
+    
+    // Give the standard offset if fixFormerTabsPositions is provided as YES
+    if ([self.fixFormerTabsPositions boolValue]) {
+        
+        // And if the centerCurrentTab is provided as YES fine tune the offset according to it
+        if ([self.centerCurrentTab boolValue]) {
+            contentSizeWidth = (CGRectGetWidth(self.tabsView.frame) - [self.tabWidth floatValue]) / 2.0;
+        } else {
+            contentSizeWidth = [self.tabOffset floatValue];
+        }
+    }
+    
+    // Update every tab's frame
+    for (NSUInteger i = 0; i < self.tabCount; i++) {
+        
+        UIView *tabView = [self tabViewAtIndex:i];
+        
+        CGRect frame = tabView.frame;
+        frame.origin.x = contentSizeWidth;
+        frame.size.width = [self.tabWidth floatValue];
+        tabView.frame = frame;
+        
+        contentSizeWidth += CGRectGetWidth(tabView.frame);
+    }
+    
+    // Extend contentSizeWidth if fixLatterTabsPositions is provided YES
+    if ([self.fixLatterTabsPositions boolValue]) {
+        
+        // And if the centerCurrentTab is provided as YES fine tune the content size according to it
+        if ([self.centerCurrentTab boolValue]) {
+            contentSizeWidth += (CGRectGetWidth(self.tabsView.frame) - [self.tabWidth floatValue]) / 2.0;
+        } else {
+            contentSizeWidth += CGRectGetWidth(self.tabsView.frame) - [self.tabWidth floatValue] - [self.tabOffset floatValue];
+        }
+    }
+    
+    // Update tabsView's contentSize with the new width
+    self.tabsView.contentSize = CGSizeMake(contentSizeWidth, [self.tabHeight floatValue]);
+    
 }
 
 - (CGFloat)valueForOption:(ViewPagerOption)option {
