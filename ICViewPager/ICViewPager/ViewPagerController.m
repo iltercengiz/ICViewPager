@@ -194,8 +194,6 @@
 #pragma mark - IBAction
 - (IBAction)handleTapGesture:(id)sender {
     
-    self.animatingToTab = YES;
-    
     // Get the desired page's index
     UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
     UIView *tabView = tapGestureRecognizer.view;
@@ -529,6 +527,7 @@
     [self defaultSetup];
 }
 - (void)selectTabAtIndex:(NSUInteger)index {
+    self.animatingToTab = YES;
     
     // Set activeTabIndex
     self.activeTabIndex = index;
