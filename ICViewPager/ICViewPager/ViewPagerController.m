@@ -22,6 +22,40 @@
 #define kFixFormerTabsPositions 0.0
 #define kFixLatterTabsPositions 0.0
 
+#define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
+#define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
+#define kContentViewBackgroundColor [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:0.75]
+
+#pragma mark - UIColor+Equality
+@interface UIColor (Equality)
+- (BOOL)isEqualToColor:(UIColor *)otherColor;
+@end
+
+@implementation UIColor (Equality)
+// This method checks if two UIColors are the same
+// Thanks to @samvermette for this method: http://stackoverflow.com/a/8899384/1931781
+- (BOOL)isEqualToColor:(UIColor *)otherColor {
+    
+    CGColorSpaceRef colorSpaceRGB = CGColorSpaceCreateDeviceRGB();
+    
+    UIColor *(^convertColorToRGBSpace)(UIColor *) = ^(UIColor *color) {
+        if (CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor)) == kCGColorSpaceModelMonochrome) {
+            const CGFloat *oldComponents = CGColorGetComponents(color.CGColor);
+            CGFloat components[4] = {oldComponents[0], oldComponents[0], oldComponents[0], oldComponents[1]};
+            return [UIColor colorWithCGColor:CGColorCreate(colorSpaceRGB, components)];
+        } else {
+            return color;
+        }
+    };
+    
+    UIColor *selfColor = convertColorToRGBSpace(self);
+    otherColor = convertColorToRGBSpace(otherColor);
+    CGColorSpaceRelease(colorSpaceRGB);
+    
+    return [selfColor isEqual:otherColor];
+}
+@end
+
 #pragma mark - TabView
 @class TabView;
 
@@ -474,7 +508,7 @@
 - (UIColor *)indicatorColor {
     
     if (!_indicatorColor) {
-        UIColor *color = [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75];
+        UIColor *color = kIndicatorColor;
         if ([self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
             color = [self.delegate viewPager:self colorForComponent:ViewPagerIndicator withDefault:color];
         }
@@ -485,7 +519,7 @@
 - (UIColor *)tabsViewBackgroundColor {
     
     if (!_tabsViewBackgroundColor) {
-        UIColor *color = [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75];
+        UIColor *color = kTabsViewBackgroundColor;
         if ([self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
             color = [self.delegate viewPager:self colorForComponent:ViewPagerTabsView withDefault:color];
         }
@@ -496,7 +530,7 @@
 - (UIColor *)contentViewBackgroundColor {
     
     if (!_contentViewBackgroundColor) {
-        UIColor *color = [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:0.75];
+        UIColor *color = kContentViewBackgroundColor;
         if ([self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
             color = [self.delegate viewPager:self colorForComponent:ViewPagerContent withDefault:color];
         }
@@ -597,6 +631,61 @@
     
     // Update tabsView's contentSize with the new width
     self.tabsView.contentSize = CGSizeMake(contentSizeWidth, [self.tabHeight floatValue]);
+    
+}
+- (void)setNeedsReloadColors {
+    
+    // If our delegate doesn't respond to our colors method, return
+    // Otherwise reload colors
+    if (![self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
+        return;
+    }
+    
+    // These colors will be updated
+    UIColor *indicatorColor;
+    UIColor *tabsViewBackgroundColor;
+    UIColor *contentViewBackgroundColor;
+    
+    // Get indicatorColor and check if it is different from the current one
+    // If it is, update it
+    indicatorColor = [self.delegate viewPager:self colorForComponent:ViewPagerIndicator withDefault:kIndicatorColor];
+    
+    if (![self.indicatorColor isEqualToColor:indicatorColor]) {
+        
+        // We will iterate through all of the tabs to update its indicatorColor
+        [self.tabs enumerateObjectsUsingBlock:^(TabView *tabView, NSUInteger index, BOOL *stop) {
+            tabView.indicatorColor = indicatorColor;
+        }];
+        
+        // Update indicatorColor to check again later
+        self.indicatorColor = indicatorColor;
+    }
+    
+    // Get tabsViewBackgroundColor and check if it is different from the current one
+    // If it is, update it
+    tabsViewBackgroundColor = [self.delegate viewPager:self colorForComponent:ViewPagerTabsView withDefault:kTabsViewBackgroundColor];
+    
+    if (![self.tabsViewBackgroundColor isEqualToColor:tabsViewBackgroundColor]) {
+        
+        // Update it
+        self.tabsView.backgroundColor = tabsViewBackgroundColor;
+        
+        // Update tabsViewBackgroundColor to check again later
+        self.tabsViewBackgroundColor = tabsViewBackgroundColor;
+    }
+    
+    // Get contentViewBackgroundColor and check if it is different from the current one
+    // Yeah update it, too
+    contentViewBackgroundColor = [self.delegate viewPager:self colorForComponent:ViewPagerContent withDefault:kContentViewBackgroundColor];
+    
+    if (![self.contentViewBackgroundColor isEqualToColor:contentViewBackgroundColor]) {
+        
+        // Yup, update
+        self.contentView.backgroundColor = contentViewBackgroundColor;
+        
+        // Update this, too, to check again later
+        self.contentViewBackgroundColor = contentViewBackgroundColor;
+    }
     
 }
 

@@ -83,6 +83,16 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 - (void)setNeedsReloadOptions;
 
 /**
+ * Reloads the colors.
+ * You can make ViewPager to reload its components colors.
+ * Changing `ViewPagerTabsView` and `ViewPagerContent` color will have no effect to performance,
+ * but `ViewPagerIndicator`, as it will need to iterate through all tabs to update it.
+ * Calling this method without changing any color won't affect the performance, 
+ * but will cause your delegate method (if you implemented it) to be called three times.
+ */
+- (void)setNeedsReloadColors;
+
+/**
  * Call this method to get the value of a given option.
  * Returns NAN for any undefined option.
  *
