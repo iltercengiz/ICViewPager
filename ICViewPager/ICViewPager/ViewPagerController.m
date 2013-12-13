@@ -776,6 +776,7 @@
         self.tabsView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), [self.tabHeight floatValue])];
         self.tabsView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.tabsView.backgroundColor = self.tabsViewBackgroundColor;
+        self.tabsView.scrollsToTop = NO;
         self.tabsView.showsHorizontalScrollIndicator = NO;
         self.tabsView.showsVerticalScrollIndicator = NO;
         self.tabsView.tag = kTabViewTag;
