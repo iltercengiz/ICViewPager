@@ -358,7 +358,8 @@
     UIViewController *viewController = [self viewControllerAtIndex:activeContentIndex];
     
     if (!viewController) {
-        return;
+        viewController = [[UIViewController alloc] init];
+        viewController.view = [[UIView alloc] init];
     }
     
     // __weak pageViewController to be used in blocks to prevent retaining strong reference to self
