@@ -360,6 +360,7 @@
     if (!viewController) {
         viewController = [[UIViewController alloc] init];
         viewController.view = [[UIView alloc] init];
+        viewController.view.backgroundColor = [UIColor clearColor];
     }
     
     // __weak pageViewController to be used in blocks to prevent retaining strong reference to self

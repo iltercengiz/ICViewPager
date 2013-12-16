@@ -136,6 +136,8 @@
             return [[UIColor redColor] colorWithAlphaComponent:0.64];
         case ViewPagerTabsView:
             return [[UIColor lightGrayColor] colorWithAlphaComponent:0.32];
+        case ViewPagerContent:
+            return [[UIColor darkGrayColor] colorWithAlphaComponent:0.32];
         default:
             return color;
     }
