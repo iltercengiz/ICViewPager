@@ -11,6 +11,8 @@
 
 @interface HostViewController () <ViewPagerDataSource, ViewPagerDelegate>
 
+@property (nonatomic) NSUInteger numberOfTabs;
+
 @end
 
 @implementation HostViewController
@@ -36,6 +38,14 @@
         
         button;
     });
+    
+}
+- (void)viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+    [self performSelector:@selector(loadContent) withObject:nil afterDelay:3.0];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -43,8 +53,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Setters
+- (void)setNumberOfTabs:(NSUInteger)numberOfTabs {
+    
+    // Set numberOfTabs
+    _numberOfTabs = numberOfTabs;
+    
+    // Reload data
+    [self reloadData];
+    
+}
+
+#pragma mark - Helpers
 - (void)selectTabWithNumberFive {
     [self selectTabAtIndex:5];
+}
+- (void)loadContent {
+    self.numberOfTabs = 10;
 }
 
 #pragma mark - Interface Orientation Changes
@@ -56,7 +81,7 @@
 
 #pragma mark - ViewPagerDataSource
 - (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager {
-    return 10;
+    return self.numberOfTabs;
 }
 - (UIView *)viewPager:(ViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index {
     
