@@ -117,10 +117,13 @@
 
 // Tab and content stuff
 @property UIScrollView *tabsView;
-@property UIView *contentView;
 
-@property UIPageViewController *pageViewController;
-@property (assign) id<UIScrollViewDelegate> actualDelegate;
+@property (nonatomic) UIPageViewController *pageViewController;
+@property (nonatomic) UIView *contentView;
+@property (nonatomic) UIScrollView *tabBar;
+
+// Helpers
+@property (nonatomic, assign) id<UIScrollViewDelegate> actualScrollViewDelegate;
 
 // Tab and content cache
 @property NSMutableArray *tabs;
@@ -165,16 +168,82 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        [self defaultSettings];
+        [self initialize];
     }
     return self;
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [self defaultSettings];
+        [self initialize];
     }
     return self;
+}
+
+#pragma mark - Initializer
+- (void)initialize {
+    
+    /*
+     * This method creates a pageViewController to use its view as contentView
+     * and a scrollView to use as tabBar
+     */
+    
+    // Create pageViewController to use its view as contentView
+    self.pageViewController = ({
+        
+        UIPageViewController *pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+                                                                                   navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
+                                                                                                 options:@{UIPageViewControllerOptionInterPageSpacingKey: @(0.0)}];
+        
+        // Add pageViewController as child
+        [self addChildViewController:pageViewController];
+        
+        // Assign self as delegate of pageView's scrollView to hijack some delegate methods
+        // Keep a reference to the actual delegate to respond to other delegate methods as original
+        self.actualScrollViewDelegate = ((UIScrollView *)pageViewController.view.subviews[0]).delegate;
+        // Set self as new delegate
+        ((UIScrollView *)[pageViewController.view.subviews objectAtIndex:0]).delegate = self;
+        
+        // Assign self as dataSource and delegate of pageViewController
+        pageViewController.dataSource = self;
+        pageViewController.delegate = self;
+        
+        // Return pageViewController
+        pageViewController;
+        
+    });
+    
+    // Get pageViewController's view and assign it as contentView
+    // contentView will be added as subview when adjusting its layout in -layoutSubviews method
+    self.contentView = ({
+        
+        // Get pageView and setup it
+        UIView *pageView = self.pageViewController.view;
+        pageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        pageView.tag = kContentViewTag;
+        
+        // Return pageView to assign it to the contentView
+        pageView;
+        
+    });
+    
+    // Create tabBar, setup it, and assign it
+    // tabBar will be added as subvire when adjusting its layout in -layoutSubviews method
+    self.tabBar = ({
+        
+        // Create and setup tabBar
+        UIScrollView *tabBar = [UIScrollView new];
+        tabBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        tabBar.scrollsToTop = NO;
+        tabBar.showsHorizontalScrollIndicator = NO;
+        tabBar.showsVerticalScrollIndicator = NO;
+        tabBar.tag = kTabViewTag;
+        
+        // Return the tabBar
+        tabBar;
+        
+    });
+    
 }
 
 #pragma mark - View life cycle
@@ -736,18 +805,6 @@
                                                                             options:nil];
     [self addChildViewController:self.pageViewController];
 
-    // Setup some forwarding events to hijack the scrollView
-    // Keep a reference to the actual delegate
-    self.actualDelegate = ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate;
-    // Set self as new delegate
-    ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate = self;
-    
-    self.pageViewController.dataSource = self;
-    self.pageViewController.delegate = self;
-    
-    self.animatingToTab = NO;
-    self.defaultSetupDone = NO;
-}
 - (void)defaultSetup {
     
     // Empty tabs and contents
@@ -949,8 +1006,8 @@
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling and Dragging
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
-        [self.actualDelegate scrollViewDidScroll:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [self.actualScrollViewDelegate scrollViewDidScroll:scrollView];
     }
     
     if (![self isAnimatingToTab]) {
@@ -985,69 +1042,69 @@
     }
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
-        [self.actualDelegate scrollViewWillBeginDragging:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [self.actualScrollViewDelegate scrollViewWillBeginDragging:scrollView];
     }
 }
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
-        [self.actualDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        [self.actualScrollViewDelegate scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
-        [self.actualDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [self.actualScrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
     }
 }
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView{
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
-        return [self.actualDelegate scrollViewShouldScrollToTop:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewShouldScrollToTop:)]) {
+        return [self.actualScrollViewDelegate scrollViewShouldScrollToTop:scrollView];
     }
     return NO;
 }
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
-        [self.actualDelegate scrollViewDidScrollToTop:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+        [self.actualScrollViewDelegate scrollViewDidScrollToTop:scrollView];
     }
 }
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
-        [self.actualDelegate scrollViewWillBeginDecelerating:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [self.actualScrollViewDelegate scrollViewWillBeginDecelerating:scrollView];
     }
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
-        [self.actualDelegate scrollViewDidEndDecelerating:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [self.actualScrollViewDelegate scrollViewDidEndDecelerating:scrollView];
     }
 }
 
 #pragma mark - UIScrollViewDelegate, Managing Zooming
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    if ([self.actualDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
-        return [self.actualDelegate viewForZoomingInScrollView:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+        return [self.actualScrollViewDelegate viewForZoomingInScrollView:scrollView];
     }
     return nil;
 }
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
-        [self.actualDelegate scrollViewWillBeginZooming:scrollView withView:view];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+        [self.actualScrollViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
     }
 }
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
-        [self.actualDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+        [self.actualScrollViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
     }
 }
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
-        [self.actualDelegate scrollViewDidZoom:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+        [self.actualScrollViewDelegate scrollViewDidZoom:scrollView];
     }
 }
 
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling Animations
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
-        [self.actualDelegate scrollViewDidEndScrollingAnimation:scrollView];
+    if ([self.actualScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [self.actualScrollViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
     }
 }
 
