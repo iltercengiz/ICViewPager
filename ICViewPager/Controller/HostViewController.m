@@ -129,7 +129,7 @@
     switch (component) {
         case ViewPagerIndicator:
             return [[UIColor redColor] colorWithAlphaComponent:0.64];
-        case ViewPagerTabsView:
+        case ViewPagerTabBar:
             return [[UIColor lightGrayColor] colorWithAlphaComponent:0.32];
         case ViewPagerContent:
             return [[UIColor darkGrayColor] colorWithAlphaComponent:0.32];
