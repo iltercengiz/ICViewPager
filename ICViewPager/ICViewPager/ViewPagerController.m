@@ -287,6 +287,7 @@
         }
     }
     
+    self.tabBar.backgroundColor = self.tabBarBackgroundColor;
     self.tabBar.frame = ({
         CGRect frame = self.tabBar.frame;
         frame.origin.x = 0.0;
@@ -296,6 +297,8 @@
         frame;
     });
     
+    self.contentView.backgroundColor = self.contentViewBackgroundColor;
+    self.contentView.bounds = self.view.bounds;
     self.contentView.frame = ({
         CGRect frame = self.contentView.frame;
         frame.origin.x = 0.0;
