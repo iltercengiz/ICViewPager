@@ -26,25 +26,20 @@
     
     self.title = @"View Pager";
     
-    // Keeps tab bar below navigation bar on iOS 7.0+
-    // if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-    //     self.edgesForExtendedLayout = UIRectEdgeNone;
-    // }
-    
     self.navigationItem.rightBarButtonItem = ({
-        
         UIBarButtonItem *button;
         button = [[UIBarButtonItem alloc] initWithTitle:@"Tab #5" style:UIBarButtonItemStylePlain target:self action:@selector(selectTabWithNumberFive)];
-        
         button;
     });
+    
+    [self loadContent];
     
 }
 - (void)viewDidAppear:(BOOL)animated {
     
     [super viewDidAppear:animated];
     
-    [self performSelector:@selector(loadContent) withObject:nil afterDelay:3.0];
+//    [self performSelector:@selector(loadContent) withObject:nil afterDelay:3.0];
     
 }
 
