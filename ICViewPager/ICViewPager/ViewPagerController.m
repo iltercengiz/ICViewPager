@@ -372,7 +372,9 @@
         [self.pageViewController setViewControllers:@[viewController]
                                           direction:UIPageViewControllerNavigationDirectionForward
                                            animated:NO
-                                         completion:nil];
+                                         completion:^(BOOL completed) {
+                                             weakSelf.animatingToTab = NO;
+                                         }];
         
     } else if (!(activeContentIndex + 1 == self.activeContentIndex || activeContentIndex - 1 == self.activeContentIndex)) {
         
@@ -397,7 +399,9 @@
         [self.pageViewController setViewControllers:@[viewController]
                                           direction:(activeContentIndex < self.activeContentIndex) ? UIPageViewControllerNavigationDirectionReverse : UIPageViewControllerNavigationDirectionForward
                                            animated:YES
-                                         completion:nil];
+                                         completion:^(BOOL completed) {
+                                             weakSelf.animatingToTab = NO;
+                                         }];
     }
     
     // Clean out of sight contents
