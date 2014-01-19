@@ -567,6 +567,11 @@
     [self defaultSetup];
 }
 - (void)selectTabAtIndex:(NSUInteger)index {
+    
+    if (index >= self.tabCount) {
+        return;
+    }
+    
     self.animatingToTab = YES;
     
     // Set activeTabIndex
