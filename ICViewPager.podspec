@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.screenshots  = "https://dl.dropboxusercontent.com/u/17948706/Resources/SS.png"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Ilter Cengiz" => "me@iltercengiz.info" }
-  s.platform     = :ios, '6.1'
+  s.platform     = :ios, '6.0'
   s.source       = { :git => "https://github.com/monsieurje/ICViewPager.git", :tag => "1.5" }
   s.source_files = 'ICViewPager/ICViewPager/*.{h,m}'
   s.requires_arc = true
