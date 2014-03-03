@@ -233,8 +233,11 @@
     UIView *tabView = tapGestureRecognizer.view;
     __block NSUInteger index = [self.tabs indexOfObject:tabView];
     
-    // Select the tab
-    [self selectTabAtIndex:index];
+    //if Tap is not selected Tab(new Tab)
+    if (self.activeTabIndex != index) {
+        // Select the tab
+        [self selectTabAtIndex:index];
+    }
 }
 
 #pragma mark - Interface rotation
@@ -372,7 +375,9 @@
         [self.pageViewController setViewControllers:@[viewController]
                                           direction:UIPageViewControllerNavigationDirectionForward
                                            animated:NO
-                                         completion:nil];
+                                         completion:^(BOOL completed) {
+                                             weakSelf.animatingToTab = NO;
+                                         }];
         
     } else if (!(activeContentIndex + 1 == self.activeContentIndex || activeContentIndex - 1 == self.activeContentIndex)) {
         
@@ -397,7 +402,9 @@
         [self.pageViewController setViewControllers:@[viewController]
                                           direction:(activeContentIndex < self.activeContentIndex) ? UIPageViewControllerNavigationDirectionReverse : UIPageViewControllerNavigationDirectionForward
                                            animated:YES
-                                         completion:nil];
+                                         completion:^(BOOL completed) {
+                                             weakSelf.animatingToTab = NO;
+                                         }];
     }
     
     // Clean out of sight contents
@@ -567,6 +574,11 @@
     [self defaultSetup];
 }
 - (void)selectTabAtIndex:(NSUInteger)index {
+    
+    if (index >= self.tabCount) {
+        return;
+    }
+    
     self.animatingToTab = YES;
     
     // Set activeTabIndex
