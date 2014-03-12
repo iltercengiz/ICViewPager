@@ -220,7 +220,7 @@
     frame.origin.x = 0.0;
     frame.origin.y = (yOffset) + ([self.tabLocation boolValue] ? topLayoutGuide : CGRectGetHeight(self.view.frame) - [self.tabHeight floatValue]);
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = ([self.tabHeight floatValue]) - (yOffset);
+    frame.size.height = [self.tabHeight floatValue];
     self.tabsView.frame = frame;
     
     frame = self.contentView.frame;
