@@ -125,6 +125,8 @@
             return 1.0;
         case ViewPagerOptionFixLatterTabsPositions:
             return 1.0;
+        case ViewPagerOptionYOffset:
+            return 0.0f;
         default:
             return value;
     }
