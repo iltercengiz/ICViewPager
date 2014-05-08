@@ -207,6 +207,7 @@
         topLayoutGuide = 20.0;
         if (self.navigationController && !self.navigationController.navigationBarHidden) {
             topLayoutGuide += self.navigationController.navigationBar.frame.size.height;
+            topLayoutGuide = self.navigationController.navigationBar.translucent?topLayoutGuide:0;
         }
     }
     
