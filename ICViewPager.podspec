@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "ICViewPager"
-  s.version      = "1.5"
+  s.version      = "1.5.1"
   s.summary      = "You can create sliding tabs with ViewPager."
 
   s.description  = <<-DESC
@@ -28,11 +28,11 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = "https://github.com/monsieurje/ICViewPager"
-  s.screenshots  = "https://dl.dropboxusercontent.com/u/17948706/Resources/SS.png"
+  s.screenshots  = "https://raw.githubusercontent.com/iltercengiz/ICViewPager/master/Resources/Screenshot.jpg"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Ilter Cengiz" => "me@iltercengiz.info" }
   s.platform     = :ios, '6.0'
-  s.source       = { :git => "https://github.com/monsieurje/ICViewPager.git", :tag => "1.5" }
+  s.source       = { :git => "https://github.com/monsieurje/ICViewPager.git", :tag => "1.5.1" }
   s.source_files = 'ICViewPager/ICViewPager/*.{h,m}'
   s.requires_arc = true
 
