@@ -210,6 +210,10 @@
         }
     }
     
+    
+    if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+        topLayoutGuide += [self.delegate viewPager:self valueForOption:ViewPagerOptionTabTopOffset withDefault:0];
+    
     CGRect frame = self.tabsView.frame;
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide : CGRectGetHeight(self.view.frame) - [self.tabHeight floatValue];

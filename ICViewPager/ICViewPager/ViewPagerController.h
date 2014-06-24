@@ -22,6 +22,7 @@
  */
 typedef NS_ENUM(NSUInteger, ViewPagerOption) {
     ViewPagerOptionTabHeight,
+    ViewPagerOptionTabTopOffset,
     ViewPagerOptionTabOffset,
     ViewPagerOptionTabWidth,
     ViewPagerOptionTabLocation,
