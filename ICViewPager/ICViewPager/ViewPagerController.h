@@ -167,7 +167,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * @param viewPager The viewPager that's subject to
  * @param index The index of the active tab
  */
-- (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index;
+- (void)viewPager:(ViewPagerController *)viewPager didChangeTabFromIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex;
 /**
  * Every time -reloadData method called, ViewPager will ask its delegate for option values.
  * So you don't have to set options from ViewPager itself.

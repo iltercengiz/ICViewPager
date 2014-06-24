@@ -582,14 +582,15 @@
     self.animatingToTab = YES;
     
     // Set activeTabIndex
+    NSUInteger previousIndex = self.activeTabIndex;
     self.activeTabIndex = index;
     
     // Set activeContentIndex
     self.activeContentIndex = index;
     
     // Inform delegate about the change
-    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
+    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabFromIndex:toIndex:)]) {
+        [self.delegate viewPager:self didChangeTabFromIndex:previousIndex toIndex:self.activeTabIndex];
     }
 }
 
