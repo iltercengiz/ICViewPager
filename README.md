@@ -141,8 +141,11 @@ ViewPager supports minimum iOS 6 and uses ARC.
 Supports both iPhone and iPad.
 
 ## Contact
+[@iltercengiz](https://twitter.com/iltercengiz)
+
 [Ilter Cengiz](mailto:me@iltercengiz.info)
-[@monsieurje](https://twitter.com/monsieurje)
+
+Note (to everyone who is interested in `ViewPager`): I cannot have much time to improve `ViewPager` for a long time, but I have some cool plans for it. So if you encounter any problems, bugs or etc. please forgive me, and send some pull requests. Thank you for your interest and support.
 
 ## Licence
 ICViewPager is MIT licensed. See the LICENCE file for more info.
