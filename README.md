@@ -5,7 +5,7 @@ You can create sliding tabs with ViewPager.
 
 Slide through the contents or select from tabs or slide through tabs and select!
 
-<img src="https://dl.dropboxusercontent.com/u/17948706/Resources/SS.jpg" alt="ICViewPager" title="ICViewPager">
+<img src="https://raw.githubusercontent.com/iltercengiz/ICViewPager/master/Resources/Screenshot.jpg" alt="ICViewPager" title="ICViewPager">
 
 ## Installation
 
