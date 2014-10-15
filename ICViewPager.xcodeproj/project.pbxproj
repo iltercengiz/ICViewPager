@@ -16,7 +16,7 @@
 		7CF3D66117CE32E40021036A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66017CE32E40021036A /* main.m */; };
 		7CF3D66517CE32E40021036A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D66417CE32E40021036A /* AppDelegate.m */; };
 		7CF3D67617CE336E0021036A /* Localization.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67817CE336E0021036A /* Localization.strings */; };
-		7CF3D67E17CE33E10021036A /* ViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D67D17CE33E10021036A /* ViewPagerController.m */; };
+		7CF3D67E17CE33E10021036A /* ICViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D67D17CE33E10021036A /* ICViewPagerController.m */; };
 		7CF3D68117CE33EC0021036A /* HostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D68017CE33EC0021036A /* HostViewController.m */; };
 		7CF3D68217CE35500021036A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D67117CE332F0021036A /* iPhone.storyboard */; };
 		7CF3D68517CE3F5B0021036A /* ContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D68417CE3F5B0021036A /* ContentViewController.m */; };
@@ -39,8 +39,8 @@
 		7CF3D67317CE335B0021036A /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7CF3D67717CE336E0021036A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localization.strings; sourceTree = "<group>"; };
 		7CF3D67917CE336F0021036A /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localization.strings; sourceTree = "<group>"; };
-		7CF3D67C17CE33E10021036A /* ViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewPagerController.h; sourceTree = "<group>"; };
-		7CF3D67D17CE33E10021036A /* ViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewPagerController.m; sourceTree = "<group>"; };
+		7CF3D67C17CE33E10021036A /* ICViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICViewPagerController.h; sourceTree = "<group>"; };
+		7CF3D67D17CE33E10021036A /* ICViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICViewPagerController.m; sourceTree = "<group>"; };
 		7CF3D67F17CE33EC0021036A /* HostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HostViewController.h; sourceTree = "<group>"; };
 		7CF3D68017CE33EC0021036A /* HostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HostViewController.m; sourceTree = "<group>"; };
 		7CF3D68317CE3F5B0021036A /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
@@ -129,8 +129,8 @@
 		7CF3D67B17CE33C80021036A /* ICViewPager */ = {
 			isa = PBXGroup;
 			children = (
-				7CF3D67C17CE33E10021036A /* ViewPagerController.h */,
-				7CF3D67D17CE33E10021036A /* ViewPagerController.m */,
+				7CF3D67C17CE33E10021036A /* ICViewPagerController.h */,
+				7CF3D67D17CE33E10021036A /* ICViewPagerController.m */,
 			);
 			path = ICViewPager;
 			sourceTree = "<group>";
@@ -204,7 +204,7 @@
 			files = (
 				7CF3D66117CE32E40021036A /* main.m in Sources */,
 				7CF3D66517CE32E40021036A /* AppDelegate.m in Sources */,
-				7CF3D67E17CE33E10021036A /* ViewPagerController.m in Sources */,
+				7CF3D67E17CE33E10021036A /* ICViewPagerController.m in Sources */,
 				7CF3D68117CE33EC0021036A /* HostViewController.m in Sources */,
 				7CF3D68517CE3F5B0021036A /* ContentViewController.m in Sources */,
 			);

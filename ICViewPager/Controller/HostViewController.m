@@ -9,7 +9,7 @@
 #import "HostViewController.h"
 #import "ContentViewController.h"
 
-@interface HostViewController () <ViewPagerDataSource, ViewPagerDelegate>
+@interface HostViewController () <ICViewPagerControllerDataSource, ICViewPagerControllerDelegate>
 
 @property (nonatomic) NSUInteger numberOfTabs;
 
@@ -79,11 +79,11 @@
     [self performSelector:@selector(setNeedsReloadOptions) withObject:nil afterDelay:duration];
 }
 
-#pragma mark - ViewPagerDataSource
-- (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager {
+#pragma mark - ICViewPagerDataSource
+- (NSUInteger)numberOfTabsForViewPager:(ICViewPagerController *)viewPager {
     return self.numberOfTabs;
 }
-- (UIView *)viewPager:(ViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index {
+- (UIView *)viewPager:(ICViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index {
     
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor clearColor];
@@ -96,7 +96,7 @@
     return label;
 }
 
-- (UIViewController *)viewPager:(ViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index {
+- (UIViewController *)viewPager:(ICViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index {
     
     ContentViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     
@@ -106,7 +106,7 @@
 }
 
 #pragma mark - ViewPagerDelegate
-- (CGFloat)viewPager:(ViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value {
+- (CGFloat)viewPager:(ICViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value {
     
     switch (option) {
         case ViewPagerOptionStartFromSecondTab:
@@ -129,7 +129,7 @@
             return value;
     }
 }
-- (UIColor *)viewPager:(ViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color {
+- (UIColor *)viewPager:(ICViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color {
     
     switch (component) {
         case ViewPagerIndicator:

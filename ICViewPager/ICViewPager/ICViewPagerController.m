@@ -1,12 +1,12 @@
 //
-//  ViewPagerController.m
+//  ICViewPagerController.m
 //  ICViewPager
 //
 //  Created by Ilter Cengiz on 28/08/2013.
 //  Copyright (c) 2013 Ilter Cengiz. All rights reserved.
 //
 
-#import "ViewPagerController.h"
+#import "ICViewPagerController.h"
 
 #pragma mark - Constants and macros
 #define kTabViewTag 38
@@ -112,8 +112,8 @@
 }
 @end
 
-#pragma mark - ViewPagerController
-@interface ViewPagerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate>
+#pragma mark - ICViewPagerController
+@interface ICViewPagerController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate>
 
 // Tab and content stuff
 @property UIScrollView *tabsView;
@@ -150,7 +150,7 @@
 
 @end
 
-@implementation ViewPagerController
+@implementation ICViewPagerController
 
 @synthesize tabHeight = _tabHeight;
 @synthesize tabOffset = _tabOffset;
@@ -368,7 +368,7 @@
     
     // __weak pageViewController to be used in blocks to prevent retaining strong reference to self
     __weak UIPageViewController *weakPageViewController = self.pageViewController;
-    __weak ViewPagerController *weakSelf = self;
+    __weak ICViewPagerController *weakSelf = self;
     
     if (activeContentIndex == self.activeContentIndex) {
         

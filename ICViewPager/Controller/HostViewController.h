@@ -8,8 +8,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "ViewPagerController.h"
+#import "ICViewPagerController.h"
 
-@interface HostViewController : ViewPagerController
+@interface HostViewController : ICViewPagerController
 
 @end
