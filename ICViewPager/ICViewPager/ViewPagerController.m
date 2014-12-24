@@ -142,6 +142,7 @@
 
 @property (getter = isAnimatingToTab, assign) BOOL animatingToTab;
 @property (getter = isDefaultSetupDone, assign) BOOL defaultSetupDone;
+@property BOOL isScrolling;
 
 // Colors
 @property (nonatomic) UIColor *indicatorColor;
@@ -233,10 +234,13 @@
     UIView *tabView = tapGestureRecognizer.view;
     __block NSUInteger index = [self.tabs indexOfObject:tabView];
     
-    //if Tap is not selected Tab(new Tab)
-    if (self.activeTabIndex != index) {
-        // Select the tab
-        [self selectTabAtIndex:index];
+    //if user is not scrolling Tabview
+    if( ! self.isScrolling ){
+        //if Tap is not selected Tab(new Tab)
+        if (self.activeTabIndex != index) {
+            // Select the tab
+            [self selectTabAtIndex:index];
+        }
     }
 }
 
@@ -747,7 +751,7 @@
                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                             options:nil];
     [self addChildViewController:self.pageViewController];
-
+    
     // Setup some forwarding events to hijack the scrollView
     // Keep a reference to the actual delegate
     self.actualDelegate = ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate;
@@ -759,6 +763,7 @@
     
     self.animatingToTab = NO;
     self.defaultSetupDone = NO;
+    self.isScrolling = NO;
 }
 - (void)defaultSetup {
     
@@ -875,7 +880,7 @@
     }
     
     if ([[self.tabs objectAtIndex:index] isEqual:[NSNull null]]) {
-
+        
         // Get view from dataSource
         UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
         tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -997,6 +1002,7 @@
     }
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.isScrolling = YES;
     if ([self.actualDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
         [self.actualDelegate scrollViewWillBeginDragging:scrollView];
     }
@@ -1028,6 +1034,7 @@
     }
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    self.isScrolling = NO;
     if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
         [self.actualDelegate scrollViewDidEndDecelerating:scrollView];
     }
