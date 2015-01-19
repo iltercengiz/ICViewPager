@@ -21,6 +21,8 @@
 #define kCenterCurrentTab 0.0
 #define kFixFormerTabsPositions 0.0
 #define kFixLatterTabsPositions 0.0
+#define kLowerTabLocation 0.0
+#define kRelativeTitle 0.0
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
@@ -135,6 +137,8 @@
 @property (nonatomic) NSNumber *centerCurrentTab;
 @property (nonatomic) NSNumber *fixFormerTabsPositions;
 @property (nonatomic) NSNumber *fixLatterTabsPositions;
+@property (nonatomic) NSNumber *lowerTabLocation;
+@property (nonatomic) NSNumber *relativeTitleSizes;
 
 @property (nonatomic) NSUInteger tabCount;
 @property (nonatomic) NSUInteger activeTabIndex;
@@ -160,6 +164,8 @@
 @synthesize centerCurrentTab = _centerCurrentTab;
 @synthesize fixFormerTabsPositions = _fixFormerTabsPositions;
 @synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
+@synthesize lowerTabLocation = _lowerTabLocation;
+@synthesize relativeTitleSizes = _relativeTitleSizes;
 
 #pragma mark - Init
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -208,6 +214,10 @@
         if (self.navigationController && !self.navigationController.navigationBarHidden) {
             topLayoutGuide += self.navigationController.navigationBar.frame.size.height;
         }
+    }
+    
+    if (self.lowerTabLocation) {
+        topLayoutGuide+=[self.lowerTabLocation floatValue];
     }
     
     CGRect frame = self.tabsView.frame;
@@ -312,6 +322,17 @@
         fixLatterTabsPositions = [fixLatterTabsPositions boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _fixLatterTabsPositions = fixLatterTabsPositions;
+}
+
+- (void)setRelativeTitleSizes:(NSNumber *)relativeTitleSizes {
+    
+    if ([relativeTitleSizes floatValue] != 1.0 && [relativeTitleSizes floatValue] != 0.0)
+        _relativeTitleSizes = [relativeTitleSizes boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    
+    _relativeTitleSizes = relativeTitleSizes;
+}
+- (void)setLowerTabLocation:(NSNumber *)lowerTabLocation {
+    _lowerTabLocation = lowerTabLocation;
 }
 
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
@@ -549,6 +570,24 @@
     }
     return _contentViewBackgroundColor;
 }
+- (NSNumber *)relativeTitleSizes {
+    if (!_tabWidth) {
+        CGFloat value = kRelativeTitle;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionRelativeTitleSizes withDefault:value];
+        self.tabWidth = [NSNumber numberWithFloat:value];
+    }
+    return _tabWidth;
+}
+- (NSNumber *)lowerTabLocation {
+    if (!_lowerTabLocation) {
+        CGFloat value = kLowerTabLocation;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionLowerTabBar withDefault:value];
+        self.lowerTabLocation = [NSNumber numberWithFloat:value];
+    }
+    return _lowerTabLocation;
+}
 
 #pragma mark - Public methods
 - (void)reloadData {
@@ -607,6 +646,7 @@
     self.centerCurrentTab = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionCenterCurrentTab withDefault:kCenterCurrentTab]];
     self.fixFormerTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixFormerTabsPositions withDefault:kFixFormerTabsPositions]];
     self.fixLatterTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixLatterTabsPositions withDefault:kFixLatterTabsPositions]];
+    self.lowerTabLocation = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionLowerTabBar withDefault:kFixLatterTabsPositions]];
     
     // We should update contentSize property of our tabsView, so we should recalculate it with the new values
     CGFloat contentSizeWidth = 0;
@@ -721,6 +761,10 @@
             return [[self startFromSecondTab] floatValue];
         case ViewPagerOptionCenterCurrentTab:
             return [[self centerCurrentTab] floatValue];
+        case ViewPagerOptionRelativeTitleSizes:
+            return [[self relativeTitleSizes] floatValue];
+        case ViewPagerOptionLowerTabBar:
+            return [[self lowerTabLocation] floatValue];
         default:
             return NAN;
     }
@@ -863,6 +907,9 @@
     // Select starting tab
     NSUInteger index = [self.startFromSecondTab boolValue] ? 1 : 0;
     [self selectTabAtIndex:index];
+    
+#warning Experimental
+    self.relativeTitleSizes = [NSNumber numberWithFloat:kRelativeTitle];
     
     // Set setup done
     self.defaultSetupDone = YES;
