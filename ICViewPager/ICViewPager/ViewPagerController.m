@@ -23,6 +23,7 @@
 #define kFixLatterTabsPositions 0.0
 #define kLowerTabLocation 0.0
 #define kRelativeTitle 0.0
+#define kRelativeTitlePadding 10.0
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
@@ -139,6 +140,7 @@
 @property (nonatomic) NSNumber *fixLatterTabsPositions;
 @property (nonatomic) NSNumber *lowerTabLocation;
 @property (nonatomic) NSNumber *relativeTitleSizes;
+@property (nonatomic) NSNumber *relativeTitlePadding;
 
 @property (nonatomic) NSUInteger tabCount;
 @property (nonatomic) NSUInteger activeTabIndex;
@@ -166,6 +168,7 @@
 @synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
 @synthesize lowerTabLocation = _lowerTabLocation;
 @synthesize relativeTitleSizes = _relativeTitleSizes;
+@synthesize relativeTitlePadding = _relativeTitlePadding;
 
 #pragma mark - Init
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -333,6 +336,9 @@
 }
 - (void)setLowerTabLocation:(NSNumber *)lowerTabLocation {
     _lowerTabLocation = lowerTabLocation;
+}
+- (void)setRelativeTitlePadding:(NSNumber *)relativeTitlePadding {
+    _relativeTitlePadding = relativeTitlePadding>=0?relativeTitlePadding:[NSNumber numberWithFloat:kRelativeTitlePadding];
 }
 
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
@@ -589,6 +595,19 @@
     return _lowerTabLocation;
 }
 
+- (NSNumber*)relativeTitlePadding {
+    if (!_relativeTitlePadding) {
+        CGFloat value = kRelativeTitlePadding;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionRelativeTitlePadding withDefault:value];
+        _relativeTitlePadding = [NSNumber numberWithFloat:value];
+    }
+    _relativeTitlePadding = _relativeTitlePadding>=0?_relativeTitlePadding:[NSNumber numberWithFloat:kRelativeTitlePadding];
+    
+    return _relativeTitlePadding;
+}
+
+
 #pragma mark - Public methods
 - (void)reloadData {
     
@@ -763,6 +782,8 @@
             return [[self centerCurrentTab] floatValue];
         case ViewPagerOptionRelativeTitleSizes:
             return [[self relativeTitleSizes] floatValue];
+        case ViewPagerOptionRelativeTitlePadding:
+            return [[self relativeTitlePadding] floatValue];
         case ViewPagerOptionLowerTabBar:
             return [[self lowerTabLocation] floatValue];
         default:
@@ -859,13 +880,34 @@
         }
     }
     
+#warning Working here
+//    NSArray* titles = nil;
+//    UILabel* tempLabel = nil;
+//    if (self.relativeTitleSizes) {
+//        if (self.relativeTitleSizes && [self.dataSource respondsToSelector:@selector(viewPagerTabs)]){
+//            titles = [self.dataSource viewPagerTabs];
+//            tempLabel = [[UILabel alloc] init];
+//        }
+//    }
     for (NSUInteger i = 0; i < self.tabCount; i++) {
         
         UIView *tabView = [self tabViewAtIndex:i];
         
         CGRect frame = tabView.frame;
         frame.origin.x = contentSizeWidth;
-        frame.size.width = [self.tabWidth floatValue];
+        
+        CGFloat tabWidth = [self.tabWidth floatValue];
+        //Set the tab's frame
+        if (self.relativeTitleSizes){
+            tabWidth = [self tabViewAtIndex:i].frame.size.width;//[self.dataSource viewPager:self viewForTabAtIndex:i].frame.size.width;
+            NSLog(@"%d - %f",i, tabWidth);
+//            tempLabel.text = titles[i];
+//            [tempLabel sizeToFit];
+//            tabWidth = ceil(tempLabel.frame.size.width);
+        }
+        
+        frame.size.width = tabWidth;
+        
         tabView.frame = frame;
         
         [self.tabsView addSubview:tabView];
@@ -876,6 +918,7 @@
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
         [tabView addGestureRecognizer:tapGestureRecognizer];
     }
+    NSLog(@"content size: %f", contentSizeWidth);
     
     // Extend contentSizeWidth if fixLatterTabsPositions is provided YES
     if ([self.fixLatterTabsPositions boolValue]) {
@@ -908,9 +951,6 @@
     NSUInteger index = [self.startFromSecondTab boolValue] ? 1 : 0;
     [self selectTabAtIndex:index];
     
-#warning Experimental
-    self.relativeTitleSizes = [NSNumber numberWithFloat:kRelativeTitle];
-    
     // Set setup done
     self.defaultSetupDone = YES;
 }
@@ -928,7 +968,14 @@
         tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         // Create TabView and subview the content
-        TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];
+        TabView *tabView = nil;
+        if (self.relativeTitleSizes){
+#warning Tab title frame
+            tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, tabViewContent.frame.size.width+[self.relativeTitlePadding floatValue], [self.tabHeight floatValue])];
+        }else {
+            tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];
+        }
+        
         [tabView addSubview:tabViewContent];
         [tabView setClipsToBounds:YES];
         [tabView setIndicatorColor:self.indicatorColor];
