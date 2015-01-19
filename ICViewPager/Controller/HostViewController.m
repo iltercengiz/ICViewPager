@@ -128,7 +128,7 @@
         case ViewPagerOptionRelativeTitleSizes:
             return 1.0;
         case ViewPagerOptionRelativeTitlePadding:
-            return 15.0;
+            return 20.0;
         default:
             return value;
     }
