@@ -21,6 +21,11 @@
 #define kCenterCurrentTab 0.0
 #define kFixFormerTabsPositions 0.0
 #define kFixLatterTabsPositions 0.0
+#define kLowerTabLocation 0.0
+#define kRelativeTitle 0.0
+#define kRelativeTitlePadding 10.0
+#define kTabBarBottomPadding 0.0
+
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
@@ -81,22 +86,6 @@
     
     UIBezierPath *bezierPath;
     
-    // Draw top line
-    bezierPath = [UIBezierPath bezierPath];
-    [bezierPath moveToPoint:CGPointMake(0.0, 0.0)];
-    [bezierPath addLineToPoint:CGPointMake(CGRectGetWidth(rect), 0.0)];
-    [[UIColor colorWithWhite:197.0/255.0 alpha:0.75] setStroke];
-    [bezierPath setLineWidth:1.0];
-    [bezierPath stroke];
-    
-    // Draw bottom line
-    bezierPath = [UIBezierPath bezierPath];
-    [bezierPath moveToPoint:CGPointMake(0.0, CGRectGetHeight(rect))];
-    [bezierPath addLineToPoint:CGPointMake(CGRectGetWidth(rect), CGRectGetHeight(rect))];
-    [[UIColor colorWithWhite:197.0/255.0 alpha:0.75] setStroke];
-    [bezierPath setLineWidth:1.0];
-    [bezierPath stroke];
-    
     // Draw an indicator line if tab is selected
     if (self.selected) {
         
@@ -135,6 +124,10 @@
 @property (nonatomic) NSNumber *centerCurrentTab;
 @property (nonatomic) NSNumber *fixFormerTabsPositions;
 @property (nonatomic) NSNumber *fixLatterTabsPositions;
+@property (nonatomic) NSNumber *lowerTabLocation;
+@property (nonatomic) NSNumber *relativeTitleSizes;
+@property (nonatomic) NSNumber *relativeTitlePadding;
+@property (nonatomic) NSNumber *tabBarBottomPadding;
 
 @property (nonatomic) NSUInteger tabCount;
 @property (nonatomic) NSUInteger activeTabIndex;
@@ -142,7 +135,7 @@
 
 @property (getter = isAnimatingToTab, assign) BOOL animatingToTab;
 @property (getter = isDefaultSetupDone, assign) BOOL defaultSetupDone;
-
+@property BOOL isScrolling;
 // Colors
 @property (nonatomic) UIColor *indicatorColor;
 @property (nonatomic) UIColor *tabsViewBackgroundColor;
@@ -160,6 +153,10 @@
 @synthesize centerCurrentTab = _centerCurrentTab;
 @synthesize fixFormerTabsPositions = _fixFormerTabsPositions;
 @synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
+@synthesize lowerTabLocation = _lowerTabLocation;
+@synthesize relativeTitleSizes = _relativeTitleSizes;
+@synthesize relativeTitlePadding = _relativeTitlePadding;
+@synthesize tabBarBottomPadding = _tabBarBottomPadding;
 
 #pragma mark - Init
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -204,17 +201,25 @@
     
     CGFloat topLayoutGuide = 0.0;
     if (IOS_VERSION_7) {
-        topLayoutGuide = 20.0;
-        if (self.navigationController && !self.navigationController.navigationBarHidden) {
-            topLayoutGuide += self.navigationController.navigationBar.frame.size.height;
+        if (self.navigationController.navigationBar.isTranslucent) {
+            topLayoutGuide = 20.0;
+            if (self.navigationController && !self.navigationController.navigationBarHidden) {
+                topLayoutGuide += self.navigationController.navigationBar.frame.size.height;
+            }
         }
     }
+    
+    if (self.lowerTabLocation) {
+        topLayoutGuide+=[self.lowerTabLocation floatValue];
+    }
+    
     
     CGRect frame = self.tabsView.frame;
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide : CGRectGetHeight(self.view.frame) - [self.tabHeight floatValue];
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = [self.tabHeight floatValue];
+    
+    frame.size.height = [self.tabHeight floatValue] + [self.tabBarBottomPadding floatValue];
     self.tabsView.frame = frame;
     
     frame = self.contentView.frame;
@@ -233,10 +238,13 @@
     UIView *tabView = tapGestureRecognizer.view;
     __block NSUInteger index = [self.tabs indexOfObject:tabView];
     
-    //if Tap is not selected Tab(new Tab)
-    if (self.activeTabIndex != index) {
-        // Select the tab
-        [self selectTabAtIndex:index];
+    // If user is not scrolling tabview
+    if (!self.isScrolling) {
+        // If tap is not selected tab (new tab)
+        if (self.activeTabIndex != index) {
+            // Select the tab
+            [self selectTabAtIndex:index];
+        }
     }
 }
 
@@ -312,6 +320,24 @@
         fixLatterTabsPositions = [fixLatterTabsPositions boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _fixLatterTabsPositions = fixLatterTabsPositions;
+}
+
+- (void) setTabBarBottomPadding:(NSNumber *)tabBarBottomPadding {
+
+    _tabBarBottomPadding = tabBarBottomPadding;
+}
+- (void)setRelativeTitleSizes:(NSNumber *)relativeTitleSizes {
+    
+    if ([relativeTitleSizes floatValue] != 1.0 && [relativeTitleSizes floatValue] != 0.0)
+        _relativeTitleSizes = [relativeTitleSizes boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    
+    _relativeTitleSizes = relativeTitleSizes;
+}
+- (void)setLowerTabLocation:(NSNumber *)lowerTabLocation {
+    _lowerTabLocation = lowerTabLocation;
+}
+- (void)setRelativeTitlePadding:(NSNumber *)relativeTitlePadding {
+    _relativeTitlePadding = relativeTitlePadding>=0?relativeTitlePadding:[NSNumber numberWithFloat:kRelativeTitlePadding];
 }
 
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
@@ -549,6 +575,47 @@
     }
     return _contentViewBackgroundColor;
 }
+- (NSNumber *)tabBarBottomPadding {
+    if (!_tabBarBottomPadding) {
+        CGFloat value = kTabBarBottomPadding;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTaBarBottomPadding withDefault:value];
+        self.tabBarBottomPadding = [NSNumber numberWithFloat:value];
+    }
+    return _tabBarBottomPadding;
+}
+
+- (NSNumber *)relativeTitleSizes {
+    if (!_tabWidth) {
+        CGFloat value = kRelativeTitle;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionRelativeTitleSizes withDefault:value];
+        self.tabWidth = [NSNumber numberWithFloat:value];
+    }
+    return _tabWidth;
+}
+- (NSNumber *)lowerTabLocation {
+    if (!_lowerTabLocation) {
+        CGFloat value = kLowerTabLocation;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionLowerTabBar withDefault:value];
+        self.lowerTabLocation = [NSNumber numberWithFloat:value];
+    }
+    return _lowerTabLocation;
+}
+
+- (NSNumber*)relativeTitlePadding {
+    if (!_relativeTitlePadding) {
+        CGFloat value = kRelativeTitlePadding;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionRelativeTitlePadding withDefault:value];
+        _relativeTitlePadding = [NSNumber numberWithFloat:value];
+    }
+    _relativeTitlePadding = _relativeTitlePadding>=0?_relativeTitlePadding:[NSNumber numberWithFloat:kRelativeTitlePadding];
+    
+    return _relativeTitlePadding;
+}
+
 
 #pragma mark - Public methods
 - (void)reloadData {
@@ -558,6 +625,7 @@
     // Empty all options
     _tabHeight = nil;
     _tabOffset = nil;
+    _tabBarBottomPadding = nil;
     _tabWidth = nil;
     _tabLocation = nil;
     _startFromSecondTab = nil;
@@ -607,6 +675,9 @@
     self.centerCurrentTab = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionCenterCurrentTab withDefault:kCenterCurrentTab]];
     self.fixFormerTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixFormerTabsPositions withDefault:kFixFormerTabsPositions]];
     self.fixLatterTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixLatterTabsPositions withDefault:kFixLatterTabsPositions]];
+    self.lowerTabLocation = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionLowerTabBar withDefault:kFixLatterTabsPositions]];
+    
+    self.tabBarBottomPadding = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionTaBarBottomPadding withDefault:kTabBarBottomPadding]];
     
     // We should update contentSize property of our tabsView, so we should recalculate it with the new values
     CGFloat contentSizeWidth = 0;
@@ -721,6 +792,14 @@
             return [[self startFromSecondTab] floatValue];
         case ViewPagerOptionCenterCurrentTab:
             return [[self centerCurrentTab] floatValue];
+        case ViewPagerOptionRelativeTitleSizes:
+            return [[self relativeTitleSizes] floatValue];
+        case ViewPagerOptionRelativeTitlePadding:
+            return [[self relativeTitlePadding] floatValue];
+        case ViewPagerOptionLowerTabBar:
+            return [[self lowerTabLocation] floatValue];
+        case ViewPagerOptionTaBarBottomPadding:
+            return [[self tabBarBottomPadding] floatValue];
         default:
             return NAN;
     }
@@ -759,6 +838,7 @@
     
     self.animatingToTab = NO;
     self.defaultSetupDone = NO;
+    self.isScrolling = NO;
 }
 - (void)defaultSetup {
     
@@ -815,13 +895,34 @@
         }
     }
     
+#warning Working here
+//    NSArray* titles = nil;
+//    UILabel* tempLabel = nil;
+//    if (self.relativeTitleSizes) {
+//        if (self.relativeTitleSizes && [self.dataSource respondsToSelector:@selector(viewPagerTabs)]){
+//            titles = [self.dataSource viewPagerTabs];
+//            tempLabel = [[UILabel alloc] init];
+//        }
+//    }
     for (NSUInteger i = 0; i < self.tabCount; i++) {
         
         UIView *tabView = [self tabViewAtIndex:i];
         
         CGRect frame = tabView.frame;
         frame.origin.x = contentSizeWidth;
-        frame.size.width = [self.tabWidth floatValue];
+        
+        CGFloat tabWidth = [self.tabWidth floatValue];
+        //Set the tab's frame
+        if (self.relativeTitleSizes){
+            tabWidth = [self tabViewAtIndex:i].frame.size.width;//[self.dataSource viewPager:self viewForTabAtIndex:i].frame.size.width;
+            NSLog(@"%d - %f",i, tabWidth);
+//            tempLabel.text = titles[i];
+//            [tempLabel sizeToFit];
+//            tabWidth = ceil(tempLabel.frame.size.width);
+        }
+        
+        frame.size.width = tabWidth;
+        
         tabView.frame = frame;
         
         [self.tabsView addSubview:tabView];
@@ -832,6 +933,7 @@
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
         [tabView addGestureRecognizer:tapGestureRecognizer];
     }
+    NSLog(@"content size: %f", contentSizeWidth);
     
     // Extend contentSizeWidth if fixLatterTabsPositions is provided YES
     if ([self.fixLatterTabsPositions boolValue]) {
@@ -881,7 +983,14 @@
         tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         // Create TabView and subview the content
-        TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];
+        TabView *tabView = nil;
+        if (self.relativeTitleSizes){
+#warning Tab title frame
+            tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, tabViewContent.frame.size.width+[self.relativeTitlePadding floatValue], [self.tabHeight floatValue])];
+        }else {
+            tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];
+        }
+        
         [tabView addSubview:tabViewContent];
         [tabView setClipsToBounds:YES];
         [tabView setIndicatorColor:self.indicatorColor];
@@ -997,6 +1106,7 @@
     }
 }
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.isScrolling = YES;
     if ([self.actualDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
         [self.actualDelegate scrollViewWillBeginDragging:scrollView];
     }
@@ -1028,6 +1138,7 @@
     }
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    self.isScrolling = NO;
     if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
         [self.actualDelegate scrollViewDidEndDecelerating:scrollView];
     }

@@ -19,6 +19,10 @@
  * ViewPagerOptionCenterCurrentTab: 1.0: YES, 0.0: NO, defines if tabs should be centered, with the given tabWidth. Defaults to NO
  * ViewPagerOptionFixFormerTabsPositions: 1.0: YES, 0.0: NO, defines if the active tab should be placed margined by the offset amount to the left. Effects only the former tabs. If set 1.0 (YES), first tab will be placed at the same position with the second one, leaving space before itself. Defaults to NO
  * ViewPagerOptionFixLatterTabsPositions: 1.0: YES, 0.0: NO, like ViewPagerOptionFixFormerTabsPositions, but effects the latter tabs, making them leave space after themselves. Defaults to NO
+ 
+ * ViewPagerOptionRelativeTitleSizes: 1.0: YES, 0.0: NO, if YES will calculate the tab width based on the view's width. Defaults to NO
+ * ViewPagerOptionRelativeTitlePadding: The spacing between tabs, defaults to 15.0. This will only have an effect if ViewPagerOptionRelativeTitleSizes is YES
+ * ViewPagerOptionLowerTabBar: Lowers the tabs n the view controller by the amount. Defaults to 0.0 which makesthe tabs be on top or on bottom depending on ViewPagerOptionTabLocation. Accepts negative values to raise the tabs.
  */
 typedef NS_ENUM(NSUInteger, ViewPagerOption) {
     ViewPagerOptionTabHeight,
@@ -28,7 +32,12 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
     ViewPagerOptionStartFromSecondTab,
     ViewPagerOptionCenterCurrentTab,
     ViewPagerOptionFixFormerTabsPositions,
-    ViewPagerOptionFixLatterTabsPositions
+    ViewPagerOptionFixLatterTabsPositions,
+    ViewPagerOptionRelativeTitleSizes,
+    ViewPagerOptionRelativeTitlePadding,
+    ViewPagerOptionLowerTabBar,
+    ViewPagerOptionTaBarBottomPadding,
+    
 };
 
 /**
@@ -154,7 +163,6 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * @return A view which will be shown as content
  */
 - (UIView *)viewPager:(ViewPagerController *)viewPager contentViewForTabAtIndex:(NSUInteger)index;
-
 @end
 
 #pragma mark delegate

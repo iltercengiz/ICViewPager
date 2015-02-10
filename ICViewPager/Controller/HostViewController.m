@@ -12,6 +12,7 @@
 @interface HostViewController () <ViewPagerDataSource, ViewPagerDelegate>
 
 @property (nonatomic) NSUInteger numberOfTabs;
+@property (strong, nonatomic) NSArray* tabTitles;
 
 @end
 
@@ -25,19 +26,12 @@
     self.delegate = self;
     
     self.title = @"View Pager";
+    self.tabTitles = @[@"DESTACADOS", @"ARTE & CULTURA",@"COMIDA",@"CINE", @"MUSICA", @"TEATRO", @"DEPORTE", @"HAPPY HOURS"];
     
     // Keeps tab bar below navigation bar on iOS 7.0+
     // if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
     //     self.edgesForExtendedLayout = UIRectEdgeNone;
     // }
-    
-    self.navigationItem.rightBarButtonItem = ({
-        
-        UIBarButtonItem *button;
-        button = [[UIBarButtonItem alloc] initWithTitle:@"Tab #5" style:UIBarButtonItemStylePlain target:self action:@selector(selectTabWithNumberFive)];
-        
-        button;
-    });
     
 }
 - (void)viewDidAppear:(BOOL)animated {
@@ -58,6 +52,7 @@
     
     // Set numberOfTabs
     _numberOfTabs = numberOfTabs;
+    _numberOfTabs = self.tabTitles.count;
     
     // Reload data
     [self reloadData];
@@ -88,12 +83,15 @@
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont systemFontOfSize:12.0];
-    label.text = [NSString stringWithFormat:@"Tab #%i", index];
+    label.text = [NSString stringWithFormat:self.tabTitles[index]];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blackColor];
     [label sizeToFit];
     
     return label;
+}
+-(NSArray*) viewPagerTabs {
+    return self.tabTitles;
 }
 
 - (UIViewController *)viewPager:(ViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index {
@@ -114,7 +112,7 @@
         case ViewPagerOptionCenterCurrentTab:
             return 1.0;
         case ViewPagerOptionTabLocation:
-            return 0.0;
+            return 1.0;
         case ViewPagerOptionTabHeight:
             return 49.0;
         case ViewPagerOptionTabOffset:
@@ -122,9 +120,18 @@
         case ViewPagerOptionTabWidth:
             return UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 128.0 : 96.0;
         case ViewPagerOptionFixFormerTabsPositions:
-            return 1.0;
+            return 0.0;
         case ViewPagerOptionFixLatterTabsPositions:
+            return 0.0;
+        case ViewPagerOptionLowerTabBar:
+            return 0.0;
+        case ViewPagerOptionRelativeTitleSizes:
             return 1.0;
+        case ViewPagerOptionRelativeTitlePadding:
+            return 20.0;
+        case ViewPagerOptionTaBarBottomPadding:
+            
+            return 0.0;
         default:
             return value;
     }
