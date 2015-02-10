@@ -24,6 +24,8 @@
 #define kLowerTabLocation 0.0
 #define kRelativeTitle 0.0
 #define kRelativeTitlePadding 10.0
+#define kTabBarBottomPadding 0.0
+
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
@@ -125,6 +127,7 @@
 @property (nonatomic) NSNumber *lowerTabLocation;
 @property (nonatomic) NSNumber *relativeTitleSizes;
 @property (nonatomic) NSNumber *relativeTitlePadding;
+@property (nonatomic) NSNumber *tabBarBottomPadding;
 
 @property (nonatomic) NSUInteger tabCount;
 @property (nonatomic) NSUInteger activeTabIndex;
@@ -153,6 +156,7 @@
 @synthesize lowerTabLocation = _lowerTabLocation;
 @synthesize relativeTitleSizes = _relativeTitleSizes;
 @synthesize relativeTitlePadding = _relativeTitlePadding;
+@synthesize tabBarBottomPadding = _tabBarBottomPadding;
 
 #pragma mark - Init
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -209,11 +213,13 @@
         topLayoutGuide+=[self.lowerTabLocation floatValue];
     }
     
+    
     CGRect frame = self.tabsView.frame;
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide : CGRectGetHeight(self.view.frame) - [self.tabHeight floatValue];
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = [self.tabHeight floatValue];
+    
+    frame.size.height = [self.tabHeight floatValue] + [self.tabBarBottomPadding floatValue];
     self.tabsView.frame = frame;
     
     frame = self.contentView.frame;
@@ -316,6 +322,10 @@
     _fixLatterTabsPositions = fixLatterTabsPositions;
 }
 
+- (void) setTabBarBottomPadding:(NSNumber *)tabBarBottomPadding {
+
+    _tabBarBottomPadding = tabBarBottomPadding;
+}
 - (void)setRelativeTitleSizes:(NSNumber *)relativeTitleSizes {
     
     if ([relativeTitleSizes floatValue] != 1.0 && [relativeTitleSizes floatValue] != 0.0)
@@ -565,6 +575,16 @@
     }
     return _contentViewBackgroundColor;
 }
+- (NSNumber *)tabBarBottomPadding {
+    if (!_tabBarBottomPadding) {
+        CGFloat value = kTabBarBottomPadding;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTaBarBottomPadding withDefault:value];
+        self.tabBarBottomPadding = [NSNumber numberWithFloat:value];
+    }
+    return _tabBarBottomPadding;
+}
+
 - (NSNumber *)relativeTitleSizes {
     if (!_tabWidth) {
         CGFloat value = kRelativeTitle;
@@ -605,6 +625,7 @@
     // Empty all options
     _tabHeight = nil;
     _tabOffset = nil;
+    _tabBarBottomPadding = nil;
     _tabWidth = nil;
     _tabLocation = nil;
     _startFromSecondTab = nil;
@@ -655,6 +676,8 @@
     self.fixFormerTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixFormerTabsPositions withDefault:kFixFormerTabsPositions]];
     self.fixLatterTabsPositions = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionFixLatterTabsPositions withDefault:kFixLatterTabsPositions]];
     self.lowerTabLocation = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionLowerTabBar withDefault:kFixLatterTabsPositions]];
+    
+    self.tabBarBottomPadding = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionTaBarBottomPadding withDefault:kTabBarBottomPadding]];
     
     // We should update contentSize property of our tabsView, so we should recalculate it with the new values
     CGFloat contentSizeWidth = 0;
@@ -775,6 +798,8 @@
             return [[self relativeTitlePadding] floatValue];
         case ViewPagerOptionLowerTabBar:
             return [[self lowerTabLocation] floatValue];
+        case ViewPagerOptionTaBarBottomPadding:
+            return [[self tabBarBottomPadding] floatValue];
         default:
             return NAN;
     }

@@ -124,11 +124,14 @@
         case ViewPagerOptionFixLatterTabsPositions:
             return 0.0;
         case ViewPagerOptionLowerTabBar:
-            return 100.0;
+            return 0.0;
         case ViewPagerOptionRelativeTitleSizes:
             return 1.0;
         case ViewPagerOptionRelativeTitlePadding:
             return 20.0;
+        case ViewPagerOptionTaBarBottomPadding:
+            
+            return 0.0;
         default:
             return value;
     }
