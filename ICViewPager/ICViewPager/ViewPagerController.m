@@ -573,6 +573,11 @@
     // Call to setup again with the updated data
     [self defaultSetup];
 }
+
+- (void)selectTabAtIndex:(NSUInteger)index {
+    [self selectTabAtIndex:index didSwipe:NO];
+}
+
 - (void)selectTabAtIndex:(NSUInteger)index didSwipe:(BOOL)didSwipe {
     
     if (index >= self.tabCount) {
