@@ -210,6 +210,10 @@
         }
     }
     
+    
+    if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+        topLayoutGuide += [self.delegate viewPager:self valueForOption:ViewPagerOptionTabTopOffset withDefault:0];
+    
     CGRect frame = self.tabsView.frame;
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide : CGRectGetHeight(self.view.frame) - [self.tabHeight floatValue];
@@ -590,14 +594,15 @@
     NSUInteger previousIndex = self.activeTabIndex;
     
     // Set activeTabIndex
+    NSUInteger previousIndex = self.activeTabIndex;
     self.activeTabIndex = index;
     
     // Set activeContentIndex
     self.activeContentIndex = index;
     
     // Inform delegate about the change
-    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
+    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabFromIndex:toIndex:)]) {
+        [self.delegate viewPager:self didChangeTabFromIndex:previousIndex toIndex:self.activeTabIndex];
     }
     else if([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:fromIndex:)]){
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex fromIndex:previousIndex];

@@ -143,4 +143,8 @@
     }
 }
 
+- (void) viewPager:(ViewPagerController *)viewPager didChangeTabFromIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex {
+    NSLog(@"Previous index : %d - Actual index : %d",fromIndex,toIndex);
+}
+
 @end
