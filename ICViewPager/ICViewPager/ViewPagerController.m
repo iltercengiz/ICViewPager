@@ -141,6 +141,7 @@
 @property (nonatomic) NSUInteger activeContentIndex;
 
 @property (getter = isAnimatingToTab, assign) BOOL animatingToTab;
+@property (getter = isShouldClicked, assign) BOOL shouldClicked;
 @property (getter = isDefaultSetupDone, assign) BOOL defaultSetupDone;
 
 // Colors
@@ -232,6 +233,8 @@
     UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
     UIView *tabView = tapGestureRecognizer.view;
     __block NSUInteger index = [self.tabs indexOfObject:tabView];
+    
+    self.shouldClicked = YES;
     
     //if Tap is not selected Tab(new Tab)
     if (self.activeTabIndex != index) {
@@ -386,6 +389,7 @@
                                            animated:YES
                                          completion:^(BOOL completed) {
                                              
+                                             weakSelf.shouldClicked = NO;
                                              weakSelf.animatingToTab = NO;
                                              
                                              // Set the current page again to obtain synchronisation between tabs and content
@@ -403,6 +407,7 @@
                                           direction:(activeContentIndex < self.activeContentIndex) ? UIPageViewControllerNavigationDirectionReverse : UIPageViewControllerNavigationDirectionForward
                                            animated:YES
                                          completion:^(BOOL completed) {
+                                             weakSelf.shouldClicked = NO;
                                              weakSelf.animatingToTab = NO;
                                          }];
     }
@@ -584,7 +589,7 @@
         return;
     }
     
-    self.animatingToTab = YES;
+    self.animatingToTab = NO;
     
     // Keep a reference to previousIndex in case it is needed for the delegate
     NSUInteger previousIndex = self.activeTabIndex;
@@ -772,6 +777,7 @@
     self.pageViewController.delegate = self;
     
     self.animatingToTab = NO;
+    self.shouldClicked = NO;
     self.defaultSetupDone = NO;
 }
 - (void)defaultSetup {
@@ -979,7 +985,7 @@
         [self.actualDelegate scrollViewDidScroll:scrollView];
     }
     
-    if (![self isAnimatingToTab]) {
+    if (![self isAnimatingToTab] && !self.shouldClicked) {
         UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
         
         // Get the related tab view position
