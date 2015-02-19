@@ -37,7 +37,8 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
     ViewPagerOptionRelativeTitlePadding,
     ViewPagerOptionLowerTabBar,
     ViewPagerOptionTaBarBottomPadding,
-    ViewPagerOptionScrollBounce
+    ViewPagerOptionScrollBounce,
+    ViewPagerOptionShowTabs
     
 };
 

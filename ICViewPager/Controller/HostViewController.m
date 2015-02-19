@@ -134,8 +134,9 @@
             return 0.0;
         case ViewPagerOptionScrollBounce:
             
-             return UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 1 : 0;
-            
+             return UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 1.0 : 0.0;
+        case ViewPagerOptionShowTabs:
+            return 1.0;
         default:
             return value;
     }

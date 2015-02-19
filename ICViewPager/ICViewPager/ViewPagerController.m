@@ -26,6 +26,7 @@
 #define kRelativeTitlePadding 10.0
 #define kTabBarBottomPadding 0.0
 #define kScrollBounce 1.0
+#define kShowTabs 1.0
 
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
@@ -130,6 +131,7 @@
 @property (nonatomic) NSNumber *relativeTitlePadding;
 @property (nonatomic) NSNumber *tabBarBottomPadding;
 @property (nonatomic) NSNumber *scrollBounce;
+@property (nonatomic) NSNumber *showTabs;
 
 @property (nonatomic) NSUInteger tabCount;
 @property (nonatomic) NSUInteger activeTabIndex;
@@ -160,6 +162,7 @@
 @synthesize relativeTitlePadding = _relativeTitlePadding;
 @synthesize tabBarBottomPadding = _tabBarBottomPadding;
 @synthesize scrollBounce = _scrollBounce;
+@synthesize showTabs = _showTabs;
 
 #pragma mark - Init
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -228,10 +231,21 @@
     frame = self.contentView.frame;
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide + CGRectGetHeight(self.tabsView.frame) : topLayoutGuide;
+    
+    
+    
     frame.size.width = CGRectGetWidth(self.view.frame);
     frame.size.height = CGRectGetHeight(self.view.frame) - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - (self.tabBarController.tabBar.hidden ? 0 : CGRectGetHeight(self.tabBarController.tabBar.frame));
+
     self.contentView.frame = frame;
- 
+    
+    if(![self.showTabs boolValue]) {
+        frame.origin.y=topLayoutGuide;
+        frame.size.height=CGRectGetHeight(self.view.frame);
+        [self.tabsView setAlpha:0];
+        self.contentView.frame = frame;
+    }
+    
     NSLog(@"BOUNCE: %@", self.scrollBounce);
         for (UIView *view in self.contentView.subviews ) {
             if ([view isKindOfClass:[UIScrollView class]]) {
@@ -340,9 +354,18 @@
 
     _tabBarBottomPadding = tabBarBottomPadding;
 }
+
+- (void) setShowTabs:(NSNumber *)showTabs {
+    NSLog(@"Show Tabs: %02f", showTabs);
+    if ([showTabs floatValue] != 1.0 && [showTabs floatValue] != 0.0)
+        _showTabs = [showTabs boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    
+    _showTabs = showTabs;
+}
+
 - (void) setScrollBounce:(NSNumber *)scrollBounce {
     NSLog(@"SET BOUNCE: %02f", scrollBounce);
-    if ([scrollBounce floatValue] != 1.0 && [scrollBounce floatValue] != 0.0)
+
     _scrollBounce = [scrollBounce boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _scrollBounce = scrollBounce;
@@ -606,6 +629,16 @@
     return _tabBarBottomPadding;
 }
 
+- (NSNumber *)showTabs {
+    if (!_showTabs) {
+        CGFloat value = kShowTabs;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionShowTabs withDefault:value];
+        self.showTabs = [NSNumber numberWithFloat:value];
+    }
+    return _showTabs;
+}
+
 - (NSNumber *)scrollBounce {
     if (!_scrollBounce) {
         CGFloat value = kScrollBounce;
@@ -658,6 +691,7 @@
     _tabOffset = nil;
     _tabBarBottomPadding = nil;
     _scrollBounce=nil;
+    _showTabs=nil;
     _tabWidth = nil;
     _tabLocation = nil;
     _startFromSecondTab = nil;
@@ -712,6 +746,7 @@
     self.tabBarBottomPadding = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionTaBarBottomPadding withDefault:kTabBarBottomPadding]];
     
     self.scrollBounce = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionScrollBounce withDefault:kScrollBounce]];
+    self.showTabs = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionShowTabs withDefault:kScrollBounce]];
 
     
     // We should update contentSize property of our tabsView, so we should recalculate it with the new values
@@ -840,6 +875,8 @@
             return [[self tabBarBottomPadding] floatValue];
         case ViewPagerOptionScrollBounce:
             return [[self scrollBounce] floatValue];
+        case ViewPagerOptionShowTabs:
+            return [[self showTabs] floatValue];
         default:
             return NAN;
     }
