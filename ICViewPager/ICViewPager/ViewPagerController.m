@@ -25,6 +25,7 @@
 #define kRelativeTitle 0.0
 #define kRelativeTitlePadding 10.0
 #define kTabBarBottomPadding 0.0
+#define kScrollBounce 1.0
 
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
@@ -128,6 +129,7 @@
 @property (nonatomic) NSNumber *relativeTitleSizes;
 @property (nonatomic) NSNumber *relativeTitlePadding;
 @property (nonatomic) NSNumber *tabBarBottomPadding;
+@property (nonatomic) NSNumber *scrollBounce;
 
 @property (nonatomic) NSUInteger tabCount;
 @property (nonatomic) NSUInteger activeTabIndex;
@@ -157,6 +159,7 @@
 @synthesize relativeTitleSizes = _relativeTitleSizes;
 @synthesize relativeTitlePadding = _relativeTitlePadding;
 @synthesize tabBarBottomPadding = _tabBarBottomPadding;
+@synthesize scrollBounce = _scrollBounce;
 
 #pragma mark - Init
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -228,6 +231,17 @@
     frame.size.width = CGRectGetWidth(self.view.frame);
     frame.size.height = CGRectGetHeight(self.view.frame) - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - (self.tabBarController.tabBar.hidden ? 0 : CGRectGetHeight(self.tabBarController.tabBar.frame));
     self.contentView.frame = frame;
+ 
+    NSLog(@"BOUNCE: %@", self.scrollBounce);
+        for (UIView *view in self.contentView.subviews ) {
+            if ([view isKindOfClass:[UIScrollView class]]) {
+                UIScrollView *scroll = (UIScrollView *)view;
+                scroll.bounces = [self.scrollBounce boolValue];
+            }
+        }
+        self.tabsView.bounces=[self.scrollBounce boolValue];
+
+    
 }
 
 #pragma mark - IBAction
@@ -325,6 +339,13 @@
 - (void) setTabBarBottomPadding:(NSNumber *)tabBarBottomPadding {
 
     _tabBarBottomPadding = tabBarBottomPadding;
+}
+- (void) setScrollBounce:(NSNumber *)scrollBounce {
+    NSLog(@"SET BOUNCE: %02f", scrollBounce);
+    if ([scrollBounce floatValue] != 1.0 && [scrollBounce floatValue] != 0.0)
+    _scrollBounce = [scrollBounce boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    
+    _scrollBounce = scrollBounce;
 }
 - (void)setRelativeTitleSizes:(NSNumber *)relativeTitleSizes {
     
@@ -585,6 +606,16 @@
     return _tabBarBottomPadding;
 }
 
+- (NSNumber *)scrollBounce {
+    if (!_scrollBounce) {
+        CGFloat value = kScrollBounce;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionScrollBounce withDefault:value];
+        self.scrollBounce = [NSNumber numberWithFloat:value];
+    }
+    return _scrollBounce;
+}
+
 - (NSNumber *)relativeTitleSizes {
     if (!_tabWidth) {
         CGFloat value = kRelativeTitle;
@@ -626,6 +657,7 @@
     _tabHeight = nil;
     _tabOffset = nil;
     _tabBarBottomPadding = nil;
+    _scrollBounce=nil;
     _tabWidth = nil;
     _tabLocation = nil;
     _startFromSecondTab = nil;
@@ -679,6 +711,9 @@
     
     self.tabBarBottomPadding = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionTaBarBottomPadding withDefault:kTabBarBottomPadding]];
     
+    self.scrollBounce = [NSNumber numberWithFloat:[self.delegate viewPager:self valueForOption:ViewPagerOptionScrollBounce withDefault:kScrollBounce]];
+
+    
     // We should update contentSize property of our tabsView, so we should recalculate it with the new values
     CGFloat contentSizeWidth = 0;
     
@@ -719,6 +754,9 @@
     
     // Update tabsView's contentSize with the new width
     self.tabsView.contentSize = CGSizeMake(contentSizeWidth, [self.tabHeight floatValue]);
+    
+    
+    
     
 }
 - (void)setNeedsReloadColors {
@@ -800,6 +838,8 @@
             return [[self lowerTabLocation] floatValue];
         case ViewPagerOptionTaBarBottomPadding:
             return [[self tabBarBottomPadding] floatValue];
+        case ViewPagerOptionScrollBounce:
+            return [[self scrollBounce] floatValue];
         default:
             return NAN;
     }
@@ -895,15 +935,6 @@
         }
     }
     
-#warning Working here
-//    NSArray* titles = nil;
-//    UILabel* tempLabel = nil;
-//    if (self.relativeTitleSizes) {
-//        if (self.relativeTitleSizes && [self.dataSource respondsToSelector:@selector(viewPagerTabs)]){
-//            titles = [self.dataSource viewPagerTabs];
-//            tempLabel = [[UILabel alloc] init];
-//        }
-//    }
     for (NSUInteger i = 0; i < self.tabCount; i++) {
         
         UIView *tabView = [self tabViewAtIndex:i];
@@ -915,10 +946,6 @@
         //Set the tab's frame
         if (self.relativeTitleSizes){
             tabWidth = [self tabViewAtIndex:i].frame.size.width;//[self.dataSource viewPager:self viewForTabAtIndex:i].frame.size.width;
-            NSLog(@"%d - %f",i, tabWidth);
-//            tempLabel.text = titles[i];
-//            [tempLabel sizeToFit];
-//            tabWidth = ceil(tempLabel.frame.size.width);
         }
         
         frame.size.width = tabWidth;
@@ -968,6 +995,9 @@
     
     // Set setup done
     self.defaultSetupDone = YES;
+    
+
+    
 }
 
 - (TabView *)tabViewAtIndex:(NSUInteger)index {
