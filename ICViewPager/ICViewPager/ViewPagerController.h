@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#define NSLog(__FORMAT__, ...)
 
 /**
  * Every option has a default value.

@@ -1052,7 +1052,7 @@
         // Create TabView and subview the content
         TabView *tabView = nil;
         if (self.relativeTitleSizes){
-#warning Tab title frame
+
             tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, tabViewContent.frame.size.width+[self.relativeTitlePadding floatValue], [self.tabHeight floatValue])];
         }else {
             tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];

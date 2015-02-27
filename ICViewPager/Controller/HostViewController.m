@@ -83,7 +83,7 @@
     UILabel *label = [UILabel new];
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont systemFontOfSize:12.0];
-    label.text = [NSString stringWithFormat:self.tabTitles[index]];
+    label.text = [NSString stringWithFormat:@"%@", self.tabTitles[index]];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blackColor];
     [label sizeToFit];
@@ -98,7 +98,7 @@
     
     ContentViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:@"contentViewController"];
     
-    cvc.labelString = [NSString stringWithFormat:@"Content View #%i", index];
+    cvc.labelString = [NSString stringWithFormat:@"Content View #%lu", (unsigned long)index];
     
     return cvc;
 }
