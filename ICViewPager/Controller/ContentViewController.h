@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#define NSLog(__FORMAT__, ...)
 
 @interface ContentViewController : UIViewController
 
