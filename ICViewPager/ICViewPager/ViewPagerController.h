@@ -13,6 +13,13 @@ typedef NS_ENUM(NSUInteger, ViewPagerTabLocation)
 	ViewPagerTabLocationTop = 0,
 	ViewPagerTabLocationBottom = 1
 };
+typedef NS_ENUM(NSUInteger, ViewPagerIndicator)
+{
+	ViewPagerIndicatorAnimationNone = 0,
+	ViewPagerIndicatorAnimationEnd = 1,
+	ViewPagerIndicatorAnimationWhileScrolling = 2
+
+};
 @protocol ViewPagerDataSource;
 @protocol ViewPagerDelegate;
 
@@ -41,9 +48,20 @@ typedef NS_ENUM(NSUInteger, ViewPagerTabLocation)
 */
 @property(nonatomic) CGFloat tabWidth;
 /**
+* Tab bar indicator stroke height, Defaults to 5;
+*/
+@property(nonatomic) CGFloat indicatorHeight;
+/**
 * ViewPagerTabLocationTop, ViewPagerTabLocationBottom, Defaults to ViewPagerTabLocationTop
 */
 @property(nonatomic) ViewPagerTabLocation tabLocation;
+/**
+* Defines if the indicator should change during the pager change (ViewPagerIndicatorAnimationWhileScrolling) ,
+* animated when it ends scrolling (ViewPagerIndicatorAnimationEnd)
+* or doesn't animate at all (ViewPagerIndicatorAnimationNone);
+* Default is ViewPagerIndicatorAnimationWhileScrolling
+*/
+@property(nonatomic) ViewPagerIndicator shouldAnimateIndicator;
 /**
 * Defines if view should appear with the 1st or 2nd tab. Defaults to NO
 */
@@ -76,10 +94,9 @@ typedef NS_ENUM(NSUInteger, ViewPagerTabLocation)
 */
 @property(nonatomic) UIColor *contentViewBackgroundColor;
 
-
 #pragma mark Methods
 /**
-* Reloads all tabs and contents
+* Reloads all tabs and contents with default configuration
 */
 - (void)reloadData;
 /**

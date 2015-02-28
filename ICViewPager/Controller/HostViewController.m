@@ -19,7 +19,6 @@
 
 - (void)viewDidLoad
 {
-
 	[super viewDidLoad];
 
 	self.dataSource = self;
@@ -37,32 +36,25 @@
 	self.contentViewBackgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.32];
 
 	self.startFromSecondTab = NO;
-	self.centerCurrentTab = YES;
-	self.tabLocation = ViewPagerTabLocationBottom;
+	self.centerCurrentTab = NO;
+	self.tabLocation = ViewPagerTabLocationTop;
 	self.tabHeight = 49;
 	self.tabOffset = 36;
 	self.tabWidth = UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 128.0f : 96.0f;
-	self.fixFormerTabsPositions = YES;
-	self.fixLatterTabsPositions = YES;
+	self.fixFormerTabsPositions = NO;
+	self.fixLatterTabsPositions = NO;
+	self.shouldAnimateIndicator = ViewPagerIndicatorAnimationWhileScrolling;
 
-	self.navigationItem.rightBarButtonItem = ({
-
-		UIBarButtonItem *button;
-		button = [[UIBarButtonItem alloc] initWithTitle:@"Tab #5" style:UIBarButtonItemStylePlain target:self action:@selector(selectTabWithNumberFive)];
-
-		button;
-	});
-
+	self.numberOfTabs = 2;
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Tab #5" style:UIBarButtonItemStylePlain target:self action:@selector(selectTabWithNumberFive)];
 }
 
 
 - (void)viewDidAppear:(BOOL)animated
 {
-
 	[super viewDidAppear:animated];
 
 	[self performSelector:@selector(loadContent) withObject:nil afterDelay:3.0];
-
 }
 
 

@@ -16,11 +16,11 @@
 static const CGFloat kTabHeight = 44.0f;
 static const CGFloat kTabOffset = 56.0f;
 static const CGFloat kTabWidth = 128.0;
+static const CGFloat kIndicatorHeight = 5.0;
 static const BOOL kStartFromSecondTab = NO;
 static const BOOL kCenterCurrentTab = NO;
 static const BOOL kFixFormerTabsPositions = NO;
 static const BOOL kFixLatterTabsPositions = NO;
-static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
@@ -28,40 +28,10 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 #pragma mark - UIColor+Equality
 
-@interface UIColor (Equality)
-- (BOOL)isEqualToColor:(UIColor *)otherColor;
-@end
-
-@implementation UIColor (Equality)
-// This method checks if two UIColors are the same
-// Thanks to @samvermette for this method: http://stackoverflow.com/a/8899384/1931781
-- (BOOL)isEqualToColor:(UIColor *)otherColor
-{
-
-	CGColorSpaceRef colorSpaceRGB = CGColorSpaceCreateDeviceRGB();
-	UIColor *(^convertColorToRGBSpace)(UIColor *) = ^(UIColor *color) {
-		if (CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor)) == kCGColorSpaceModelMonochrome) {
-			const CGFloat *oldComponents = CGColorGetComponents(color.CGColor);
-			CGFloat components[4] = {oldComponents[0], oldComponents[0], oldComponents[0], oldComponents[1]};
-			return [UIColor colorWithCGColor:CGColorCreate(colorSpaceRGB, components)];
-		} else {
-			return color;
-		}
-	};
-	UIColor *selfColor = convertColorToRGBSpace(self);
-	otherColor = convertColorToRGBSpace(otherColor);
-	CGColorSpaceRelease(colorSpaceRGB);
-
-	return [selfColor isEqual:otherColor];
-}
-@end
-
 #pragma mark - TabView
 @class TabView;
 
 @interface TabView : UIView
-@property(nonatomic, getter = isSelected) BOOL selected;
-@property(nonatomic) UIColor *indicatorColor;
 @end
 
 @implementation TabView
@@ -75,17 +45,8 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 }
 
 
-- (void)setSelected:(BOOL)selected
-{
-	_selected = selected;
-	// Update view as state changed
-	[self setNeedsDisplay];
-}
-
-
 - (void)drawRect:(CGRect)rect
 {
-
 	UIBezierPath *bezierPath;
 
 	// Draw top line
@@ -103,19 +64,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 	[[UIColor colorWithWhite:197.0f / 255.0f alpha:0.75] setStroke];
 	[bezierPath setLineWidth:1.0];
 	[bezierPath stroke];
-
-	// Draw an indicator line if tab is selected
-	if (self.selected) {
-
-		bezierPath = [UIBezierPath bezierPath];
-
-		// Draw the indicator
-		[bezierPath moveToPoint:CGPointMake(0.0, CGRectGetHeight(rect) - 1.0f)];
-		[bezierPath addLineToPoint:CGPointMake(CGRectGetWidth(rect), CGRectGetHeight(rect) - 1.0f)];
-		[bezierPath setLineWidth:5.0];
-		[self.indicatorColor setStroke];
-		[bezierPath stroke];
-	}
 }
 @end
 
@@ -134,22 +82,14 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 @property(nonatomic) NSUInteger tabCount;
 @property(nonatomic) NSUInteger activeTabIndex;
 @property(nonatomic) NSUInteger activeContentIndex;
-@property(getter = isAnimatingToTab, assign) BOOL animatingToTab;
-@property(getter = isDefaultSetupDone, assign) BOOL defaultSetupDone;
-
-
+@property(getter = isAnimatingToTab) BOOL animatingToTab;
+@property(getter = isDefaultSetupDone) BOOL defaultSetupDone;
+@property(nonatomic, strong) UIView *underlineStroke;
+@property(nonatomic) BOOL didTapOnTabView;
 @end
 
 @implementation ViewPagerController
 
-@synthesize tabHeight = _tabHeight;
-@synthesize tabOffset = _tabOffset;
-@synthesize tabWidth = _tabWidth;
-@synthesize tabLocation = _tabLocation;
-@synthesize startFromSecondTab = _startFromSecondTab;
-@synthesize centerCurrentTab = _centerCurrentTab;
-@synthesize fixFormerTabsPositions = _fixFormerTabsPositions;
-@synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
 
 #pragma mark - Init
 
@@ -185,7 +125,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-
 	[super viewWillAppear:animated];
 
 	// Do setup if it's not done yet
@@ -197,7 +136,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 - (void)viewWillLayoutSubviews
 {
-
 	// Re-layout sub views
 	[self layoutSubviews];
 }
@@ -241,7 +179,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 - (IBAction)handleTapGesture:(id)sender
 {
-
 	// Get the desired page's index
 	UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *) sender;
 	UIView *tabView = tapGestureRecognizer.view;
@@ -260,7 +197,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-
 	// Re-layout sub views
 	[self layoutSubviews];
 
@@ -274,52 +210,30 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 - (void)setTabHeight:(CGFloat)tabHeight
 {
-	if (tabHeight < 4.0)
-		tabHeight = 4.0f;
-	else if (tabHeight > CGRectGetHeight(self.view.frame))
-		tabHeight = CGRectGetHeight(self.view.frame);
-
+	NSAssert((tabHeight > 4.0) || tabHeight < CGRectGetHeight(self.view.frame),
+			@"The tab bar height should be higher then 4 and smaller then the view.height");
 	_tabHeight = tabHeight;
 }
 
 
 - (void)setTabOffset:(CGFloat)tabOffset
 {
-
-	if (tabOffset < 0.0)
-		tabOffset = 0.0F;
-	else if (tabOffset > CGRectGetWidth(self.view.frame) - self.tabWidth)
-		tabOffset = CGRectGetWidth(self.view.frame) - self.tabWidth;
-
+	NSAssert((tabOffset > 0.0) || (tabOffset < CGRectGetWidth(self.view.frame) - self.tabWidth),
+			@"The tab bar offset should be bigger then 4 and smaller then (view.width - tab.width)");
 	_tabOffset = tabOffset;
 }
 
 
 - (void)setTabWidth:(CGFloat)tabWidth
 {
-
-	if (tabWidth < 4.0)
-		tabWidth = 4.0F;
-	else if (tabWidth > CGRectGetWidth(self.view.frame))
-		tabWidth = CGRectGetWidth(self.view.frame);
-
+	NSAssert((tabWidth > 4.0) || tabWidth < CGRectGetWidth(self.view.frame),
+			@"The tab bar width should be higher then 4 and smaller then the view.width");
 	_tabWidth = tabWidth;
 }
 
 
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex
 {
-
-	TabView *activeTabView;
-
-	// Set to-be-inactive tab unselected
-	activeTabView = [self tabViewAtIndex:self.activeTabIndex];
-	activeTabView.selected = NO;
-
-	// Set to-be-active tab selected
-	activeTabView = [self tabViewAtIndex:activeTabIndex];
-	activeTabView.selected = YES;
-
 	// Set current activeTabIndex
 	_activeTabIndex = activeTabIndex;
 
@@ -406,9 +320,7 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 	// Clean out of sight contents
 	NSInteger index;
-	NSLog(@"1. index: %d", index);
 	index = self.activeContentIndex - 1;
-	NSLog(@"2. index: %d", index);
 	if (index >= 0 &&
 			index != activeContentIndex &&
 			index != activeContentIndex - 1) {
@@ -431,95 +343,16 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 }
 
 
-#pragma mark - Getters
-
-
-- (CGFloat)tabHeight
-{
-	if (!_tabHeight) _tabHeight = kTabHeight;
-	return _tabHeight;
-}
-
-
-- (CGFloat)tabOffset
-{
-
-	if (!_tabOffset) _tabOffset = kTabOffset;
-
-	return _tabOffset;
-}
-
-
-- (CGFloat)tabWidth
-{
-	if (!_tabWidth) _tabOffset = kTabWidth;
-	return _tabWidth;
-}
-
-
-- (ViewPagerTabLocation)tabLocation
-{
-	if (!_tabLocation) _tabLocation = kTabLocation;
-	return _tabLocation;
-}
-
-
-- (BOOL)startFromSecondTab
-{
-	if (!_startFromSecondTab) _startFromSecondTab = kStartFromSecondTab;
-	return _startFromSecondTab;
-}
-
-
-- (BOOL)centerCurrentTab
-{
-	if (!_centerCurrentTab) _centerCurrentTab = kCenterCurrentTab;
-	return _centerCurrentTab;
-}
-
-
-- (BOOL)fixFormerTabsPositions
-{
-	if (!_fixFormerTabsPositions) _fixFormerTabsPositions = kFixFormerTabsPositions;
-	return _fixFormerTabsPositions;
-}
-
-
-- (BOOL)fixLatterTabsPositions
-{
-	if (!_fixLatterTabsPositions) _fixLatterTabsPositions = kFixLatterTabsPositions;
-	return _fixLatterTabsPositions;
-}
-
-
-- (UIColor *)indicatorColor
-{
-	if (!_indicatorColor) _indicatorColor = kIndicatorColor;
-	return _indicatorColor;
-}
-
-
-- (UIColor *)tabsViewBackgroundColor
-{
-	if (!_tabsViewBackgroundColor) _tabsViewBackgroundColor = kTabsViewBackgroundColor;
-	return _tabsViewBackgroundColor;
-}
-
-
-- (UIColor *)contentViewBackgroundColor
-{
-	if (!_contentViewBackgroundColor) _contentViewBackgroundColor = kContentViewBackgroundColor;
-	return _contentViewBackgroundColor;
-}
-
-
 #pragma mark - Public methods
 
 
 - (void)reloadData
 {
+//	[self defaultSettings];
 	// Call to setup again with the updated data
 	[self defaultSetup];
+
+	[self.view setNeedsDisplay];
 }
 
 
@@ -535,6 +368,7 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 		return;
 	}
 
+	self.didTapOnTabView = !didSwipe;
 	self.animatingToTab = YES;
 
 	// Keep a reference to previousIndex in case it is needed for the delegate
@@ -606,11 +440,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 - (void)setNeedsReloadColors
 {
-	// We will iterate through all of the tabs to update its indicatorColor
-	[self.tabs enumerateObjectsUsingBlock:^(TabView *tabView, NSUInteger index, BOOL *stop) {
-		tabView.indicatorColor = self.indicatorColor;
-	}];
-
 	// Update indicatorColor to check again later
 	self.indicatorColor = self.indicatorColor;
 
@@ -634,11 +463,27 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 - (void)defaultSettings
 {
+
+	self.contentViewBackgroundColor = kContentViewBackgroundColor;
+	self.tabsViewBackgroundColor = kTabsViewBackgroundColor;
+	self.indicatorColor = kIndicatorColor;
+	self.fixLatterTabsPositions = kFixLatterTabsPositions;
+	self.fixFormerTabsPositions = kFixFormerTabsPositions;
+	self.centerCurrentTab = kCenterCurrentTab;
+	self.startFromSecondTab = kStartFromSecondTab;
+	self.shouldAnimateIndicator = ViewPagerIndicatorAnimationWhileScrolling;
+	self.tabLocation = ViewPagerTabLocationTop;
+	self.indicatorHeight = kIndicatorHeight;
+	self.tabOffset = kTabOffset;
+	self.tabWidth = kTabWidth;
+	self.tabHeight = kTabHeight;
+
+	self.didTapOnTabView = NO;
+
 	// pageViewController
 	self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
 															  navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
 																			options:nil];
-	[self addChildViewController:self.pageViewController];
 
 	// Setup some forwarding events to hijack the scrollView
 	// Keep a reference to the actual delegate
@@ -693,6 +538,9 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 		self.tabsView.tag = kTabViewTag;
 
 		[self.view insertSubview:self.tabsView atIndex:0];
+
+		self.underlineStroke = [UIView new];
+		[self.tabsView addSubview:self.underlineStroke];
 	}
 
 	// Add tab views to _tabsView
@@ -755,7 +603,13 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 	// Select starting tab
 	NSUInteger index = self.startFromSecondTab ? 1 : 0;
-	[self selectTabAtIndex:index didSwipe:NO];
+	[self selectTabAtIndex:index didSwipe:YES];
+
+	CGRect rect = [self tabViewAtIndex:self.activeContentIndex].frame;
+	rect.origin.y = rect.size.height - self.indicatorHeight;
+	rect.size.height = self.indicatorHeight;
+	self.underlineStroke.frame = rect;
+	self.underlineStroke.backgroundColor = self.indicatorColor;
 
 	// Set setup done
 	self.defaultSetupDone = YES;
@@ -778,7 +632,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 		TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.tabWidth, self.tabHeight)];
 		[tabView addSubview:tabViewContent];
 		[tabView setClipsToBounds:YES];
-		[tabView setIndicatorColor:self.indicatorColor];
 
 		tabViewContent.center = tabView.center;
 
@@ -787,12 +640,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 	}
 
 	return self.tabs[index];
-}
-
-
-- (NSUInteger)indexForTabView:(UIView *)tabView
-{
-	return [self.tabs indexOfObject:tabView];
 }
 
 
@@ -862,7 +709,6 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 {
 	UIViewController *viewController = self.pageViewController.viewControllers[0];
 
-	NSLog(@"Content Count: %d", self.contents.count);
 	// Select tab
 	NSUInteger index = [self indexForViewController:viewController];
 	[self selectTabAtIndex:index didSwipe:YES];
@@ -877,9 +723,9 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 	if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
 		[self.actualDelegate scrollViewDidScroll:scrollView];
 	}
+	UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
 
 	if (![self isAnimatingToTab]) {
-		UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
 
 		// Get the related tab view position
 		CGRect frame = tabView.frame;
@@ -907,6 +753,38 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 
 		[self.tabsView scrollRectToVisible:frame animated:NO];
 	}
+
+	__block CGFloat newX;
+	__block CGRect rect = tabView.frame;
+	void (^updateIndicator)() = ^void() {
+		rect.origin.x = newX;
+		rect.origin.y = self.underlineStroke.frame.origin.y;
+		rect.size.height = self.underlineStroke.frame.size.height;
+		self.underlineStroke.frame = rect;
+	};
+	CGFloat width = CGRectGetWidth(self.view.frame);
+	CGFloat distance = tabView.frame.size.width;
+
+	if (self.shouldAnimateIndicator == ViewPagerIndicatorAnimationWhileScrolling && !self.didTapOnTabView) {
+		if ([scrollView.panGestureRecognizer translationInView:scrollView.superview].x > 0) {
+			// handle dragging to the right
+			CGFloat mov = width - scrollView.contentOffset.x;
+			newX = rect.origin.x - ((distance * mov) / width);
+		} else {
+			// handle dragging to the left
+			CGFloat mov = scrollView.contentOffset.x - width;
+			newX = rect.origin.x + ((distance * mov) / width);
+		}
+		updateIndicator();
+	} else if (self.shouldAnimateIndicator == ViewPagerIndicatorAnimationNone) {
+		newX = tabView.frame.origin.x;
+		updateIndicator();
+	} else if (self.shouldAnimateIndicator == ViewPagerIndicatorAnimationEnd || self.didTapOnTabView) {
+		newX = tabView.frame.origin.x;
+		[UIView animateWithDuration:.35f animations:^{
+			updateIndicator();
+		}];
+	}
 }
 
 
@@ -931,6 +809,7 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 	if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
 		[self.actualDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
 	}
+	self.didTapOnTabView = NO;
 }
 
 
@@ -964,6 +843,7 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 	if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
 		[self.actualDelegate scrollViewDidEndDecelerating:scrollView];
 	}
+	self.didTapOnTabView = NO;
 }
 
 
@@ -1011,6 +891,7 @@ static const ViewPagerTabLocation kTabLocation = ViewPagerTabLocationTop;
 	if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
 		[self.actualDelegate scrollViewDidEndScrollingAnimation:scrollView];
 	}
+	self.didTapOnTabView = NO;
 }
 
 @end
