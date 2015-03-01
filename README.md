@@ -21,7 +21,7 @@ Subclass ViewPagerController (as it's a `UIViewController` subclass) and impleme
 
 In the subclass assign self as dataSource and delegate,
 
-```
+```Objective-C
 - (void)viewDidLoad {
     
     [super viewDidLoad];
@@ -34,7 +34,7 @@ In the subclass assign self as dataSource and delegate,
 ### Methods
 
 Then implement dataSource and delegate methods.
-```
+```Objective-C
 #pragma mark - ViewPagerDataSource
 - (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager {
     return 10;
@@ -42,7 +42,7 @@ Then implement dataSource and delegate methods.
 ```
 Returns the number of tabs that will be present in ViewPager.
 
-```
+```Objective-C
 #pragma mark - ViewPagerDataSource
 - (UIView *)viewPager:(ViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index {
 
@@ -55,7 +55,7 @@ Returns the number of tabs that will be present in ViewPager.
 ```
 Returns the view that will be shown as tab. Create a `UIView` object (or any `UIView` subclass object) and give it to ViewPager and it will use it as tab view.
 
-```
+```Objective-C
 #pragma mark - ViewPagerDataSource
 - (UIViewController *)viewPager:(ViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index {
     
@@ -72,7 +72,7 @@ The `- viewPager:contentViewControllerForTabAtIndex:` and `- viewPager:contentVi
 
 All delegate methods are optional.
 
-```
+```Objective-C
 #pragma mark - ViewPagerDelegate
 - (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index {
     
@@ -81,58 +81,25 @@ All delegate methods are optional.
 ```
 ViewPager will alert your delegate object via `- viewPager:didChangeTabToIndex:` method, so that you can do something useful.
 
-```
+```Objective-C
 #pragma mark - ViewPagerDelegate
-- (CGFloat)viewPager:(ViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value {
-    
-    switch (option) {
-        case ViewPagerOptionStartFromSecondTab:
-            return 0.0;
-        case ViewPagerOptionCenterCurrentTab:
-            return 0.0;
-        case ViewPagerOptionTabLocation:
-            return 0.0;
-        default:
-            return value;
-    }
-}
-```
-You can change ViewPager's options via `viewPager:valueForOption:withDefault:` delegate method. Just return the desired value for the given option. You don't have to return a value for every option. Only return values for the interested options and ViewPager will use the default values for the rest. Available options are defined in the `ViewPagerController.h` file and described below.
+    self.indicatorColor = [[UIColor redColor] colorWithAlphaComponent:0.64];
+	self.tabsViewBackgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.32];
+	self.contentViewBackgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.32];
 
+	self.startFromSecondTab = NO;
+	self.centerCurrentTab = NO;
+	self.tabLocation = ViewPagerTabLocationTop;
+	self.tabHeight = 49;
+	self.tabOffset = 36;
+	self.tabWidth = UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 128.0f : 96.0f;
+	self.fixFormerTabsPositions = NO;
+	self.fixLatterTabsPositions = NO;
+	self.shouldAnimateIndicator = ViewPagerIndicatorAnimationWhileScrolling;
 ```
-#pragma mark - ViewPagerDelegate
-- (UIColor *)viewPager:(ViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color {
-    
-    switch (component) {
-        case ViewPagerIndicator:
-            return [[UIColor redColor] colorWithAlphaComponent:0.64];
-        default:
-            return color;
-    }
-}
-```
+You can configurate view pager by changing the properties declared in the interface. All of them have a default value, if you wanna customize your ViewPager just have to change.
+
 You can change some colors too. Just like options, return the interested component's color, and leave out all the rest! [Link](http://www.youtube.com/watch?v=LBTXNPZPfbE)
-    
-### Options
-
-Every option has a default value. So 
-
- * `ViewPagerOptionTabHeight`: Tab bar's height, defaults to 44.0
- * `ViewPagerOptionTabOffset`: Tab bar's offset from left, defaults to 56.0
- * `ViewPagerOptionTabWidth`: Any tab item's width, defaults to 128.0
- * `ViewPagerOptionTabLocation`: 1.0: Top, 0.0: Bottom, Defaults to Top
- * `ViewPagerOptionStartFromSecondTab`: 1.0: `YES`, 0.0: `NO`, defines if view should appear with the 1st or 2nd tab. Defaults to `NO`
- * `ViewPagerOptionCenterCurrentTab`: 1.0: `YES`, 0.0: `NO`, defines if tabs should be centered, with the given tabWidth. Defaults to `NO`
- * `ViewPagerOptionFixFormerTabsPositions`: 1.0: `YES`, 0.0: `NO`, defines if the active tab should be placed margined by the offset amount to the left. Effects only the former tabs. If set 1.0 (`YES`), first tab will be placed at the same position with the second one, leaving space before itself. Defaults to `NO`
- * `ViewPagerOptionFixLatterTabsPositions`: 1.0: `YES`, 0.0: `NO`, like `ViewPagerOptionFixFormerTabsPositions`, but effects the latter tabs, making them leave space after themselves. Defaults to `NO`
-
-### Components
-
-Main parts of the ViewPagerController
-
- * `ViewPagerIndicator`: The colored line in the view of the active tab.
- * `ViewPagerTabsView`: The tabs view itself. When used in `- viewPager:colorForComponent:withDefault:` method, the returned color will be used as background color for the tab view.
- * `ViewPagerContent`: Provided views goes here as content. When used in `- viewPager:colorForComponent:withDefault:` method, the returned color will be used as background color for the content view.
 
 ## Requirements
 
