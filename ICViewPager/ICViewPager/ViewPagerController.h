@@ -15,7 +15,7 @@
  * ViewPagerOptionTabOffset: Tab bar's offset from left, defaults to 56.0
  * ViewPagerOptionTabWidth: Any tab item's width, defaults to 128.0
  * ViewPagerOptionTabLocation: 1.0: Top, 0.0: Bottom, Defaults to Top
- * ViewPagerOptionStartFromSecondTab: 1.0: YES, 0.0: NO, defines if view should appear with the 1st or 2nd tab. Defaults to NO
+ * ViewPagerOptionInitialIndex: Defines which tab the pager should open at. Defaults to 0 (i.e. the first tab). Should be an integer.
  * ViewPagerOptionCenterCurrentTab: 1.0: YES, 0.0: NO, defines if tabs should be centered, with the given tabWidth. Defaults to NO
  * ViewPagerOptionFixFormerTabsPositions: 1.0: YES, 0.0: NO, defines if the active tab should be placed margined by the offset amount to the left. Effects only the former tabs. If set 1.0 (YES), first tab will be placed at the same position with the second one, leaving space before itself. Defaults to NO
  * ViewPagerOptionFixLatterTabsPositions: 1.0: YES, 0.0: NO, like ViewPagerOptionFixFormerTabsPositions, but effects the latter tabs, making them leave space after themselves. Defaults to NO
@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
     ViewPagerOptionTabOffset,
     ViewPagerOptionTabWidth,
     ViewPagerOptionTabLocation,
-    ViewPagerOptionStartFromSecondTab,
+    ViewPagerOptionInitialIndex,
     ViewPagerOptionCenterCurrentTab,
     ViewPagerOptionFixFormerTabsPositions,
     ViewPagerOptionFixLatterTabsPositions

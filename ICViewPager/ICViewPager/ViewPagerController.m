@@ -17,7 +17,7 @@
 #define kTabOffset 56.0
 #define kTabWidth 128.0
 #define kTabLocation 1.0
-#define kStartFromSecondTab 0.0
+#define kInitialIndex 0.0
 #define kCenterCurrentTab 0.0
 #define kFixFormerTabsPositions 0.0
 #define kFixLatterTabsPositions 0.0
@@ -131,7 +131,7 @@
 @property (nonatomic) NSNumber *tabOffset;
 @property (nonatomic) NSNumber *tabWidth;
 @property (nonatomic) NSNumber *tabLocation;
-@property (nonatomic) NSNumber *startFromSecondTab;
+@property (nonatomic) NSNumber *initialIndex;
 @property (nonatomic) NSNumber *centerCurrentTab;
 @property (nonatomic) NSNumber *fixFormerTabsPositions;
 @property (nonatomic) NSNumber *fixLatterTabsPositions;
@@ -156,7 +156,7 @@
 @synthesize tabOffset = _tabOffset;
 @synthesize tabWidth = _tabWidth;
 @synthesize tabLocation = _tabLocation;
-@synthesize startFromSecondTab = _startFromSecondTab;
+@synthesize initialIndex = _initialIndex;
 @synthesize centerCurrentTab = _centerCurrentTab;
 @synthesize fixFormerTabsPositions = _fixFormerTabsPositions;
 @synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
@@ -285,12 +285,14 @@
     
     _tabLocation = tabLocation;
 }
-- (void)setStartFromSecondTab:(NSNumber *)startFromSecondTab {
+- (void)setInitialIndex:(NSNumber *)initialIndex {
     
-    if ([startFromSecondTab floatValue] != 1.0 && [startFromSecondTab floatValue] != 0.0)
-        startFromSecondTab = [startFromSecondTab boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
+    if([initialIndex floatValue] < 0.0)
+        initialIndex = [NSNumber numberWithFloat:0.0];
+    else if ([initialIndex floatValue] > self.tabCount)
+        initialIndex = [NSNumber numberWithFloat:0.0];
     
-    _startFromSecondTab = startFromSecondTab;
+    _initialIndex = initialIndex;
 }
 - (void)setCenterCurrentTab:(NSNumber *)centerCurrentTab {
     
@@ -475,15 +477,15 @@
     }
     return _tabLocation;
 }
-- (NSNumber *)startFromSecondTab {
+- (NSNumber *)initialIndex {
     
-    if (!_startFromSecondTab) {
-        CGFloat value = kStartFromSecondTab;
+    if (!_initialIndex) {
+        CGFloat value = kInitialIndex;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
-            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionStartFromSecondTab withDefault:value];
-        self.startFromSecondTab = [NSNumber numberWithFloat:value];
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionInitialIndex withDefault:value];
+        self.initialIndex = [NSNumber numberWithFloat:value];
     }
-    return _startFromSecondTab;
+    return _initialIndex;
 }
 - (NSNumber *)centerCurrentTab {
     
@@ -560,7 +562,7 @@
     _tabOffset = nil;
     _tabWidth = nil;
     _tabLocation = nil;
-    _startFromSecondTab = nil;
+    _initialIndex = nil;
     _centerCurrentTab = nil;
     _fixFormerTabsPositions = nil;
     _fixLatterTabsPositions = nil;
@@ -731,8 +733,8 @@
             return [[self tabWidth] floatValue];
         case ViewPagerOptionTabLocation:
             return [[self tabLocation] floatValue];
-        case ViewPagerOptionStartFromSecondTab:
-            return [[self startFromSecondTab] floatValue];
+        case ViewPagerOptionInitialIndex:
+            return [[self initialIndex] floatValue];
         case ViewPagerOptionCenterCurrentTab:
             return [[self centerCurrentTab] floatValue];
         default:
@@ -875,7 +877,7 @@
     }
     
     // Select starting tab
-    NSUInteger index = [self.startFromSecondTab boolValue] ? 1 : 0;
+    NSUInteger index = [self.initialIndex integerValue];
     [self selectTabAtIndex:index didSwipe:NO];
     
     // Set setup done
