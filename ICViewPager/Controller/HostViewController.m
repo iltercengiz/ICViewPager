@@ -109,7 +109,7 @@
 - (CGFloat)viewPager:(ViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value {
     
     switch (option) {
-        case ViewPagerOptionStartFromSecondTab:
+        case ViewPagerOptionInitialIndex:
             return 0.0;
         case ViewPagerOptionCenterCurrentTab:
             return 1.0;
