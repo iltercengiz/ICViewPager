@@ -241,9 +241,10 @@
     
     if(![self.showTabs boolValue]) {
         frame.origin.y=topLayoutGuide;
-        frame.size.height=CGRectGetHeight(self.view.frame);
+        frame.size.height=CGRectGetHeight(self.view.frame)-kTabHeight-15;
         [self.tabsView setAlpha:0];
         self.contentView.frame = frame;
+
     }
     
     NSLog(@"BOUNCE: %@", self.scrollBounce);
