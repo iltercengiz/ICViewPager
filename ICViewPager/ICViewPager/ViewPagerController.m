@@ -200,6 +200,11 @@
     [super didReceiveMemoryWarning];
 }
 
+- (NSUInteger) currentActiveContentIndex
+{
+    return _activeContentIndex;
+}
+
 - (void)layoutSubviews {
     
     CGFloat topLayoutGuide = 0.0;
@@ -221,7 +226,7 @@
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide + CGRectGetHeight(self.tabsView.frame) : topLayoutGuide;
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = CGRectGetHeight(self.view.frame) - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - (self.tabBarController.tabBar.hidden ? 0 : CGRectGetHeight(self.tabBarController.tabBar.frame));
+    frame.size.height = CGRectGetHeight(self.view.frame) - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - CGRectGetHeight(self.tabBarController.tabBar.frame);
     self.contentView.frame = frame;
 }
 
@@ -236,7 +241,7 @@
     //if Tap is not selected Tab(new Tab)
     if (self.activeTabIndex != index) {
         // Select the tab
-        [self selectTabAtIndex:index didSwipe:NO];
+        [self selectTabAtIndex:index];
     }
 }
 
@@ -570,24 +575,17 @@
     _tabsViewBackgroundColor = nil;
     _contentViewBackgroundColor = nil;
     
+    
     // Call to setup again with the updated data
     [self defaultSetup];
 }
-
 - (void)selectTabAtIndex:(NSUInteger)index {
-    [self selectTabAtIndex:index didSwipe:NO];
-}
-
-- (void)selectTabAtIndex:(NSUInteger)index didSwipe:(BOOL)didSwipe {
     
     if (index >= self.tabCount) {
         return;
     }
     
     self.animatingToTab = YES;
-    
-    // Keep a reference to previousIndex in case it is needed for the delegate
-    NSUInteger previousIndex = self.activeTabIndex;
     
     // Set activeTabIndex
     self.activeTabIndex = index;
@@ -598,12 +596,6 @@
     // Inform delegate about the change
     if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
-    }
-    else if([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:fromIndex:)]){
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex fromIndex:previousIndex];
-    }
-    else if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:fromIndex:didSwipe:)]) {
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex fromIndex:previousIndex didSwipe:didSwipe];
     }
 }
 
@@ -761,7 +753,7 @@
                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                             options:nil];
     [self addChildViewController:self.pageViewController];
-
+    
     // Setup some forwarding events to hijack the scrollView
     // Keep a reference to the actual delegate
     self.actualDelegate = ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate;
@@ -876,7 +868,8 @@
     
     // Select starting tab
     NSUInteger index = [self.startFromSecondTab boolValue] ? 1 : 0;
-    [self selectTabAtIndex:index didSwipe:NO];
+    _activeContentIndex = 0;
+    [self selectTabAtIndex:index];
     
     // Set setup done
     self.defaultSetupDone = YES;
@@ -889,7 +882,7 @@
     }
     
     if ([[self.tabs objectAtIndex:index] isEqual:[NSNull null]]) {
-
+        
         // Get view from dataSource
         UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
         tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -969,7 +962,7 @@
     
     // Select tab
     NSUInteger index = [self indexForViewController:viewController];
-    [self selectTabAtIndex:index didSwipe:YES];
+    [self selectTabAtIndex:index];
 }
 
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling and Dragging
