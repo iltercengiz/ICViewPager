@@ -745,6 +745,14 @@
     }
 }
 
+- (void) enableScrolling:(BOOL)enable
+{
+    if (enable)
+        self.pageViewController.dataSource = self;
+    else
+        self.pageViewController.dataSource = nil;
+}
+
 #pragma mark - Private methods
 - (void)defaultSettings {
     
