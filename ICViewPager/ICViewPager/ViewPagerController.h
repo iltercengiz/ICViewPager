@@ -116,6 +116,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * expose for internal manipulation
  */
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index;
+- (UIView *) tabViewAtIndex:(NSUInteger)index;
 - (NSUInteger) currentActiveContentIndex;
 - (void) enableScrolling:(BOOL)enable;
 
