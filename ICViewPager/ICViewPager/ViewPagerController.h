@@ -119,6 +119,8 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 - (UIView *) tabViewAtIndex:(NSUInteger)index;
 - (NSUInteger) currentActiveContentIndex;
 - (void) enableScrolling:(BOOL)enable;
+- (UIScrollView*) pagerTabsView;
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
 
 @end
 
@@ -205,5 +207,9 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * @return A UIColor for the given component
  */
 - (UIColor *)viewPager:(ViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color;
+
+
+- (void)viewPager:(ViewPagerController *)viewPager activeTabMoveBehind:(NSNumber*)idxPosition;
+
 
 @end
