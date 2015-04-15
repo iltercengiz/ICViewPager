@@ -7,6 +7,7 @@
 //
 
 #import "ViewPagerController.h"
+#import "BFDragGestureRecognizer.h"
 
 #pragma mark - Constants and macros
 #define kTabViewTag 38
@@ -203,6 +204,11 @@
 - (NSUInteger) currentActiveContentIndex
 {
     return _activeContentIndex;
+}
+
+- (UIScrollView*) pagerTabsView
+{
+    return self.tabsView;
 }
 
 - (void)layoutSubviews {
@@ -905,10 +911,83 @@
         
         // Replace the null object with tabView
         [self.tabs replaceObjectAtIndex:index withObject:tabView];
+        
+        
+        BFDragGestureRecognizer *dragRecognizer = [[BFDragGestureRecognizer alloc] init];
+        dragRecognizer.delegate = self;
+        [dragRecognizer addTarget:self action:@selector(dragRecognized:)];
+        [tabView addGestureRecognizer:dragRecognizer];
+        
     }
     
     return [self.tabs objectAtIndex:index];
 }
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer isKindOfClass:[BFDragGestureRecognizer class]])
+    {
+        UIView * tabView = gestureRecognizer.view;
+        UIView * activeTab = [self tabViewAtIndex:[self currentActiveContentIndex]];
+        
+        return (tabView == activeTab);
+    }
+    return FALSE;
+}
+
+- (NSNumber*) estimatePositionFromCenter:(CGPoint)ptCenter
+{
+    for (int i = 0; i < self.tabCount; i++)
+    {
+        UIView * tab = [self tabViewAtIndex:i];
+        
+        if ((tab.center.x < ptCenter.x)
+            &&
+            (ptCenter.x < (tab.center.x + [self.tabWidth intValue])))
+        {
+            return [NSNumber numberWithInt:i];
+        }
+    }
+    
+    return nil;
+}
+
+- (void)dragRecognized:(BFDragGestureRecognizer *)recognizer {
+    UIView *view = recognizer.view;
+    
+    static CGPoint _startCenter = {0};
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        // When the gesture starts, remember the current position.
+        _startCenter = view.center;
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        
+        // During the gesture, we just add the gesture's translation to the saved original position.
+        // The translation will account for the changes in contentOffset caused by auto-scrolling.
+        CGPoint translation = [recognizer translationInView:[self pagerTabsView]];
+        CGPoint center = CGPointMake(_startCenter.x + translation.x, _startCenter.y);
+        //  CGPoint center = CGPointMake(_startCenter.x, _startCenter.y + translation.y);
+        view.center = center;
+        
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        NSNumber * num = [self estimatePositionFromCenter:view.center];
+        if (num)
+        {
+            if ([self.delegate respondsToSelector:@selector(viewPager:activeTabMoveBehind:)])
+            {
+                [self.delegate viewPager:self activeTabMoveBehind:num];
+            }
+        }
+        else
+        {
+            view.center = _startCenter;
+            _startCenter = CGPointZero;
+        }
+    }
+}
+
+
 - (NSUInteger)indexForTabView:(UIView *)tabView {
     
     return [self.tabs indexOfObject:tabView];
