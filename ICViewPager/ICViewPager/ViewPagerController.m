@@ -211,6 +211,11 @@
     return self.tabsView;
 }
 
+- (UIView*) pagerContentView
+{
+    return self.contentView;
+}
+
 - (void)layoutSubviews {
     
     CGFloat topLayoutGuide = 0.0;
