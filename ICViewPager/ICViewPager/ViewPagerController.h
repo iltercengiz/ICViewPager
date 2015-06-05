@@ -120,8 +120,9 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 - (NSUInteger) currentActiveContentIndex;
 - (void) enableScrolling:(BOOL)enable;
 - (UIScrollView*) pagerTabsView;
+- (UIView*) pagerContentView;
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
-- (void)layoutSubviews;
+- (void)layoutSubviews ;
 
 @end
 
