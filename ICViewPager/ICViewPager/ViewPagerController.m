@@ -22,6 +22,7 @@
 #define kCenterCurrentTab 0.0
 #define kFixFormerTabsPositions 0.0
 #define kFixLatterTabsPositions 0.0
+#define kStartFromIndexTab 1
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
@@ -133,6 +134,7 @@
 @property (nonatomic) NSNumber *tabWidth;
 @property (nonatomic) NSNumber *tabLocation;
 @property (nonatomic) NSNumber *startFromSecondTab;
+@property (nonatomic) NSNumber *startFromIndexTab;
 @property (nonatomic) NSNumber *centerCurrentTab;
 @property (nonatomic) NSNumber *fixFormerTabsPositions;
 @property (nonatomic) NSNumber *fixLatterTabsPositions;
@@ -158,6 +160,7 @@
 @synthesize tabWidth = _tabWidth;
 @synthesize tabLocation = _tabLocation;
 @synthesize startFromSecondTab = _startFromSecondTab;
+@synthesize startFromIndexTab = _startFromIndexTab;
 @synthesize centerCurrentTab = _centerCurrentTab;
 @synthesize fixFormerTabsPositions = _fixFormerTabsPositions;
 @synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
@@ -307,6 +310,9 @@
         startFromSecondTab = [startFromSecondTab boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _startFromSecondTab = startFromSecondTab;
+}
+- (void)setStartFromIndexTab:(NSNumber *)startFromIndexTab {
+    _startFromIndexTab = startFromIndexTab;
 }
 - (void)setCenterCurrentTab:(NSNumber *)centerCurrentTab {
     
@@ -501,6 +507,16 @@
     }
     return _startFromSecondTab;
 }
+- (NSNumber *)startFromIndexTab {
+    
+    if (!_startFromIndexTab) {
+        CGFloat value = kStartFromIndexTab;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionStartFromIndexTab withDefault:value];
+        self.startFromIndexTab = [NSNumber numberWithFloat:value];
+    }
+    return _startFromIndexTab;
+}
 - (NSNumber *)centerCurrentTab {
     
     if (!_centerCurrentTab) {
@@ -577,6 +593,7 @@
     _tabWidth = nil;
     _tabLocation = nil;
     _startFromSecondTab = nil;
+    _startFromIndexTab = nil;
     _centerCurrentTab = nil;
     _fixFormerTabsPositions = nil;
     _fixLatterTabsPositions = nil;
@@ -888,7 +905,11 @@
     // Select starting tab
     NSUInteger index = [self.startFromSecondTab boolValue] ? 1 : 0;
     _activeContentIndex = 0;
-    [self selectTabAtIndex:index];
+    
+    if ([self.startFromIndexTab integerValue] > 1)
+        [self selectTabAtIndex:[self.startFromIndexTab integerValue]];
+    else
+        [self selectTabAtIndex:index];
     
     // Set setup done
     self.defaultSetupDone = YES;
