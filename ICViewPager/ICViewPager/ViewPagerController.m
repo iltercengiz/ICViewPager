@@ -802,6 +802,11 @@
     self.animatingToTab = NO;
     self.defaultSetupDone = NO;
 }
+
+- (void) handleTap:(id)sender {
+    NSLog(@"tap detected");
+    
+}
 - (void)defaultSetup {
     
     // Empty tabs and contents
@@ -898,6 +903,13 @@
         self.contentView.backgroundColor = self.contentViewBackgroundColor;
         self.contentView.bounds = self.view.bounds;
         self.contentView.tag = kContentViewTag;
+        
+        // allow UIViewController hosted inside pageview controller able to receive tap event
+        // http://stackoverflow.com/questions/16882737/scrollview-gesture-recognizer-eating-all-touch-events
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        singleTap.cancelsTouchesInView = NO;
+        [self.pageViewController.view addGestureRecognizer:singleTap];
+
         
         [self.view insertSubview:self.contentView atIndex:0];
     }
