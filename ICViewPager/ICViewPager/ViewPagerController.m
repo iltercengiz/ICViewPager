@@ -916,6 +916,18 @@
     
     // Select starting tab
     NSUInteger index = [self.startFromSecondTab boolValue] ? 1 : 0;
+    UIViewController *viewController = [self viewControllerAtIndex:index];
+    
+    if (!viewController) {
+        viewController = [[UIViewController alloc] init];
+        viewController.view = [[UIView alloc] init];
+        viewController.view.backgroundColor = [UIColor clearColor];
+    }
+    
+    [self.pageViewController setViewControllers:@[viewController]
+                                      direction:UIPageViewControllerNavigationDirectionForward
+                                       animated:NO
+                                     completion:nil];
     _activeContentIndex = 0;
     
     if ([self.startFromIndexTab integerValue] > 1)
