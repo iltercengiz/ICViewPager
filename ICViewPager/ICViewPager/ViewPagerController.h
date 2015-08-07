@@ -37,11 +37,15 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
  * ViewPagerIndicator: The colored line in the view of the active tab
  * ViewPagerTabsView: The tabs view itself
  * ViewPagerContent: Provided views goes here as content
+ * ViewPagerTopLine: The colored top line for the tab
+ * ViewPagerBottomLine: The colored bottom line for the tab
  */
 typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
     ViewPagerIndicator,
     ViewPagerTabsView,
-    ViewPagerContent
+    ViewPagerContent,
+    ViewPagerTopLine,
+    ViewPagerBottomLine
 };
 
 @protocol ViewPagerDataSource;
@@ -168,23 +172,6 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * @param index The index of the active tab
  */
 - (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index;
-/**
- * delegate object should implement this method if it wants to be informed when a tab changes and what its previous tab index was
- *
- * @param viewPager The viewPager that's subject to
- * @param index The index of the active tab
- * @param previousIndex The previous index of the active tab
- */
-- (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index fromIndex:(NSUInteger)previousIndex;
-/**
- * delegate object should implement this method if it wants to be informed when a tab changes and what its previous tab index was and whether the change action was caused by a swipe gesture or tab bar button press
- *
- * @param viewPager The viewPager that's subject to
- * @param index The index of the active tab
- * @param previousIndex The previous index of the active tab
- * @param didSwipe Indicating if the change action was caused by a swipe gesture or a tab bar button press
- */
-- (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index fromIndex:(NSUInteger)previousIndex didSwipe:(BOOL)didSwipe;
 /**
  * Every time -reloadData method called, ViewPager will ask its delegate for option values.
  * So you don't have to set options from ViewPager itself.
