@@ -326,11 +326,13 @@
     
     // Set to-be-inactive tab unselected
     activeTabView = [self tabViewAtIndex:self.activeTabIndex];
-    activeTabView.selected = NO;
+    if (![activeTabView isKindOfClass:[NSNull class]])
+        activeTabView.selected = NO;
     
     // Set to-be-active tab selected
     activeTabView = [self tabViewAtIndex:activeTabIndex];
-    activeTabView.selected = YES;
+    if (![activeTabView isKindOfClass:[NSNull class]])
+        activeTabView.selected = YES;
     
     // Set current activeTabIndex
     _activeTabIndex = activeTabIndex;
@@ -338,6 +340,9 @@
     // Bring tab to active position
     // Position the tab in center if centerCurrentTab option is provided as YES
     UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
+    if ([tabView isKindOfClass:[NSNull class]])
+        return;
+    
     CGRect frame = tabView.frame;
     
     if ([self.centerCurrentTab boolValue]) {
@@ -656,6 +661,8 @@
     for (NSUInteger i = 0; i < self.tabCount; i++) {
         
         UIView *tabView = [self tabViewAtIndex:i];
+        if ([tabView isKindOfClass:[NSNull class]])
+            continue;
         
         CGRect frame = tabView.frame;
         frame.origin.x = contentSizeWidth;
@@ -883,6 +890,8 @@
     for (NSUInteger i = 0; i < self.tabCount; i++) {
         
         UIView *tabView = [self tabViewAtIndex:i];
+        if ([tabView isKindOfClass:[NSNull class]])
+            continue;
         
         CGRect frame = tabView.frame;
         frame.origin.x = contentSizeWidth;
@@ -943,20 +952,22 @@
 
         // Get view from dataSource
         UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
-        tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        
-        // Create TabView and subview the content
-        TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];
-        [tabView addSubview:tabViewContent];
-        [tabView setClipsToBounds:YES];
-        [tabView setIndicatorColor:self.indicatorColor];
-        [tabView setTopLineColor:self.topLineColor];
-        [tabView setBottomLineColor:self.bottomLineColor];
-        
-        tabViewContent.center = tabView.center;
-        
-        // Replace the null object with tabView
-        [self.tabs replaceObjectAtIndex:index withObject:tabView];
+        if (tabViewContent != nil) {
+            tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+            
+            // Create TabView and subview the content
+            TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];
+            [tabView addSubview:tabViewContent];
+            [tabView setClipsToBounds:YES];
+            [tabView setIndicatorColor:self.indicatorColor];
+            [tabView setTopLineColor:self.topLineColor];
+            [tabView setBottomLineColor:self.bottomLineColor];
+            
+            tabViewContent.center = tabView.center;
+            
+            // Replace the null object with tabView
+            [self.tabs replaceObjectAtIndex:index withObject:tabView];
+        }
     }
     
     return [self.tabs objectAtIndex:index];
@@ -1034,6 +1045,8 @@
     
     if (![self isAnimatingToTab]) {
         UIView *tabView = [self tabViewAtIndex:self.activeTabIndex];
+        if ([tabView isKindOfClass:[NSNull class]])
+            return;
         
         // Get the related tab view position
         CGRect frame = tabView.frame;
