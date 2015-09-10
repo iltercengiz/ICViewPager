@@ -974,7 +974,7 @@
 
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling and Dragging
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
+    scrollView.delaysContentTouches = NO;    
     if ([self.actualDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
         [self.actualDelegate scrollViewDidScroll:scrollView];
     }
