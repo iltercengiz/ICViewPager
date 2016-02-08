@@ -2,11 +2,12 @@
 //  ViewPagerController.m
 //  ICViewPager
 //
-//  Created by Ilter Cengiz on 28/08/2013.
+//  Created by Ilter Cengiz on 28/08/2013.IOS_VERSION_7
 //  Copyright (c) 2013 Ilter Cengiz. All rights reserved.
 //
 
 #import "ViewPagerController.h"
+#import "BFDragGestureRecognizer.h"
 
 #pragma mark - Constants and macros
 #define kTabViewTag 38
@@ -21,6 +22,7 @@
 #define kCenterCurrentTab 0.0
 #define kFixFormerTabsPositions 0.0
 #define kFixLatterTabsPositions 0.0
+#define kStartFromIndexTab 1
 
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
@@ -132,6 +134,7 @@
 @property (nonatomic) NSNumber *tabWidth;
 @property (nonatomic) NSNumber *tabLocation;
 @property (nonatomic) NSNumber *startFromSecondTab;
+@property (nonatomic) NSNumber *startFromIndexTab;
 @property (nonatomic) NSNumber *centerCurrentTab;
 @property (nonatomic) NSNumber *fixFormerTabsPositions;
 @property (nonatomic) NSNumber *fixLatterTabsPositions;
@@ -157,6 +160,7 @@
 @synthesize tabWidth = _tabWidth;
 @synthesize tabLocation = _tabLocation;
 @synthesize startFromSecondTab = _startFromSecondTab;
+@synthesize startFromIndexTab = _startFromIndexTab;
 @synthesize centerCurrentTab = _centerCurrentTab;
 @synthesize fixFormerTabsPositions = _fixFormerTabsPositions;
 @synthesize fixLatterTabsPositions = _fixLatterTabsPositions;
@@ -200,6 +204,21 @@
     [super didReceiveMemoryWarning];
 }
 
+- (NSUInteger) currentActiveContentIndex
+{
+    return _activeContentIndex;
+}
+
+- (UIScrollView*) pagerTabsView
+{
+    return self.tabsView;
+}
+
+- (UIView*) pagerContentView
+{
+    return self.contentView;
+}
+
 - (void)layoutSubviews {
     
     CGFloat topLayoutGuide = 0.0;
@@ -221,7 +240,7 @@
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide + CGRectGetHeight(self.tabsView.frame) : topLayoutGuide;
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = CGRectGetHeight(self.view.frame) - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - (self.tabBarController.tabBar.hidden ? 0 : CGRectGetHeight(self.tabBarController.tabBar.frame));
+    frame.size.height = CGRectGetHeight(self.view.frame) - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - CGRectGetHeight(self.tabBarController.tabBar.frame);
     self.contentView.frame = frame;
 }
 
@@ -236,7 +255,7 @@
     //if Tap is not selected Tab(new Tab)
     if (self.activeTabIndex != index) {
         // Select the tab
-        [self selectTabAtIndex:index didSwipe:NO];
+        [self selectTabAtIndex:index];
     }
 }
 
@@ -291,6 +310,9 @@
         startFromSecondTab = [startFromSecondTab boolValue] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO];
     
     _startFromSecondTab = startFromSecondTab;
+}
+- (void)setStartFromIndexTab:(NSNumber *)startFromIndexTab {
+    _startFromIndexTab = startFromIndexTab;
 }
 - (void)setCenterCurrentTab:(NSNumber *)centerCurrentTab {
     
@@ -485,6 +507,16 @@
     }
     return _startFromSecondTab;
 }
+- (NSNumber *)startFromIndexTab {
+    
+    if (!_startFromIndexTab) {
+        CGFloat value = kStartFromIndexTab;
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionStartFromIndexTab withDefault:value];
+        self.startFromIndexTab = [NSNumber numberWithFloat:value];
+    }
+    return _startFromIndexTab;
+}
 - (NSNumber *)centerCurrentTab {
     
     if (!_centerCurrentTab) {
@@ -561,6 +593,7 @@
     _tabWidth = nil;
     _tabLocation = nil;
     _startFromSecondTab = nil;
+    _startFromIndexTab = nil;
     _centerCurrentTab = nil;
     _fixFormerTabsPositions = nil;
     _fixLatterTabsPositions = nil;
@@ -570,24 +603,17 @@
     _tabsViewBackgroundColor = nil;
     _contentViewBackgroundColor = nil;
     
+    
     // Call to setup again with the updated data
     [self defaultSetup];
 }
-
 - (void)selectTabAtIndex:(NSUInteger)index {
-    [self selectTabAtIndex:index didSwipe:NO];
-}
-
-- (void)selectTabAtIndex:(NSUInteger)index didSwipe:(BOOL)didSwipe {
     
     if (index >= self.tabCount) {
         return;
     }
     
     self.animatingToTab = YES;
-    
-    // Keep a reference to previousIndex in case it is needed for the delegate
-    NSUInteger previousIndex = self.activeTabIndex;
     
     // Set activeTabIndex
     self.activeTabIndex = index;
@@ -598,12 +624,6 @@
     // Inform delegate about the change
     if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
         [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex];
-    }
-    else if([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:fromIndex:)]){
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex fromIndex:previousIndex];
-    }
-    else if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:fromIndex:didSwipe:)]) {
-        [self.delegate viewPager:self didChangeTabToIndex:self.activeTabIndex fromIndex:previousIndex didSwipe:didSwipe];
     }
 }
 
@@ -753,6 +773,14 @@
     }
 }
 
+- (void) enableScrolling:(BOOL)enable
+{
+    if (enable)
+        self.pageViewController.dataSource = self;
+    else
+        self.pageViewController.dataSource = nil;
+}
+
 #pragma mark - Private methods
 - (void)defaultSettings {
     
@@ -761,7 +789,7 @@
                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                             options:nil];
     [self addChildViewController:self.pageViewController];
-
+    
     // Setup some forwarding events to hijack the scrollView
     // Keep a reference to the actual delegate
     self.actualDelegate = ((UIScrollView *)[self.pageViewController.view.subviews objectAtIndex:0]).delegate;
@@ -773,6 +801,11 @@
     
     self.animatingToTab = NO;
     self.defaultSetupDone = NO;
+}
+
+- (void) handleTap:(id)sender {
+    NSLog(@"tap detected");
+    
 }
 - (void)defaultSetup {
     
@@ -871,12 +904,36 @@
         self.contentView.bounds = self.view.bounds;
         self.contentView.tag = kContentViewTag;
         
+        // allow UIViewController hosted inside pageview controller able to receive tap event
+        // http://stackoverflow.com/questions/16882737/scrollview-gesture-recognizer-eating-all-touch-events
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        singleTap.cancelsTouchesInView = NO;
+        [self.pageViewController.view addGestureRecognizer:singleTap];
+
+        
         [self.view insertSubview:self.contentView atIndex:0];
     }
     
     // Select starting tab
     NSUInteger index = [self.startFromSecondTab boolValue] ? 1 : 0;
-    [self selectTabAtIndex:index didSwipe:NO];
+    UIViewController *viewController = [self viewControllerAtIndex:index];
+    
+    if (!viewController) {
+        viewController = [[UIViewController alloc] init];
+        viewController.view = [[UIView alloc] init];
+        viewController.view.backgroundColor = [UIColor clearColor];
+    }
+    
+    [self.pageViewController setViewControllers:@[viewController]
+                                      direction:UIPageViewControllerNavigationDirectionForward
+                                       animated:NO
+                                     completion:nil];
+    _activeContentIndex = 0;
+    
+    if ([self.startFromIndexTab integerValue] > 1)
+        [self selectTabAtIndex:[self.startFromIndexTab integerValue]];
+    else
+        [self selectTabAtIndex:index];
     
     // Set setup done
     self.defaultSetupDone = YES;
@@ -889,7 +946,7 @@
     }
     
     if ([[self.tabs objectAtIndex:index] isEqual:[NSNull null]]) {
-
+        
         // Get view from dataSource
         UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
         tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -904,10 +961,83 @@
         
         // Replace the null object with tabView
         [self.tabs replaceObjectAtIndex:index withObject:tabView];
+        
+        
+        BFDragGestureRecognizer *dragRecognizer = [[BFDragGestureRecognizer alloc] init];
+        dragRecognizer.delegate = self;
+        [dragRecognizer addTarget:self action:@selector(dragRecognized:)];
+        [tabView addGestureRecognizer:dragRecognizer];
+        
     }
     
     return [self.tabs objectAtIndex:index];
 }
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer isKindOfClass:[BFDragGestureRecognizer class]])
+    {
+        UIView * tabView = gestureRecognizer.view;
+        UIView * activeTab = [self tabViewAtIndex:[self currentActiveContentIndex]];
+        
+        return (tabView == activeTab);
+    }
+    return FALSE;
+}
+
+- (NSNumber*) estimatePositionFromCenter:(CGPoint)ptCenter
+{
+    for (int i = 0; i < self.tabCount; i++)
+    {
+        UIView * tab = [self tabViewAtIndex:i];
+        
+        if ((tab.center.x < ptCenter.x)
+            &&
+            (ptCenter.x < (tab.center.x + [self.tabWidth intValue])))
+        {
+            return [NSNumber numberWithInt:i];
+        }
+    }
+    
+    return nil;
+}
+
+- (void)dragRecognized:(BFDragGestureRecognizer *)recognizer {
+    UIView *view = recognizer.view;
+    
+    static CGPoint _startCenter = {0};
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        // When the gesture starts, remember the current position.
+        _startCenter = view.center;
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        
+        // During the gesture, we just add the gesture's translation to the saved original position.
+        // The translation will account for the changes in contentOffset caused by auto-scrolling.
+        CGPoint translation = [recognizer translationInView:[self pagerTabsView]];
+        CGPoint center = CGPointMake(_startCenter.x + translation.x, _startCenter.y);
+        //  CGPoint center = CGPointMake(_startCenter.x, _startCenter.y + translation.y);
+        view.center = center;
+        
+    } else if (recognizer.state == UIGestureRecognizerStateEnded) {
+        NSNumber * num = [self estimatePositionFromCenter:view.center];
+        if (num)
+        {
+            if ([self.delegate respondsToSelector:@selector(viewPager:activeTabMoveBehind:)])
+            {
+                [self.delegate viewPager:self activeTabMoveBehind:num];
+            }
+        }
+        else
+        {
+            view.center = _startCenter;
+            _startCenter = CGPointZero;
+        }
+    }
+}
+
+
 - (NSUInteger)indexForTabView:(UIView *)tabView {
     
     return [self.tabs indexOfObject:tabView];
@@ -969,7 +1099,7 @@
     
     // Select tab
     NSUInteger index = [self indexForViewController:viewController];
-    [self selectTabAtIndex:index didSwipe:YES];
+    [self selectTabAtIndex:index];
 }
 
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling and Dragging
