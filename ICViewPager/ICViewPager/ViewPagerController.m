@@ -310,18 +310,14 @@
 }
 - (void)setTabNarmalLineWidth:(NSNumber *)tabNarmalLineWidth {
     
-    if ([tabNarmalLineWidth floatValue] > 1.0)
-        tabNarmalLineWidth = [NSNumber numberWithFloat:1.0];
-    else if ([tabNarmalLineWidth floatValue] < 0.0)
+    if ([tabNarmalLineWidth floatValue] < 0.0)
         tabNarmalLineWidth = [NSNumber numberWithFloat:0.0];
     
     _tabNarmalLineWidth = tabNarmalLineWidth;
 }
 - (void)setTabSelectedLineWidth:(NSNumber *)tabSelectedLineWidth {
     
-    if ([tabSelectedLineWidth floatValue] > 1.0)
-        tabSelectedLineWidth = [NSNumber numberWithFloat:1.0];
-    else if ([tabSelectedLineWidth floatValue] < 0.0)
+    if ([tabSelectedLineWidth floatValue] < 0.0)
         tabSelectedLineWidth = [NSNumber numberWithFloat:0.0];
     
     _tabSelectedLineWidth = tabSelectedLineWidth;
