@@ -222,14 +222,9 @@
     
     CGFloat topLayoutGuide = 0.0;
     if (IOS_VERSION_7) {
-        topLayoutGuide = 20.0;
-        if (self.navigationController && !self.navigationController.navigationBarHidden) {
-            if (self.navigationController.navigationBar.translucent) {
-                topLayoutGuide += self.navigationController.navigationBar.frame.size.height;
-            }
-            else if (self.navigationController.navigationBar.opaque) {
-                topLayoutGuide = 0.0;
-            }
+        if (self.navigationController.navigationBar.translucent) {
+            if (self.prefersStatusBarHidden == NO) topLayoutGuide += 20;
+            if (self.navigationController.navigationBarHidden == NO) topLayoutGuide += self.navigationController.navigationBar.bounds.size.height;
         }
     }
     
