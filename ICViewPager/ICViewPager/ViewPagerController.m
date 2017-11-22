@@ -203,11 +203,16 @@
 - (void)layoutSubviews {
     
     CGFloat topLayoutGuide = 0.0;
+    CGFloat bottomLayoutGuide = 0.0;
     if (IOS_VERSION_7) {
         if([[UIDevice currentDevice]userInterfaceIdiom]==UIUserInterfaceIdiomPhone && ((int)[[UIScreen mainScreen] nativeBounds].size.height) == 2436) {
-        topLayoutGuide = 44.0;
+        topLayoutGuide = 44.0f;
+            if (@available(iOS 11.0, *)) {
+                UIWindow *window = UIApplication.sharedApplication.keyWindow;
+                bottomLayoutGuide = window.safeAreaInsets.bottom;
+            }
         } else {
-        topLayoutGuide = 20.0;
+        topLayoutGuide = 20.0f;
         }
         if (self.navigationController && !self.navigationController.navigationBarHidden) {
             topLayoutGuide += self.navigationController.navigationBar.frame.size.height;
@@ -225,7 +230,7 @@
     frame.origin.x = 0.0;
     frame.origin.y = [self.tabLocation boolValue] ? topLayoutGuide + CGRectGetHeight(self.tabsView.frame) : topLayoutGuide;
     frame.size.width = CGRectGetWidth(self.view.frame);
-    frame.size.height = CGRectGetHeight(self.view.frame) - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - CGRectGetHeight(self.tabBarController.tabBar.frame);
+    frame.size.height = CGRectGetHeight(self.view.frame) - bottomLayoutGuide - (topLayoutGuide + CGRectGetHeight(self.tabsView.frame)) - CGRectGetHeight(self.tabBarController.tabBar.frame);
     self.contentView.frame = frame;
 }
 
