@@ -17,7 +17,7 @@ class ApplicationDelegate: UIResponder, UIApplicationDelegate, UISplitViewContro
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = EmptyViewController()
+        window?.rootViewController = ViewPagerController()
         window?.makeKeyAndVisible()
         
         return true

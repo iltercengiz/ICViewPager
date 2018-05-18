@@ -7,15 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36CB293120AF5A370054261E /* ViewPagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB292F20AF5A370054261E /* ViewPagerController.swift */; };
+		36CB293220AF5A370054261E /* ViewPagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36CB293020AF5A370054261E /* ViewPagerController.xib */; };
+		36CB293420AF5A4D0054261E /* TabCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB293320AF5A4D0054261E /* TabCollectionViewLayout.swift */; };
+		36CB293620AF5A610054261E /* ContentCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB293520AF5A610054261E /* ContentCollectionViewLayout.swift */; };
 		36F4A3B220AF0685000995B2 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F4A3B120AF0685000995B2 /* ApplicationDelegate.swift */; };
 		36F4A3B620AF0EF9000995B2 /* EmptyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F4A3B520AF0EF9000995B2 /* EmptyViewController.swift */; };
 		36F4A3B920AF0FA4000995B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36F4A3B820AF0FA4000995B2 /* LaunchScreen.storyboard */; };
+		36F4A3C120AF4F8A000995B2 /* ViewPagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F4A3C020AF4F8A000995B2 /* ViewPagerConfiguration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		36CB292F20AF5A370054261E /* ViewPagerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPagerController.swift; sourceTree = "<group>"; };
+		36CB293020AF5A370054261E /* ViewPagerController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewPagerController.xib; sourceTree = "<group>"; };
+		36CB293320AF5A4D0054261E /* TabCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCollectionViewLayout.swift; sourceTree = "<group>"; };
+		36CB293520AF5A610054261E /* ContentCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCollectionViewLayout.swift; sourceTree = "<group>"; };
 		36F4A3B120AF0685000995B2 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
 		36F4A3B520AF0EF9000995B2 /* EmptyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewController.swift; sourceTree = "<group>"; };
 		36F4A3B820AF0FA4000995B2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		36F4A3C020AF4F8A000995B2 /* ViewPagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPagerConfiguration.swift; sourceTree = "<group>"; };
 		7CEC17A817DA1EC000E4A439 /* iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPad.storyboard; sourceTree = "<group>"; };
 		7CF3D65117CE32E40021036A /* ICViewPager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ICViewPager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF3D65C17CE32E40021036A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -87,6 +97,18 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		36F4A3BC20AF184E000995B2 /* ICViewPager */ = {
+			isa = PBXGroup;
+			children = (
+				36CB292F20AF5A370054261E /* ViewPagerController.swift */,
+				36CB293020AF5A370054261E /* ViewPagerController.xib */,
+				36F4A3C020AF4F8A000995B2 /* ViewPagerConfiguration.swift */,
+				36CB293320AF5A4D0054261E /* TabCollectionViewLayout.swift */,
+				36CB293520AF5A610054261E /* ContentCollectionViewLayout.swift */,
+			);
+			path = ICViewPager;
+			sourceTree = "<group>";
+		};
 		7CF3D64817CE32E40021036A = {
 			isa = PBXGroup;
 			children = (
@@ -108,6 +130,7 @@
 			children = (
 				36F4A3B020AF0675000995B2 /* Application */,
 				36F4A3B320AF0E1D000995B2 /* Scenes */,
+				36F4A3BC20AF184E000995B2 /* ICViewPager */,
 				36F4A3BB20AF0FC4000995B2 /* Supporting Files */,
 				36F4A3B720AF0F22000995B2 /* Legacy */,
 			);
@@ -191,6 +214,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36CB293220AF5A370054261E /* ViewPagerController.xib in Resources */,
 				36F4A3B920AF0FA4000995B2 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -202,7 +226,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36CB293620AF5A610054261E /* ContentCollectionViewLayout.swift in Sources */,
+				36CB293420AF5A4D0054261E /* TabCollectionViewLayout.swift in Sources */,
 				36F4A3B620AF0EF9000995B2 /* EmptyViewController.swift in Sources */,
+				36F4A3C120AF4F8A000995B2 /* ViewPagerConfiguration.swift in Sources */,
+				36CB293120AF5A370054261E /* ViewPagerController.swift in Sources */,
 				36F4A3B220AF0685000995B2 /* ApplicationDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
