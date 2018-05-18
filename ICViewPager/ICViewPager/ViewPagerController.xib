@@ -37,7 +37,7 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="npo-sR-p5m">
-                    <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="5ZG-Ey-Pww">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -57,7 +57,7 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="npo-sR-p5m" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="6Xi-xI-Tkg"/>
+                <constraint firstItem="npo-sR-p5m" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="top" identifier="tabAlignmentConstraint" id="6Xi-xI-Tkg"/>
                 <constraint firstItem="ghe-xT-zRb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="QZz-2e-1W6"/>
                 <constraint firstItem="npo-sR-p5m" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="ams-Fn-0iS"/>
                 <constraint firstItem="ghe-xT-zRb" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ohQ-q5-iIm"/>

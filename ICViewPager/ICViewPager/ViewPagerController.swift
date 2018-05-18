@@ -17,7 +17,11 @@ final public class ViewPagerController: UIViewController {
     @IBOutlet private weak var tabCollectionViewLayout: TabCollectionViewLayout!
     @IBOutlet private weak var contentCollectionViewLayout: ContentCollectionViewLayout!
     
-    public private(set) var configuration: ViewPagerConfiguration
+    private var contentCollectionViewDataSource: ContentCollectionViewDataSource!
+    private var contentCollectionViewDelegate: ContentCollectionViewDelegate!
+    
+    public weak var dataSource: ViewPagerControllerDataSource?
+    public var configuration: ViewPagerConfiguration
     
     // MARK: Init
     
@@ -27,7 +31,8 @@ final public class ViewPagerController: UIViewController {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        configuration = ViewPagerConfiguration()
+        super.init(coder: aDecoder)
     }
     
     // MARK: View life cycle
@@ -41,7 +46,27 @@ final public class ViewPagerController: UIViewController {
 private extension ViewPagerController {
     
     func setUpUI() {
+        if #available(iOS 11.0, *) {
+            additionalSafeAreaInsets = UIEdgeInsetsMake(configuration.tabHeight, 0.0, 0.0, 0.0)
+            contentCollectionView.contentInsetAdjustmentBehavior = .never
+        } else {
+            if let constraint = view.constraints.first(where: { $0.identifier == "tabAlignmentConstraint" }) {
+                view.removeConstraint(constraint)
+            }
+            topLayoutGuide.bottomAnchor.constraint(equalTo: tabContainerStackView.topAnchor).isActive = true
+            automaticallyAdjustsScrollViewInsets = false
+        }
+        setUpContentCollectionView(contentCollectionView)
         applyConfiguration(configuration)
+    }
+    
+    func setUpContentCollectionView(_ collectionView: UICollectionView) {
+        contentCollectionViewDataSource = ContentCollectionViewDataSource(viewPagerController: self,
+                                                                          collectionView: collectionView)
+        contentCollectionViewDataSource.dataSource = dataSource
+        contentCollectionViewDelegate = ContentCollectionViewDelegate(viewPagerController: self)
+        collectionView.dataSource = contentCollectionViewDataSource
+        collectionView.delegate = contentCollectionViewDelegate
     }
     
     func applyConfiguration(_ configuration: ViewPagerConfiguration) {

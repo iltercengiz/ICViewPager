@@ -10,8 +10,24 @@ import UIKit
 
 class EmptyViewController: UIViewController {
     
+    var backgroundColor: UIColor
+    
+    // MARK: Init
+    
+    init(backgroundColor: UIColor) {
+        self.backgroundColor = backgroundColor
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        backgroundColor = .blue
+        super.init(coder: aDecoder)
+    }
+    
+    // MARK: View life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = #colorLiteral(red: 0.7105011344, green: 0.9193516374, blue: 1, alpha: 1)
+        view.backgroundColor = backgroundColor
     }
 }
