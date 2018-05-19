@@ -12,6 +12,7 @@
 		36B1151520AF92F900DA4621 /* TabCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1151420AF92F900DA4621 /* TabCollectionViewDataSource.swift */; };
 		36B1151720AF9FEB00DA4621 /* DefaultTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1151620AF9FEB00DA4621 /* DefaultTabItemView.swift */; };
 		36B1151920AFA0CF00DA4621 /* TabCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1151820AFA0CF00DA4621 /* TabCollectionViewDelegate.swift */; };
+		36B1152920B0920C00DA4621 /* ScrollController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1152820B0920C00DA4621 /* ScrollController.swift */; };
 		36CB293120AF5A370054261E /* ViewPagerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB292F20AF5A370054261E /* ViewPagerController.swift */; };
 		36CB293220AF5A370054261E /* ViewPagerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36CB293020AF5A370054261E /* ViewPagerController.xib */; };
 		36CB293420AF5A4D0054261E /* TabCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB293320AF5A4D0054261E /* TabCollectionViewLayout.swift */; };
@@ -36,6 +37,7 @@
 		36B1151420AF92F900DA4621 /* TabCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		36B1151620AF9FEB00DA4621 /* DefaultTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTabItemView.swift; sourceTree = "<group>"; };
 		36B1151820AFA0CF00DA4621 /* TabCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCollectionViewDelegate.swift; sourceTree = "<group>"; };
+		36B1152820B0920C00DA4621 /* ScrollController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollController.swift; sourceTree = "<group>"; };
 		36CB292F20AF5A370054261E /* ViewPagerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPagerController.swift; sourceTree = "<group>"; };
 		36CB293020AF5A370054261E /* ViewPagerController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewPagerController.xib; sourceTree = "<group>"; };
 		36CB293320AF5A4D0054261E /* TabCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCollectionViewLayout.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				36CB293020AF5A370054261E /* ViewPagerController.xib */,
 				36CB294620AF628F0054261E /* ViewPagerControllerDataSource.swift */,
 				36F4A3C020AF4F8A000995B2 /* ViewPagerConfiguration.swift */,
+				36B1152820B0920C00DA4621 /* ScrollController.swift */,
 				36CB295220AF82590054261E /* Tab */,
 				36CB295120AF824F0054261E /* Content */,
 				36CB294120AF60370054261E /* Extensions */,
@@ -305,6 +308,7 @@
 				36B1151320AF926700DA4621 /* TabItemView.swift in Sources */,
 				36CB293420AF5A4D0054261E /* TabCollectionViewLayout.swift in Sources */,
 				36CB294020AF5F1D0054261E /* ContentCollectionViewCell.swift in Sources */,
+				36B1152920B0920C00DA4621 /* ScrollController.swift in Sources */,
 				36F4A3B620AF0EF9000995B2 /* EmptyViewController.swift in Sources */,
 				36CB294E20AF6C2D0054261E /* ExampleViewPagerControllerDataSource.swift in Sources */,
 				36F4A3C120AF4F8A000995B2 /* ViewPagerConfiguration.swift in Sources */,

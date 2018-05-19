@@ -8,15 +8,31 @@
 
 import UIKit
 
+protocol TabCollectionViewDelegateProtocol: class {
+    
+    func tabCollectionView(_ collectionView: UICollectionView, didSelectItemAt index: Int)
+}
+
 final class TabCollectionViewDelegate: NSObject {
     
     private unowned var viewPagerController: ViewPagerController
+    weak var delegate: TabCollectionViewDelegateProtocol?
     
     // MARK: Init
     
     init(viewPagerController: ViewPagerController) {
         self.viewPagerController = viewPagerController
         super.init()
+    }
+}
+
+// MARK: UICollectionViewDelegate
+
+extension TabCollectionViewDelegate: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
+        delegate?.tabCollectionView(collectionView, didSelectItemAt: indexPath.item)
     }
 }
 

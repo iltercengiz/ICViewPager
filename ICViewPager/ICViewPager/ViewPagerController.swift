@@ -21,6 +21,7 @@ final public class ViewPagerController: UIViewController {
     private var contentCollectionViewDelegate: ContentCollectionViewDelegate!
     private var tabCollectionViewDataSource: TabCollectionViewDataSource!
     private var tabCollectionViewDelegate: TabCollectionViewDelegate!
+    private var scrollController: ScrollController!
     
     public weak var dataSource: ViewPagerControllerDataSource?
     public var configuration: ViewPagerConfiguration
@@ -41,6 +42,7 @@ final public class ViewPagerController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setUpScrollController()
         setUpUI()
     }
 }
@@ -72,7 +74,9 @@ private extension ViewPagerController {
         contentCollectionViewDataSource = ContentCollectionViewDataSource(viewPagerController: self,
                                                                           collectionView: collectionView)
         contentCollectionViewDataSource.dataSource = dataSource
-        contentCollectionViewDelegate = ContentCollectionViewDelegate(viewPagerController: self)
+        contentCollectionViewDelegate = ContentCollectionViewDelegate(viewPagerController: self,
+                                                                      collectionView: collectionView)
+        contentCollectionViewDelegate.delegate = scrollController
         collectionView.dataSource = contentCollectionViewDataSource
         collectionView.delegate = contentCollectionViewDelegate
     }
@@ -82,11 +86,18 @@ private extension ViewPagerController {
                                                                   collectionView: collectionView)
         tabCollectionViewDataSource.dataSource = dataSource
         tabCollectionViewDelegate = TabCollectionViewDelegate(viewPagerController: self)
+        tabCollectionViewDelegate.delegate = scrollController
         collectionView.dataSource = tabCollectionViewDataSource
         collectionView.delegate = tabCollectionViewDelegate
     }
     
     func applyConfiguration(_ configuration: ViewPagerConfiguration) {
         tabCollectionViewHeightConstraint.constant = configuration.tabHeight
+    }
+    
+    func setUpScrollController() {
+        scrollController = ScrollController(viewPagerController: self,
+                                            contentCollectionView: contentCollectionView,
+                                            tabCollectionView: tabCollectionView)
     }
 }
