@@ -19,6 +19,8 @@ final public class ViewPagerController: UIViewController {
     
     private var contentCollectionViewDataSource: ContentCollectionViewDataSource!
     private var contentCollectionViewDelegate: ContentCollectionViewDelegate!
+    private var tabCollectionViewDataSource: TabCollectionViewDataSource!
+    private var tabCollectionViewDelegate: TabCollectionViewDelegate!
     
     public weak var dataSource: ViewPagerControllerDataSource?
     public var configuration: ViewPagerConfiguration
@@ -46,6 +48,13 @@ final public class ViewPagerController: UIViewController {
 private extension ViewPagerController {
     
     func setUpUI() {
+        adjustInsets()
+        setUpContentCollectionView(contentCollectionView)
+        setUpTabCollectionView(tabCollectionView)
+        applyConfiguration(configuration)
+    }
+    
+    func adjustInsets() {
         if #available(iOS 11.0, *) {
             additionalSafeAreaInsets = UIEdgeInsetsMake(configuration.tabHeight, 0.0, 0.0, 0.0)
             contentCollectionView.contentInsetAdjustmentBehavior = .never
@@ -56,8 +65,6 @@ private extension ViewPagerController {
             topLayoutGuide.bottomAnchor.constraint(equalTo: tabContainerStackView.topAnchor).isActive = true
             automaticallyAdjustsScrollViewInsets = false
         }
-        setUpContentCollectionView(contentCollectionView)
-        applyConfiguration(configuration)
     }
     
     func setUpContentCollectionView(_ collectionView: UICollectionView) {
@@ -67,6 +74,15 @@ private extension ViewPagerController {
         contentCollectionViewDelegate = ContentCollectionViewDelegate(viewPagerController: self)
         collectionView.dataSource = contentCollectionViewDataSource
         collectionView.delegate = contentCollectionViewDelegate
+    }
+    
+    func setUpTabCollectionView(_ collectionView: UICollectionView) {
+        tabCollectionViewDataSource = TabCollectionViewDataSource(viewPagerController: self,
+                                                                  collectionView: collectionView)
+        tabCollectionViewDataSource.dataSource = dataSource
+        tabCollectionViewDelegate = TabCollectionViewDelegate(viewPagerController: self)
+        collectionView.dataSource = tabCollectionViewDataSource
+        collectionView.delegate = tabCollectionViewDelegate
     }
     
     func applyConfiguration(_ configuration: ViewPagerConfiguration) {

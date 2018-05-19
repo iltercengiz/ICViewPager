@@ -32,8 +32,14 @@ extension ExampleViewPagerControllerDataSource: ViewPagerControllerDataSource {
     }
     
     func viewPagerController(_ controller: ViewPagerController,
-                             titleForTabAt index: Int) -> String {
-        return "Title #\(index)"
+                             tabItemViewAt index: Int,
+                             reusingTabItemView tabItemView: TabItemView?) -> TabItemView {
+        let title = "Title #\(index)"
+        if let view = tabItemView as? DefaultTabItemView {
+            view.title = title
+            return view
+        }
+        return DefaultTabItemView(title: title)
     }
     
     func numberOfViews(in controller: ViewPagerController) -> Int {

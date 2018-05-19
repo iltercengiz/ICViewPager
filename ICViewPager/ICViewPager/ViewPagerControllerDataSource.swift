@@ -10,9 +10,12 @@ import UIKit
 
 public protocol ViewPagerControllerDataSource: class {
     
-    func viewPagerController(_ controller: ViewPagerController, viewControllerAt index: Int) -> UIViewController
+    func viewPagerController(_ controller: ViewPagerController,
+                             viewControllerAt index: Int) -> UIViewController
     
-    func viewPagerController(_ controller: ViewPagerController, titleForTabAt index: Int) -> String
+    func viewPagerController(_ controller: ViewPagerController,
+                             tabItemViewAt index: Int,
+                             reusingTabItemView tabItemView: TabItemView?) -> TabItemView
     
     func numberOfViews(in controller: ViewPagerController) -> Int
 }
