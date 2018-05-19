@@ -10,7 +10,7 @@ import UIKit
 
 final class ContentCollectionViewCell: UICollectionViewCell {
     
-    private weak var contentViewController: UIViewController?
+    private var contentViewController: UIViewController?
     
     // MARK: Public functions
     
@@ -34,6 +34,5 @@ final class ContentCollectionViewCell: UICollectionViewCell {
         contentViewController?.willMove(toParentViewController: nil)
         contentViewController?.view.removeFromSuperview()
         contentViewController?.removeFromParentViewController()
-        contentViewController = nil
     }
 }
