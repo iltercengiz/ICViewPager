@@ -48,6 +48,7 @@ final public class ViewPagerController: UIViewController {
 private extension ViewPagerController {
     
     func setUpUI() {
+        view.backgroundColor = .black
         adjustInsets()
         setUpContentCollectionView(contentCollectionView)
         setUpTabCollectionView(tabCollectionView)
