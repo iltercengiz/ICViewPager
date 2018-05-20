@@ -24,7 +24,8 @@ final class ContentCollectionViewLayout: UICollectionViewFlowLayout {
         super.prepare()
         guard let collectionView = collectionView else { return }
         itemSize = collectionView.bounds.size
-        collectionView.decelerationRate = UIScrollViewDecelerationRateFast
+        let sweetSpot = (UIScrollViewDecelerationRateFast * 0.64 + UIScrollViewDecelerationRateNormal * 0.36)
+        collectionView.decelerationRate = sweetSpot
         collectionView.isPagingEnabled = false
     }
     
