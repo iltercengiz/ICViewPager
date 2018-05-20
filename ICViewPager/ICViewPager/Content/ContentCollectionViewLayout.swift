@@ -23,6 +23,7 @@ final class ContentCollectionViewLayout: UICollectionViewFlowLayout {
     override func prepare() {
         super.prepare()
         guard let collectionView = collectionView else { return }
+        itemSize = collectionView.bounds.size
         collectionView.decelerationRate = UIScrollViewDecelerationRateFast
         collectionView.isPagingEnabled = false
     }

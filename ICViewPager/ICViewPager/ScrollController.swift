@@ -27,16 +27,18 @@ final class ScrollController {
 
 extension ScrollController: ContentCollectionViewDelegateProtocol {
     
-    func contentCollectionView(_ collectionView: UICollectionView, didScroll offset: CGPoint) {
-        
-    }
-    
     func contentCollectionViewWillBeginDragging(_ collectionView: UICollectionView) {
         tabCollectionView.isUserInteractionEnabled = false
     }
     
     func contentCollectionViewDidEndDragging(_ collectionView: UICollectionView) {
         tabCollectionView.isUserInteractionEnabled = true
+    }
+    
+    func contentCollectionView(_ collectionView: UICollectionView, didScrollToPageAt index: Int) {
+        tabCollectionView.scrollToItem(at: IndexPath(item: index, section: 0),
+                                       at: .left,
+                                       animated: true)
     }
 }
 
