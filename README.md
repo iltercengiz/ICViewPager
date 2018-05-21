@@ -10,6 +10,7 @@ Version 2.0 is written from scratch and still under heavy development. You can c
 - [ ] Auto sizing tabs
 - [ ] Tab location setting support (top/bottom)
 - [ ] Tab centering support (center active/selected tab)
+- [ ] Custom tab indicator color support
 - [ ] Polishing
 - [ ] CocoaPods support
 - [ ] Carthage support
