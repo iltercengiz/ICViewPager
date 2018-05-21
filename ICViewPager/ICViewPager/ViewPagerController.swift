@@ -89,6 +89,7 @@ private extension ViewPagerController {
         tabCollectionViewDelegate.delegate = scrollController
         collectionView.dataSource = tabCollectionViewDataSource
         collectionView.delegate = tabCollectionViewDelegate
+        tabCollectionViewLayout.configuration = configuration
     }
     
     func applyConfiguration(_ configuration: ViewPagerConfiguration) {

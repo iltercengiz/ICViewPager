@@ -23,10 +23,13 @@ public struct ViewPagerConfiguration {
     
     public var tabHeight: CGFloat
     public var tabItemSizingPolicy: TabItemSizingPolicy
+    public var tabIndicatorColor: UIColor
     
     public init(tabHeight: CGFloat = Constants.tabHeight,
-                tabItemSizingPolicy: TabItemSizingPolicy = .fixed(size: TabItemSizingPolicy.defaultTabWidth)) {
+                tabItemSizingPolicy: TabItemSizingPolicy = .fixed(size: TabItemSizingPolicy.defaultTabWidth),
+                tabIndicatorColor: UIColor = .red) {
         self.tabHeight = tabHeight
         self.tabItemSizingPolicy = tabItemSizingPolicy
+        self.tabIndicatorColor = tabIndicatorColor
     }
 }

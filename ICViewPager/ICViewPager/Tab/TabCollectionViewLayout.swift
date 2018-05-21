@@ -11,19 +11,20 @@ import UIKit
 final class TabCollectionViewLayout: UICollectionViewFlowLayout {
     
     private enum Constants {
-        static let indicatorIndexPath: IndexPath = IndexPath(item: 0, section: 0)
         static let indicatorHeight: CGFloat = 2.0
     }
     
-    private var indicatorAttributes: UICollectionViewLayoutAttributes!
+    private var indicatorAttributes: TabIndicatorAttributes!
     private var invalidationContext: UICollectionViewFlowLayoutInvalidationContext = {
         let context = UICollectionViewFlowLayoutInvalidationContext()
         context.invalidateFlowLayoutAttributes = false
         context.invalidateFlowLayoutDelegateMetrics = false
-        context.invalidateDecorationElements(ofKind: ActiveTabIndicatorView.kind, at: [Constants.indicatorIndexPath])
+        context.invalidateDecorationElements(ofKind: TabIndicatorView.kind,
+                                             at: [TabIndicatorAttributes.Constants.indicatorIndexPath])
         return context
     }()
     
+    var configuration: ViewPagerConfiguration!
     var currentPage: Int = 0
     
     // MARK: Init
@@ -55,7 +56,7 @@ final class TabCollectionViewLayout: UICollectionViewFlowLayout {
 
     override func layoutAttributesForDecorationView(ofKind elementKind: String,
                                                     at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        guard elementKind == ActiveTabIndicatorView.kind else { return nil }
+        guard elementKind == TabIndicatorView.kind else { return nil }
         return indicatorAttributes
     }
     
@@ -108,26 +109,24 @@ private extension TabCollectionViewLayout {
     }
     
     func registerDecorationView() {
-        register(ActiveTabIndicatorView.self,
-                 forDecorationViewOfKind: ActiveTabIndicatorView.kind)
+        register(TabIndicatorView.self,
+                 forDecorationViewOfKind: TabIndicatorView.kind)
     }
     
-    func indicatorAttributes(for page: Int) -> UICollectionViewLayoutAttributes {
+    func indicatorAttributes(for page: Int) -> TabIndicatorAttributes {
         
         guard let tabItemAttributes = layoutAttributesForItem(at: IndexPath(item: page, section: 0)) else {
             #if DEBUG
             NSLog("Called `indicatorAttributes(for:)` before super did its preparations.")
             #endif
-            return UICollectionViewLayoutAttributes()
+            return TabIndicatorAttributes()
         }
         
         let tabItemFrame = tabItemAttributes.frame
         
-        let indicatorAttributes = UICollectionViewLayoutAttributes(forDecorationViewOfKind: ActiveTabIndicatorView.kind,
-                                                                   with: Constants.indicatorIndexPath)
+        let indicatorAttributes = TabIndicatorAttributes(backgroundColor: configuration.tabIndicatorColor)
         indicatorAttributes.frame = CGRect(x: tabItemFrame.minX, y: tabItemFrame.maxY - Constants.indicatorHeight,
                                            width: tabItemFrame.width, height: Constants.indicatorHeight)
-        indicatorAttributes.zIndex = Int.max
         return indicatorAttributes
     }
 }

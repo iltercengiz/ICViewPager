@@ -37,7 +37,8 @@ class ApplicationDelegate: UIResponder, UIApplicationDelegate, UISplitViewContro
         
         /** ViewPagerController configuration here. All the configuration properties are optional. */
         let configuration = ViewPagerConfiguration(tabHeight: 48.0,
-                                                   tabItemSizingPolicy: .fill)
+                                                   tabItemSizingPolicy: .fill,
+                                                   tabIndicatorColor: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1))
         
         let viewPagerController = ViewPagerController(configuration: configuration)
         viewPagerController.dataSource = dataSource
