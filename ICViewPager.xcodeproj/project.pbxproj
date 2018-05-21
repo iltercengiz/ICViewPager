@@ -58,18 +58,8 @@
 		36F4A3B520AF0EF9000995B2 /* EmptyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewController.swift; sourceTree = "<group>"; };
 		36F4A3B820AF0FA4000995B2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		36F4A3C020AF4F8A000995B2 /* ViewPagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPagerConfiguration.swift; sourceTree = "<group>"; };
-		7CEC17A817DA1EC000E4A439 /* iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPad.storyboard; sourceTree = "<group>"; };
 		7CF3D65117CE32E40021036A /* ICViewPager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ICViewPager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF3D65C17CE32E40021036A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7CF3D66317CE32E40021036A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		7CF3D66417CE32E40021036A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		7CF3D67117CE332F0021036A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
-		7CF3D67C17CE33E10021036A /* ViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewPagerController.h; sourceTree = "<group>"; };
-		7CF3D67D17CE33E10021036A /* ViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewPagerController.m; sourceTree = "<group>"; };
-		7CF3D67F17CE33EC0021036A /* HostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HostViewController.h; sourceTree = "<group>"; };
-		7CF3D68017CE33EC0021036A /* HostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HostViewController.m; sourceTree = "<group>"; };
-		7CF3D68317CE3F5B0021036A /* ContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentViewController.h; sourceTree = "<group>"; };
-		7CF3D68417CE3F5B0021036A /* ContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,19 +140,6 @@
 			path = Empty;
 			sourceTree = "<group>";
 		};
-		36F4A3B720AF0F22000995B2 /* Legacy */ = {
-			isa = PBXGroup;
-			children = (
-				7CF3D66317CE32E40021036A /* AppDelegate.h */,
-				7CF3D66417CE32E40021036A /* AppDelegate.m */,
-				7CF3D67117CE332F0021036A /* iPhone.storyboard */,
-				7CEC17A817DA1EC000E4A439 /* iPad.storyboard */,
-				7CF3D67B17CE33C80021036A /* ICViewPager */,
-				7CF3D67A17CE33C80021036A /* Controller */,
-			);
-			path = Legacy;
-			sourceTree = "<group>";
-		};
 		36F4A3BB20AF0FC4000995B2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,27 +189,6 @@
 				36F4A3B320AF0E1D000995B2 /* Scenes */,
 				36F4A3BC20AF184E000995B2 /* ICViewPager */,
 				36F4A3BB20AF0FC4000995B2 /* Supporting Files */,
-				36F4A3B720AF0F22000995B2 /* Legacy */,
-			);
-			path = ICViewPager;
-			sourceTree = "<group>";
-		};
-		7CF3D67A17CE33C80021036A /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				7CF3D67F17CE33EC0021036A /* HostViewController.h */,
-				7CF3D68017CE33EC0021036A /* HostViewController.m */,
-				7CF3D68317CE3F5B0021036A /* ContentViewController.h */,
-				7CF3D68417CE3F5B0021036A /* ContentViewController.m */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		7CF3D67B17CE33C80021036A /* ICViewPager */ = {
-			isa = PBXGroup;
-			children = (
-				7CF3D67C17CE33E10021036A /* ViewPagerController.h */,
-				7CF3D67D17CE33E10021036A /* ViewPagerController.m */,
 			);
 			path = ICViewPager;
 			sourceTree = "<group>";
