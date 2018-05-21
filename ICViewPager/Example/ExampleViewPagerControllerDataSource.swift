@@ -43,6 +43,14 @@ extension ExampleViewPagerControllerDataSource: ViewPagerControllerDataSource {
     }
     
     func numberOfViews(in controller: ViewPagerController) -> Int {
-        return viewControllers.count
+        
+        /** Return all the view controllers if the tab bar is not configured to fill the full width. */
+        let tabItemSizingPolicy = controller.configuration.tabItemSizingPolicy
+        switch tabItemSizingPolicy {
+        case .fixed(_):
+            return viewControllers.count
+        case .fill:
+            return 3
+        }
     }
 }

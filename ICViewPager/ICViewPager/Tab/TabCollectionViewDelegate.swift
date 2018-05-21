@@ -16,6 +16,7 @@ protocol TabCollectionViewDelegateProtocol: class {
 final class TabCollectionViewDelegate: NSObject {
     
     private unowned var viewPagerController: ViewPagerController
+    private lazy var numberOfItems: Int = self.viewPagerController.tabCollectionViewDataSource.numberOfViews
     weak var delegate: TabCollectionViewDelegateProtocol?
     
     // MARK: Init
@@ -43,6 +44,14 @@ extension TabCollectionViewDelegate: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 144.0, height: 44.0)
+        
+        let tabItemSizingPolicy = viewPagerController.configuration.tabItemSizingPolicy
+        switch tabItemSizingPolicy {
+        case .fixed(let size):
+            return size
+        case .fill:
+            return CGSize(width: collectionView.bounds.width / CGFloat(numberOfItems),
+                          height: collectionView.bounds.height)
+        }
     }
 }

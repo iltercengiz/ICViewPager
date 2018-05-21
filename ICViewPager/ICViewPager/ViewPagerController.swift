@@ -17,11 +17,11 @@ final public class ViewPagerController: UIViewController {
     @IBOutlet private weak var tabCollectionViewLayout: TabCollectionViewLayout!
     @IBOutlet private weak var contentCollectionViewLayout: ContentCollectionViewLayout!
     
-    private var contentCollectionViewDataSource: ContentCollectionViewDataSource!
-    private var contentCollectionViewDelegate: ContentCollectionViewDelegate!
-    private var tabCollectionViewDataSource: TabCollectionViewDataSource!
-    private var tabCollectionViewDelegate: TabCollectionViewDelegate!
-    private var scrollController: ScrollController!
+    internal var contentCollectionViewDataSource: ContentCollectionViewDataSource!
+    internal var contentCollectionViewDelegate: ContentCollectionViewDelegate!
+    internal var tabCollectionViewDataSource: TabCollectionViewDataSource!
+    internal var tabCollectionViewDelegate: TabCollectionViewDelegate!
+    internal var scrollController: ScrollController!
     
     public weak var dataSource: ViewPagerControllerDataSource?
     public var configuration: ViewPagerConfiguration

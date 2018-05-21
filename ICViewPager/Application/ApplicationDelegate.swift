@@ -20,9 +20,12 @@ class ApplicationDelegate: UIResponder, UIApplicationDelegate, UISplitViewContro
         
         
         window = UIWindow(frame: UIScreen.main.bounds)
-//        window?.rootViewController = viewPagerController()
+        
+        /** To test different container scenarios, enable one option. */
+        window?.rootViewController = viewPagerController()
 //        window?.rootViewController = navigationController()
-        window?.rootViewController = tabBarController()
+//        window?.rootViewController = tabBarController()
+        
         window?.makeKeyAndVisible()
         
         return true
@@ -31,7 +34,12 @@ class ApplicationDelegate: UIResponder, UIApplicationDelegate, UISplitViewContro
     // MARK: Functions for test purposes
     
     private func viewPagerController() -> ViewPagerController {
-        let viewPagerController = ViewPagerController()
+        
+        /** ViewPagerController configuration here. All the configuration properties are optional. */
+        let configuration = ViewPagerConfiguration(tabHeight: 48.0,
+                                                   tabItemSizingPolicy: .fill)
+        
+        let viewPagerController = ViewPagerController(configuration: configuration)
         viewPagerController.dataSource = dataSource
         return viewPagerController
     }

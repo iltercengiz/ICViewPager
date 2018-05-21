@@ -14,9 +14,19 @@ public struct ViewPagerConfiguration {
         public static let tabHeight: CGFloat = 44.0
     }
     
-    public var tabHeight: CGFloat
+    public enum TabItemSizingPolicy {
+        public static let defaultTabWidth: CGSize = CGSize(width: 144.0, height: Constants.tabHeight)
+        
+        case fixed(size: CGSize)
+        case fill
+    }
     
-    public init(tabHeight: CGFloat = Constants.tabHeight) {
+    public var tabHeight: CGFloat
+    public var tabItemSizingPolicy: TabItemSizingPolicy
+    
+    public init(tabHeight: CGFloat = Constants.tabHeight,
+                tabItemSizingPolicy: TabItemSizingPolicy = .fixed(size: TabItemSizingPolicy.defaultTabWidth)) {
         self.tabHeight = tabHeight
+        self.tabItemSizingPolicy = tabItemSizingPolicy
     }
 }
