@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		365567DA20B0BD7100D5C00F /* ActiveTabIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365567D920B0BD7100D5C00F /* ActiveTabIndicatorView.swift */; };
 		36B1150020AF91E200DA4621 /* TabCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B114FE20AF91E200DA4621 /* TabCollectionViewCell.swift */; };
 		36B1151320AF926700DA4621 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1151220AF926700DA4621 /* TabItemView.swift */; };
 		36B1151520AF92F900DA4621 /* TabCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1151420AF92F900DA4621 /* TabCollectionViewDataSource.swift */; };
@@ -25,6 +26,7 @@
 		36CB294B20AF6AC20054261E /* EmptyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36CB294A20AF6AC20054261E /* EmptyViewController.xib */; };
 		36CB294E20AF6C2D0054261E /* ExampleViewPagerControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB294D20AF6C2D0054261E /* ExampleViewPagerControllerDataSource.swift */; };
 		36CB295020AF80270054261E /* UIViewController+Insets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB294F20AF80270054261E /* UIViewController+Insets.swift */; };
+		36E1376E20B2245D0021F3EF /* ScrollDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1376D20B2245D0021F3EF /* ScrollDirection.swift */; };
 		36F4A3B220AF0685000995B2 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F4A3B120AF0685000995B2 /* ApplicationDelegate.swift */; };
 		36F4A3B620AF0EF9000995B2 /* EmptyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F4A3B520AF0EF9000995B2 /* EmptyViewController.swift */; };
 		36F4A3B920AF0FA4000995B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36F4A3B820AF0FA4000995B2 /* LaunchScreen.storyboard */; };
@@ -32,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		365567D920B0BD7100D5C00F /* ActiveTabIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveTabIndicatorView.swift; sourceTree = "<group>"; };
 		36B114FE20AF91E200DA4621 /* TabCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCollectionViewCell.swift; sourceTree = "<group>"; };
 		36B1151220AF926700DA4621 /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
 		36B1151420AF92F900DA4621 /* TabCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCollectionViewDataSource.swift; sourceTree = "<group>"; };
@@ -50,6 +53,7 @@
 		36CB294A20AF6AC20054261E /* EmptyViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyViewController.xib; sourceTree = "<group>"; };
 		36CB294D20AF6C2D0054261E /* ExampleViewPagerControllerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewPagerControllerDataSource.swift; sourceTree = "<group>"; };
 		36CB294F20AF80270054261E /* UIViewController+Insets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Insets.swift"; sourceTree = "<group>"; };
+		36E1376D20B2245D0021F3EF /* ScrollDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollDirection.swift; sourceTree = "<group>"; };
 		36F4A3B120AF0685000995B2 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
 		36F4A3B520AF0EF9000995B2 /* EmptyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewController.swift; sourceTree = "<group>"; };
 		36F4A3B820AF0FA4000995B2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -115,6 +119,7 @@
 				36B1151220AF926700DA4621 /* TabItemView.swift */,
 				36B1151420AF92F900DA4621 /* TabCollectionViewDataSource.swift */,
 				36B1151820AFA0CF00DA4621 /* TabCollectionViewDelegate.swift */,
+				365567D920B0BD7100D5C00F /* ActiveTabIndicatorView.swift */,
 				36B1151620AF9FEB00DA4621 /* DefaultTabItemView.swift */,
 			);
 			path = Tab;
@@ -175,6 +180,7 @@
 				36CB294620AF628F0054261E /* ViewPagerControllerDataSource.swift */,
 				36F4A3C020AF4F8A000995B2 /* ViewPagerConfiguration.swift */,
 				36B1152820B0920C00DA4621 /* ScrollController.swift */,
+				36E1376D20B2245D0021F3EF /* ScrollDirection.swift */,
 				36CB295220AF82590054261E /* Tab */,
 				36CB295120AF824F0054261E /* Content */,
 				36CB294120AF60370054261E /* Extensions */,
@@ -307,10 +313,12 @@
 				36B1151720AF9FEB00DA4621 /* DefaultTabItemView.swift in Sources */,
 				36B1151320AF926700DA4621 /* TabItemView.swift in Sources */,
 				36CB293420AF5A4D0054261E /* TabCollectionViewLayout.swift in Sources */,
+				365567DA20B0BD7100D5C00F /* ActiveTabIndicatorView.swift in Sources */,
 				36CB294020AF5F1D0054261E /* ContentCollectionViewCell.swift in Sources */,
 				36B1152920B0920C00DA4621 /* ScrollController.swift in Sources */,
 				36F4A3B620AF0EF9000995B2 /* EmptyViewController.swift in Sources */,
 				36CB294E20AF6C2D0054261E /* ExampleViewPagerControllerDataSource.swift in Sources */,
+				36E1376E20B2245D0021F3EF /* ScrollDirection.swift in Sources */,
 				36F4A3C120AF4F8A000995B2 /* ViewPagerConfiguration.swift in Sources */,
 				36B1150020AF91E200DA4621 /* TabCollectionViewCell.swift in Sources */,
 				36CB293120AF5A370054261E /* ViewPagerController.swift in Sources */,

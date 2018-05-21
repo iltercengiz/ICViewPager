@@ -13,6 +13,7 @@ final class ScrollController {
     private unowned var viewPagerController: ViewPagerController
     private unowned var contentCollectionView: UICollectionView
     private unowned var tabCollectionView: UICollectionView
+    private unowned var tabCollectionViewLayout: TabCollectionViewLayout
     
     // MARK: Init
     
@@ -22,10 +23,15 @@ final class ScrollController {
         self.viewPagerController = viewPagerController
         self.contentCollectionView = contentCollectionView
         self.tabCollectionView = tabCollectionView
+        self.tabCollectionViewLayout = tabCollectionView.collectionViewLayout as! TabCollectionViewLayout
     }
 }
 
 extension ScrollController: ContentCollectionViewDelegateProtocol {
+    
+    func contentCollectionViewDidScroll(_ collectionView: UICollectionView, direction: ScrollDirection) {
+        tabCollectionViewLayout.updateIndicator(direction: direction)
+    }
     
     func contentCollectionViewWillBeginDragging(_ collectionView: UICollectionView) {
         tabCollectionView.isUserInteractionEnabled = false
@@ -36,6 +42,7 @@ extension ScrollController: ContentCollectionViewDelegateProtocol {
     }
     
     func contentCollectionView(_ collectionView: UICollectionView, didScrollToPageAt index: Int) {
+        tabCollectionViewLayout.currentPage = index
         tabCollectionView.scrollToItem(at: IndexPath(item: index, section: 0),
                                        at: .left,
                                        animated: true)

@@ -23,7 +23,11 @@ final class ContentCollectionViewLayout: UICollectionViewFlowLayout {
     override func prepare() {
         super.prepare()
         guard let collectionView = collectionView else { return }
+        
         itemSize = collectionView.bounds.size
+        minimumLineSpacing = 10.0
+        minimumInteritemSpacing = 0.0
+        
         let sweetSpot = (UIScrollViewDecelerationRateFast * 0.64 + UIScrollViewDecelerationRateNormal * 0.36)
         collectionView.decelerationRate = sweetSpot
         collectionView.isPagingEnabled = false
