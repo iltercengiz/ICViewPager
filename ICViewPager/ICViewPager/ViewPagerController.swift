@@ -23,7 +23,12 @@ final public class ViewPagerController: UIViewController {
     internal var tabCollectionViewDelegate: TabCollectionViewDelegate!
     internal var scrollController: ScrollController!
     
-    public weak var dataSource: ViewPagerControllerDataSource?
+    public weak var dataSource: ViewPagerControllerDataSource? {
+        didSet {
+            tabCollectionViewDataSource?.dataSource = dataSource
+            contentCollectionViewDataSource?.dataSource = dataSource
+        }
+    }
     public var configuration: ViewPagerConfiguration
     
     // MARK: Init

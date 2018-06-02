@@ -16,7 +16,9 @@ final class TabCollectionViewDataSource: NSObject {
     
     private unowned var viewPagerController: ViewPagerController
     private unowned var collectionView: UICollectionView
-    weak var dataSource: ViewPagerControllerDataSource?
+    weak var dataSource: ViewPagerControllerDataSource? {
+        didSet { collectionView.reloadData() }
+    }
     var numberOfViews: Int = 0
     
     // MARK: Init
@@ -64,10 +66,15 @@ extension TabCollectionViewDataSource: UICollectionViewDataSource {
                         numberOfItemsInSection section: Int) -> Int {
         
         guard let dataSource = dataSource else {
-            fatalError("ViewPagerControllerDataSource is not provided!")
+            return 0
         }
         
         numberOfViews = dataSource.numberOfViews(in: viewPagerController)
+        
+        if let layout = collectionView.collectionViewLayout as? TabCollectionViewLayout {
+            layout.numberOfViews = numberOfViews
+        }
+        
         return numberOfViews
     }
 }

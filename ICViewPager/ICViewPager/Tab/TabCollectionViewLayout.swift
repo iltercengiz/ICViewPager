@@ -26,6 +26,7 @@ final class TabCollectionViewLayout: UICollectionViewFlowLayout {
     
     var configuration: ViewPagerConfiguration!
     var currentPage: Int = 0
+    var numberOfViews: Int = 0
     
     // MARK: Init
     
@@ -45,12 +46,16 @@ final class TabCollectionViewLayout: UICollectionViewFlowLayout {
     
     override func prepare() {
         super.prepare()
-        indicatorAttributes = indicatorAttributes(for: currentPage)
+        if numberOfViews > 0 {
+            indicatorAttributes = indicatorAttributes(for: currentPage)
+        }
     }
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var attributes = super.layoutAttributesForElements(in: rect)
-        attributes?.append(indicatorAttributes)
+        if numberOfViews > 0 {
+            attributes?.append(indicatorAttributes)
+        }
         return attributes
     }
 
@@ -116,10 +121,7 @@ private extension TabCollectionViewLayout {
     func indicatorAttributes(for page: Int) -> TabIndicatorAttributes {
         
         guard let tabItemAttributes = layoutAttributesForItem(at: IndexPath(item: page, section: 0)) else {
-            #if DEBUG
-            NSLog("Called `indicatorAttributes(for:)` before super did its preparations.")
-            #endif
-            return TabIndicatorAttributes()
+            fatalError("Called `indicatorAttributes(for:)` before super did its preparations.")
         }
         
         let tabItemFrame = tabItemAttributes.frame

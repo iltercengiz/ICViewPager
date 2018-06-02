@@ -17,7 +17,9 @@ final class ContentCollectionViewDataSource: NSObject {
     private unowned var viewPagerController: ViewPagerController
     private unowned var collectionView: UICollectionView
     private var viewControllerCache: [Int: UIViewController] = [:]
-    weak var dataSource: ViewPagerControllerDataSource?
+    weak var dataSource: ViewPagerControllerDataSource? {
+        didSet { collectionView.reloadData() }
+    }
     
     // MARK: Init
     
@@ -87,7 +89,7 @@ extension ContentCollectionViewDataSource: UICollectionViewDataSource {
                         numberOfItemsInSection section: Int) -> Int {
         
         guard let dataSource = dataSource else {
-            fatalError("ViewPagerControllerDataSource is not provided!")
+            return 0
         }
         
         return dataSource.numberOfViews(in: viewPagerController)
