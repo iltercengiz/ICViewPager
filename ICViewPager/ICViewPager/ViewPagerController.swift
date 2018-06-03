@@ -8,7 +8,7 @@
 
 import UIKit
 
-final public class ViewPagerController: UIViewController {
+public final class ViewPagerController: UIViewController {
     
     @IBOutlet private weak var contentCollectionView: UICollectionView!
     @IBOutlet private weak var tabContainerStackView: UIStackView!
@@ -17,11 +17,11 @@ final public class ViewPagerController: UIViewController {
     @IBOutlet private weak var tabCollectionViewLayout: TabCollectionViewLayout!
     @IBOutlet private weak var contentCollectionViewLayout: ContentCollectionViewLayout!
     
-    internal var contentCollectionViewDataSource: ContentCollectionViewDataSource!
-    internal var contentCollectionViewDelegate: ContentCollectionViewDelegate!
-    internal var tabCollectionViewDataSource: TabCollectionViewDataSource!
-    internal var tabCollectionViewDelegate: TabCollectionViewDelegate!
-    internal var scrollController: ScrollController!
+    var contentCollectionViewDataSource: ContentCollectionViewDataSource!
+    var contentCollectionViewDelegate: ContentCollectionViewDelegate!
+    var tabCollectionViewDataSource: TabCollectionViewDataSource!
+    var tabCollectionViewDelegate: TabCollectionViewDelegate!
+    var scrollController: ScrollController!
     
     public weak var dataSource: ViewPagerControllerDataSource? {
         didSet {
@@ -64,7 +64,7 @@ private extension ViewPagerController {
     
     func adjustInsets() {
         if #available(iOS 11.0, *) {
-            additionalSafeAreaInsets = UIEdgeInsetsMake(configuration.tabHeight, 0.0, 0.0, 0.0)
+            additionalSafeAreaInsets = UIEdgeInsets(top: configuration.tabHeight, left: 0.0, bottom: 0.0, right: 0.0)
             contentCollectionView.contentInsetAdjustmentBehavior = .never
         } else {
             if let constraint = view.constraints.first(where: { $0.identifier == "tabAlignmentConstraint" }) {

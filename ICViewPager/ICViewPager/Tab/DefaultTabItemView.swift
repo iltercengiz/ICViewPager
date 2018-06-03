@@ -8,10 +8,14 @@
 
 import UIKit
 
-final class DefaultTabItemView: TabItemView {
+public final class DefaultTabItemView: TabItemView {
     
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: 144.0, height: 44.0)
+    private enum Constants {
+        static let defaultTabItemSize = CGSize(width: 144.0, height: 44.0)
+    }
+    
+    public override var intrinsicContentSize: CGSize {
+        return Constants.defaultTabItemSize
     }
     
     private var label: UILabel
@@ -21,20 +25,24 @@ final class DefaultTabItemView: TabItemView {
         }
     }
     
-    init(title: String) {
+    public init(title: String) {
         label = UILabel()
         self.title = title
         super.init(frame: .zero)
         setUpUI()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
     
-    private func setUpUI() {
+private extension DefaultTabItemView {
+    
+    func setUpUI() {
         backgroundColor = .white
         
+        label.font = UIFont.boldSystemFont(ofSize: 14.0)
         label.text = title
         label.textAlignment = .center
         label.textColor = .black

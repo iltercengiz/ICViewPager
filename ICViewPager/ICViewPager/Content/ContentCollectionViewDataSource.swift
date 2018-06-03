@@ -58,7 +58,7 @@ private extension ContentCollectionViewDataSource {
         } else {
             let topInset = viewPagerController.topLayoutGuide.length + viewPagerController.configuration.tabHeight
             let bottomInset = viewPagerController.bottomLayoutGuide.length
-            let insets = UIEdgeInsetsMake(topInset, 0.0, bottomInset, 0.0)
+            let insets = UIEdgeInsets(top: topInset, left: 0.0, bottom: bottomInset, right: 0.0)
             viewController.adjustScrollViewInsets(insets: insets)
         }
         
