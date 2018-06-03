@@ -35,7 +35,8 @@ public final class ViewPagerController: UIViewController {
     
     public init(configuration: ViewPagerConfiguration = ViewPagerConfiguration()) {
         self.configuration = configuration
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: "\(ViewPagerController.self)",
+                   bundle: Bundle(for: ViewPagerController.self))
     }
     
     required public init?(coder aDecoder: NSCoder) {
