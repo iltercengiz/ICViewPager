@@ -205,7 +205,7 @@
     CGFloat topLayoutGuide = 0.0;
     CGFloat bottomLayoutGuide = 0.0;
     if (IOS_VERSION_7) {
-        if([[UIDevice currentDevice]userInterfaceIdiom]==UIUserInterfaceIdiomPhone && ((int)[[UIScreen mainScreen] nativeBounds].size.height) == 2436) {
+        if([[UIDevice currentDevice]userInterfaceIdiom]==UIUserInterfaceIdiomPhone && ( (((int)[[UIScreen mainScreen] nativeBounds].size.height) == 2436) || (((int)[[UIScreen mainScreen] nativeBounds].size.height) == 1624)) ) {
         topLayoutGuide = 44.0f;
             if (@available(iOS 11.0, *)) {
                 UIWindow *window = UIApplication.sharedApplication.keyWindow;
