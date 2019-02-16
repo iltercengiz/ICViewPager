@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewPagerController" customModule="ICViewPager" customModuleProvider="target">
+            <connections>
+                <outlet property="contentCollectionView" destination="ghe-xT-zRb" id="qj2-gj-2jL"/>
+                <outlet property="contentCollectionViewLayout" destination="A2Z-E1-Mgj" id="kWE-V3-afq"/>
+                <outlet property="tabCollectionView" destination="5ZG-Ey-Pww" id="gdL-rZ-i4r"/>
+                <outlet property="tabCollectionViewHeightConstraint" destination="vdB-vd-tyZ" id="Fc8-Be-fq4"/>
+                <outlet property="tabCollectionViewLayout" destination="FyZ-th-uhB" id="7oo-j0-Hg1"/>
+                <outlet property="tabContainerStackView" destination="npo-sR-p5m" id="16j-Xi-Wdj"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ghe-xT-zRb">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="A2Z-E1-Mgj" customClass="ContentCollectionViewLayout" customModule="ICViewPager" customModuleProvider="target">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="npo-sR-p5m">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <subviews>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="5ZG-Ey-Pww">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="vdB-vd-tyZ"/>
+                            </constraints>
+                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="FyZ-th-uhB" customClass="TabCollectionViewLayout" customModule="ICViewPager" customModuleProvider="target">
+                                <size key="itemSize" width="50" height="50"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                        </collectionView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="npo-sR-p5m" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="top" identifier="tabAlignmentConstraint" id="6Xi-xI-Tkg"/>
+                <constraint firstItem="ghe-xT-zRb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="QZz-2e-1W6"/>
+                <constraint firstItem="npo-sR-p5m" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="ams-Fn-0iS"/>
+                <constraint firstItem="ghe-xT-zRb" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ohQ-q5-iIm"/>
+                <constraint firstItem="ghe-xT-zRb" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="rE0-ms-fgl"/>
+                <constraint firstItem="npo-sR-p5m" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="sip-Eb-ff2"/>
+                <constraint firstItem="ghe-xT-zRb" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="tUT-8e-3Dd"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="-90.5" y="104"/>
+        </view>
+    </objects>
+</document>
