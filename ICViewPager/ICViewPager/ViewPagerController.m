@@ -17,7 +17,7 @@
 #define kTabOffset 56.0
 #define kTabWidth 128.0
 #define kTabLocation 1.0
-#define kTabNarmalLineWidth 1.0
+#define kTabNormalLineWidth 1.0
 #define kTabSelectedLineWidth 5.0
 #define kTabDisableTopLine 0.0
 #define kTabDisableBottomLine 0.0
@@ -68,7 +68,7 @@
 @property (nonatomic) UIColor *indicatorColor;
 @property (nonatomic) BOOL disableTopLine;
 @property (nonatomic) BOOL disableBottomLine;
-@property (nonatomic) CGFloat narmalLineWidth;
+@property (nonatomic) CGFloat normalLineWidth;
 @property (nonatomic) CGFloat selectedLineWidth;
 @end
 
@@ -77,7 +77,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        self.narmalLineWidth = 1.0;
+        self.normalLineWidth = 1.0;
         self.selectedLineWidth = 5.0;
     }
     return self;
@@ -96,7 +96,7 @@
     [bezierPath moveToPoint:CGPointMake(0.0, 0.0)];
     [bezierPath addLineToPoint:CGPointMake(CGRectGetWidth(rect), 0.0)];
     [[UIColor colorWithWhite:197.0/255.0 alpha:0.75] setStroke];
-    [bezierPath setLineWidth:(self.disableTopLine ? 0.0 : self.narmalLineWidth)];
+    [bezierPath setLineWidth:(self.disableTopLine ? 0.0 : self.normalLineWidth)];
     [bezierPath stroke];
     
     // Draw bottom line
@@ -104,7 +104,7 @@
     [bezierPath moveToPoint:CGPointMake(0.0, CGRectGetHeight(rect))];
     [bezierPath addLineToPoint:CGPointMake(CGRectGetWidth(rect), CGRectGetHeight(rect))];
     [[UIColor colorWithWhite:197.0/255.0 alpha:0.75] setStroke];
-    [bezierPath setLineWidth:(self.disableBottomLine ? 0.0 : self.narmalLineWidth)];
+    [bezierPath setLineWidth:(self.disableBottomLine ? 0.0 : self.normalLineWidth)];
     [bezierPath stroke];
     
     // Draw an indicator line if tab is selected
@@ -141,7 +141,7 @@
 @property (nonatomic) NSNumber *tabOffset;
 @property (nonatomic) NSNumber *tabWidth;
 @property (nonatomic) NSNumber *tabLocation;
-@property (nonatomic) NSNumber *tabNarmalLineWidth;
+@property (nonatomic) NSNumber *tabNormalLineWidth;
 @property (nonatomic) NSNumber *tabSelectedLineWidth;
 @property (nonatomic) NSNumber *tabDisableTopLine;
 @property (nonatomic) NSNumber *tabDisableBottomLine;
@@ -170,7 +170,7 @@
 @synthesize tabOffset = _tabOffset;
 @synthesize tabWidth = _tabWidth;
 @synthesize tabLocation = _tabLocation;
-@synthesize tabNarmalLineWidth = _tabNarmalLineWidth;
+@synthesize tabNormalLineWidth = _tabNormalLineWidth;
 @synthesize tabSelectedLineWidth = _tabSelectedLineWidth;
 @synthesize tabDisableTopLine = _tabDisableTopLine;
 @synthesize tabDisableBottomLine = _tabDisableBottomLine;
@@ -303,12 +303,12 @@
     
     _tabLocation = tabLocation;
 }
-- (void)setTabNarmalLineWidth:(NSNumber *)tabNarmalLineWidth {
+- (void)setTabNormalLineWidth:(NSNumber *)tabNormalLineWidth {
     
-    if ([tabNarmalLineWidth floatValue] < 0.0)
-        tabNarmalLineWidth = [NSNumber numberWithFloat:0.0];
+    if ([tabNormalLineWidth floatValue] < 0.0)
+        tabNormalLineWidth = [NSNumber numberWithFloat:0.0];
     
-    _tabNarmalLineWidth = tabNarmalLineWidth;
+    _tabNormalLineWidth = tabNormalLineWidth;
 }
 - (void)setTabSelectedLineWidth:(NSNumber *)tabSelectedLineWidth {
     
@@ -521,15 +521,15 @@
     }
     return _tabLocation;
 }
-- (NSNumber *)tabNarmalLineWidth {
+- (NSNumber *)tabNormalLineWidth {
     
-    if (!_tabNarmalLineWidth) {
-        CGFloat value = kTabNarmalLineWidth;
+    if (!_tabNormalLineWidth) {
+        CGFloat value = kTabNormalLineWidth;
         if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)])
-            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabNarmalLineWidth withDefault:value];
-        self.tabNarmalLineWidth = [NSNumber numberWithFloat:value];
+            value = [self.delegate viewPager:self valueForOption:ViewPagerOptionTabNormalLineWidth withDefault:value];
+        self.tabNormalLineWidth = [NSNumber numberWithFloat:value];
     }
-    return _tabNarmalLineWidth;
+    return _tabNormalLineWidth;
 }
 - (NSNumber *)tabSelectedLineWidth {
     
@@ -646,7 +646,7 @@
     _tabOffset = nil;
     _tabWidth = nil;
     _tabLocation = nil;
-    _tabNarmalLineWidth = nil;
+    _tabNormalLineWidth = nil;
     _tabSelectedLineWidth = nil;
     _tabDisableTopLine = nil;
     _tabDisableBottomLine = nil;
@@ -821,8 +821,8 @@
             return [[self tabWidth] floatValue];
         case ViewPagerOptionTabLocation:
             return [[self tabLocation] floatValue];
-        case ViewPagerOptionTabNarmalLineWidth:
-            return [[self tabNarmalLineWidth] floatValue];
+        case ViewPagerOptionTabNormalLineWidth:
+            return [[self tabNormalLineWidth] floatValue];
         case ViewPagerOptionTabSelectedLineWidth:
             return [[self tabSelectedLineWidth] floatValue];
         case ViewPagerOptionTabDisableTopLine:
@@ -997,7 +997,7 @@
         [tabView addSubview:tabViewContent];
         [tabView setClipsToBounds:YES];
         [tabView setIndicatorColor:self.indicatorColor];
-        [tabView setNarmalLineWidth:[self.tabNarmalLineWidth floatValue]];
+        [tabView setNormalLineWidth:[self.tabNormalLineWidth floatValue]];
         [tabView setSelectedLineWidth:[self.tabSelectedLineWidth floatValue]];
         [tabView setDisableTopLine:[self.tabDisableTopLine boolValue]];
         [tabView setDisableBottomLine:[self.tabDisableBottomLine boolValue]];
